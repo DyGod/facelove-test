@@ -141,6 +141,7 @@
     "zoom_media": "Zoom du support multimédia {{ index }}"
   },
   "content": {
+    "save_amount_html": "Économisez {{ amount }}",
     "reviews": "avis",
     "language": "Langue",
     "localization_region_and_language": "Région et langue",

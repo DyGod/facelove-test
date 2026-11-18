@@ -1,0 +1,245 @@
+{% comment %}
+  Section contract.
+  An image beside a heading, text and call-to-action button. Stacks image-first on mobile,
+  sits side by side from tablet up, and lets the image take two thirds of the row on desktop.
+  The button scrolls to the product buy box (#landing-buy) unless a link is set.
+  @example
+  <!-- Add "Image with text" to a product landing template, pick an image and write the copy -->
+{% endcomment %}
+
+{% liquid
+  assign button_link = section.settings.button_link | default: '#landing-buy'
+  assign image_width = section.settings.image_width
+%}
+
+{% render 'contrast-override', background_color: section.settings.background_color, section_id: section.id %}
+
+<div class="section-background color-custom-{{ section.id }}"></div>
+<div class="section section--page-width color-custom-{{ section.id }}">
+  <div
+    class="landing-image-text landing-image-text--image-{{ section.settings.image_position }} landing-image-text--width-{{ image_width }} spacing-style"
+    style="{% render 'spacing-style', settings: section.settings %}"
+  >
+    <div class="landing-image-text__media">
+      {%- if section.settings.image != blank -%}
+        {%- liquid
+          if image_width == 'large'
+            assign image_sizes = '(min-width: 990px) 66vw, (min-width: 750px) 50vw, 100vw'
+          else
+            assign image_sizes = '(min-width: 750px) 50vw, 100vw'
+          endif
+        -%}
+        {{
+          section.settings.image
+          | image_url: width: 2000
+          | image_tag:
+            widths: '400, 600, 800, 1000, 1400, 2000',
+            sizes: image_sizes,
+            loading: 'lazy',
+            class: 'landing-image-text__image'
+        }}
+      {%- else -%}
+        {{ 'image' | placeholder_svg_tag: 'landing-image-text__image landing-image-text__placeholder' }}
+      {%- endif -%}
+    </div>
+
+    <div class="landing-image-text__content landing-image-text__content--{{ section.settings.text_alignment }}">
+      {%- if section.settings.heading != blank -%}
+        <h2 class="landing-image-text__heading">{{ section.settings.heading }}</h2>
+      {%- endif -%}
+      {%- if section.settings.text != blank -%}
+        <div class="landing-image-text__text rte">{{ section.settings.text }}</div>
+      {%- endif -%}
+      {%- if section.settings.button_label != blank -%}
+        <a class="button landing-image-text__button" href="{{ button_link }}">
+          {{- section.settings.button_label | escape -}}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .landing-image-text {
+    display: grid;
+    gap: var(--gap-xl);
+    align-items: center;
+    width: min(100%, 1100px);
+    min-width: 0;
+    margin-inline: auto;
+  }
+
+  .landing-image-text__media {
+    min-width: 0;
+  }
+
+  .landing-image-text__image {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--style-border-radius-lg);
+  }
+
+  .landing-image-text__placeholder {
+    aspect-ratio: 4 / 3;
+    background-color: rgb(var(--color-foreground-rgb) / var(--opacity-5));
+  }
+
+  .landing-image-text__content {
+    display: grid;
+    gap: var(--gap-md);
+    justify-items: center;
+    text-align: center;
+    min-width: 0;
+  }
+
+  .landing-image-text__heading {
+    margin: 0;
+    font-size: clamp(1.75rem, 1.4rem + 1.6vw, 2.5rem);
+    line-height: 1.15;
+    overflow-wrap: break-word;
+    text-wrap: balance;
+  }
+
+  .landing-image-text__text {
+    max-width: 48ch;
+  }
+
+  .landing-image-text__text > * {
+    margin-block: 0 var(--margin-sm);
+  }
+
+  .landing-image-text__text > :last-child {
+    margin-block-end: 0;
+  }
+
+  @media screen and (min-width: 750px) {
+    .landing-image-text {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--gap-3xl);
+    }
+
+    .landing-image-text--image-right .landing-image-text__media {
+      order: 2;
+    }
+
+    .landing-image-text__content--start {
+      justify-items: start;
+      text-align: start;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .landing-image-text--width-large {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    }
+
+    .landing-image-text--width-large.landing-image-text--image-left {
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:landing.names.image_with_text",
+  "class": "landing-image-text-section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:settings.image"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "t:landing.settings.image_position",
+      "info": "t:landing.info.image_position",
+      "options": [
+        { "value": "left", "label": "t:options.left" },
+        { "value": "right", "label": "t:options.right" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "image_width",
+      "label": "t:landing.settings.image_width",
+      "options": [
+        { "value": "half", "label": "t:landing.options.half" },
+        { "value": "large", "label": "t:landing.options.two_thirds" }
+      ],
+      "default": "half"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "t:settings.heading",
+      "default": "Image with text"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "t:settings.text",
+      "default": "<p>Describe what makes this product different.</p>"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "t:landing.settings.text_alignment_desktop",
+      "options": [
+        { "value": "start", "label": "t:options.left" },
+        { "value": "center", "label": "t:options.center" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:landing.settings.button_label",
+      "default": "Shop now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:landing.settings.button_link",
+      "info": "t:landing.info.button_link"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:settings.background",
+      "alpha": true
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:landing.names.image_with_text"
+    }
+  ]
+}
+{% endschema %}

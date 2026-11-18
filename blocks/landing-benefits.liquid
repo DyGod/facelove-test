@@ -1,0 +1,129 @@
+{%- doc -%}
+  Renders a two-column grid of short benefit pills from a list of lines, one benefit per line.
+  The wrapper carries the `landing-buy` anchor so landing page buttons can scroll to the buy box.
+
+  @example
+  {% content_for 'block', type: 'landing-benefits', id: 'benefits' %}
+{%- enddoc -%}
+
+{%- assign benefits = block.settings.benefits | newline_to_br | split: '<br />' -%}
+
+<div
+  id="landing-buy"
+  class="landing-benefits spacing-style"
+  style="
+    {% render 'spacing-style', settings: block.settings %}
+    --landing-benefits-icon: {{ block.settings.icon_color }};
+  "
+  {{ block.shopify_attributes }}
+>
+  {%- if block.settings.benefits != blank -%}
+    <ul class="landing-benefits__list" role="list">
+      {%- for benefit in benefits -%}
+        {%- assign benefit_text = benefit | strip -%}
+        {%- if benefit_text != blank -%}
+          <li class="landing-benefits__item">
+            <svg class="landing-benefits__icon" aria-hidden="true" focusable="false" viewBox="0 0 16 16">
+              <path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>{{ benefit_text | escape }}</span>
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .landing-benefits {
+    width: 100%;
+    min-width: 0;
+    scroll-margin-block-start: 96px;
+  }
+
+  .landing-benefits__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--gap-xs);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .landing-benefits__item {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-xs);
+    min-width: 0;
+    padding: var(--padding-xs) var(--padding-sm);
+    border-radius: var(--style-border-radius-sm);
+    background-color: rgb(var(--color-foreground-rgb) / var(--opacity-5));
+    font-size: 0.8125rem;
+    font-weight: 500;
+    line-height: 1.3;
+  }
+
+  .landing-benefits__item > span {
+    min-width: 0;
+    overflow-wrap: break-word;
+  }
+
+  .landing-benefits__icon {
+    flex: none;
+    width: 14px;
+    height: 14px;
+    color: var(--landing-benefits-icon);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:landing.names.benefit_pills",
+  "tag": null,
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "benefits",
+      "label": "t:landing.settings.benefits",
+      "info": "t:landing.info.benefits",
+      "default": "Benefit one\nBenefit two\nBenefit three\nBenefit four"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "t:landing.settings.icon_color",
+      "default": "#9B7FC0"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:landing.names.benefit_pills",
+      "category": "t:categories.product"
+    }
+  ]
+}
+{% endschema %}

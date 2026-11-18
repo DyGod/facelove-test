@@ -523,4 +523,111 @@
   .variant-option__button-label--has-swatch:has([data-option-available='false']):has(:checked):hover {
     background-color: inherit;
   }
+
+  /* Card style: one full-width card per option value with its variant price */
+  .variant-option--cards {
+    display: grid;
+    gap: var(--gap-sm);
+    margin: 0;
+    padding: 0;
+    border: none;
+    min-width: 0;
+  }
+
+  .variant-option--cards legend {
+    padding: 0;
+    margin-block-end: var(--margin-xs);
+    color: var(--variant-option-label-color, var(--color-foreground));
+  }
+
+  .variant-option__card {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--gap-md);
+    min-height: 44px;
+    padding: var(--padding-md) var(--padding-lg);
+    border: var(--variant-picker-button-border-width, 1px) solid var(--color-variant-border);
+    border-radius: var(--style-border-radius-md);
+    background-color: var(--color-variant-background);
+    color: var(--color-variant-text);
+    cursor: pointer;
+    transition: border-color var(--animation-speed-fast) var(--animation-easing),
+      box-shadow var(--animation-speed-fast) var(--animation-easing);
+  }
+
+  .variant-option__card:hover {
+    border-color: var(--color-variant-hover-border);
+  }
+
+  .variant-option__card:has(:checked) {
+    border-color: var(--color-selected-variant-border);
+    box-shadow: 0 0 0 1px var(--color-selected-variant-border);
+  }
+
+  .variant-option__card:has(:focus-visible) {
+    outline: var(--focus-outline-width) solid currentcolor;
+    outline-offset: var(--focus-outline-offset);
+  }
+
+  .variant-option__card:has([data-option-available='false']) {
+    cursor: not-allowed;
+    opacity: var(--opacity-60);
+  }
+
+  .variant-option__card-input {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    accent-color: var(--color-selected-variant-border);
+  }
+
+  .variant-option__card-main {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--gap-2xs) var(--gap-xs);
+    min-width: 0;
+  }
+
+  .variant-option__card-title {
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  .variant-option__card-badge {
+    padding: 2px var(--padding-xs);
+    border-radius: var(--style-border-radius-pills);
+    background-color: rgb(var(--color-foreground-rgb) / var(--opacity-8));
+    font-size: 0.75em;
+    white-space: nowrap;
+  }
+
+  .variant-option__card-note {
+    flex-basis: 100%;
+    font-size: 0.85em;
+    color: var(--color-foreground-muted);
+  }
+
+  .variant-option__card-price {
+    display: grid;
+    justify-items: end;
+    text-align: end;
+    line-height: 1.2;
+  }
+
+  .variant-option__card-amount {
+    font-weight: 600;
+  }
+
+  .variant-option__card-compare {
+    font-size: 0.8em;
+    color: var(--color-foreground-muted);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .variant-option__card {
+      transition: none;
+    }
+  }
 {% endstylesheet %}

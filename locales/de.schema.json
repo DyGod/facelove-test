@@ -8,6 +8,64 @@
  * ------------------------------------------------------------
  */
 {
+  "landing": {
+    "names": {
+      "benefit_pills": "Benefit pills",
+      "callout": "Callout",
+      "faq": "FAQ",
+      "feature": "Feature",
+      "feature_cards": "Feature cards",
+      "image_with_text": "Landing image with text",
+      "logo": "Logo",
+      "logo_strip": "Logo strip",
+      "point": "Point",
+      "question": "Question",
+      "testimonial": "Testimonial",
+      "testimonial_cards": "Testimonial cards",
+      "trust_points": "Trust points"
+    },
+    "settings": {
+      "accent_color": "Accent color",
+      "answer": "Answer",
+      "benefits": "Benefits",
+      "button_label": "Button label",
+      "button_link": "Button link",
+      "card_background": "Card background",
+      "checklist": "Checklist",
+      "columns_desktop": "Desktop columns",
+      "customer_name": "Customer name",
+      "icon_color": "Icon color",
+      "image_after": "After image",
+      "image_before": "Before image",
+      "image_position": "Image position",
+      "image_width": "Image width on desktop",
+      "label": "Label",
+      "logo_height": "Logo height",
+      "logo_name": "Publication name",
+      "note": "Note",
+      "number_label": "Number label",
+      "question": "Question",
+      "question_background": "Question background",
+      "quote": "Quote",
+      "rating": "Rating",
+      "star_color": "Star color",
+      "subheading": "Subheading",
+      "text_alignment_desktop": "Text alignment on tablet and desktop"
+    },
+    "info": {
+      "benefits": "One benefit per line. The block also marks where landing page buttons scroll to.",
+      "button_link": "Leave empty to scroll to the product's benefit pills and buy box.",
+      "checklist": "Use a bulleted list to show check marks.",
+      "image_position": "Applies from tablet width up. On mobile the image always comes first.",
+      "logo_name": "Used as the logo's alt text, or shown as text when there's no image."
+    },
+    "options": {
+      "half": "Half",
+      "one_column": "One column",
+      "two_columns": "Two columns",
+      "two_thirds": "Two thirds"
+    }
+  },
   "names": {
     "404": "404",
     "custom_section": "Benutzerdefinierter Abschnitt",
@@ -588,6 +646,7 @@
     "show_physical_stores": "Physische Geschäfte anzeigen"
   },
   "options": {
+    "cards": "Cards",
     "apple": "Apfel",
     "arrow": "Pfeil",
     "banana": "Banane",

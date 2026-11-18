@@ -1,0 +1,99 @@
+{%- doc -%}
+  Renders a bordered note with an optional theme icon beside short rich text,
+  for guarantees or reassurance near the buy buttons.
+
+  @example
+  {% content_for 'block', type: 'landing-callout', id: 'guarantee' %}
+{%- enddoc -%}
+
+<div
+  class="landing-callout"
+  style="--landing-callout-icon: {{ block.settings.icon_color }};"
+  {{ block.shopify_attributes }}
+>
+  {%- if block.settings.icon != 'none' -%}
+    <svg class="landing-callout__icon" aria-hidden="true" focusable="false" viewBox="0 0 20 20">
+      {%- render 'icon', icon: block.settings.icon -%}
+    </svg>
+  {%- endif -%}
+  {%- if block.settings.text != blank -%}
+    <div class="landing-callout__text rte">{{ block.settings.text }}</div>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .landing-callout {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--gap-sm);
+    width: 100%;
+    min-width: 0;
+    padding: var(--padding-md);
+    border: 1px solid rgb(var(--color-foreground-rgb) / var(--opacity-10));
+    border-radius: var(--style-border-radius-md);
+  }
+
+  .landing-callout__icon {
+    flex: none;
+    width: 24px;
+    height: 24px;
+    color: var(--landing-callout-icon);
+    fill: currentcolor;
+  }
+
+  .landing-callout__text {
+    min-width: 0;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--color-foreground-muted);
+  }
+
+  .landing-callout__text > * {
+    margin: 0;
+  }
+
+  .landing-callout__text strong {
+    color: var(--color-foreground);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:landing.names.callout",
+  "tag": null,
+  "settings": [
+    {
+      "type": "select",
+      "id": "icon",
+      "label": "t:settings.icon",
+      "options": [
+        { "value": "none", "label": "t:options.none" },
+        { "value": "check_box", "label": "t:options.check_box" },
+        { "value": "return", "label": "t:options.return" },
+        { "value": "truck", "label": "t:options.truck" },
+        { "value": "lock", "label": "t:options.lock" },
+        { "value": "heart", "label": "t:options.heart" }
+      ],
+      "default": "check_box"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "t:settings.text",
+      "default": "<p>Add a short guarantee or reassurance message.</p>"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "t:landing.settings.icon_color",
+      "default": "#9B7FC0"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:landing.names.callout",
+      "category": "t:categories.product"
+    }
+  ]
+}
+{% endschema %}

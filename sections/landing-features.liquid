@@ -1,0 +1,345 @@
+{% comment %}
+  Section contract.
+  A heading followed by numbered feature cards. Each card pairs an image with a heading,
+  a checklist and a call-to-action. Cards stack image-first on mobile and alternate the
+  image side from tablet up. Buttons scroll to the product buy box (#landing-buy) unless a link is set.
+  @example
+  <!-- Add "Feature cards" to a product landing template and add one Feature block per reason -->
+{% endcomment %}
+
+{% liquid
+  assign button_link = section.settings.button_link | default: '#landing-buy'
+%}
+
+{% render 'contrast-override', background_color: section.settings.background_color, section_id: section.id %}
+
+<div class="section-background color-custom-{{ section.id }}"></div>
+<div class="section section--page-width color-custom-{{ section.id }}">
+  <div
+    class="landing-features spacing-style"
+    style="
+      {% render 'spacing-style', settings: section.settings %}
+      --landing-features-accent: {{ section.settings.accent_color }};
+    "
+  >
+    {%- if section.settings.heading != blank or section.settings.subheading != blank -%}
+      <div class="landing-features__intro">
+        {%- if section.settings.heading != blank -%}
+          <h2 class="landing-features__heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.subheading != blank -%}
+          <div class="landing-features__subheading rte">{{ section.settings.subheading }}</div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <ol class="landing-features__list" role="list">
+      {%- for block in section.blocks -%}
+        <li class="landing-features__card" {{ block.shopify_attributes }}>
+          <div class="landing-features__media">
+            {%- if block.settings.image != blank -%}
+              {{
+                block.settings.image
+                | image_url: width: 1400
+                | image_tag:
+                  widths: '400, 600, 800, 1000, 1400',
+                  sizes: '(min-width: 1200px) 560px, (min-width: 750px) 45vw, 100vw',
+                  loading: 'lazy',
+                  class: 'landing-features__image'
+              }}
+            {%- else -%}
+              {{ 'image' | placeholder_svg_tag: 'landing-features__image landing-features__placeholder' }}
+            {%- endif -%}
+          </div>
+
+          <div class="landing-features__content">
+            {%- if block.settings.label != blank -%}
+              <p class="landing-features__label">{{ block.settings.label | escape }}</p>
+            {%- endif -%}
+            {%- if block.settings.heading != blank -%}
+              <h3 class="landing-features__card-heading">{{ block.settings.heading }}</h3>
+            {%- endif -%}
+            {%- if block.settings.text != blank -%}
+              <div class="landing-features__text rte">{{ block.settings.text }}</div>
+            {%- endif -%}
+            {%- if section.settings.button_label != blank -%}
+              <a class="button landing-features__button" href="{{ button_link }}">
+                {{- section.settings.button_label | escape -}}
+              </a>
+            {%- endif -%}
+          </div>
+        </li>
+      {%- endfor -%}
+    </ol>
+  </div>
+</div>
+
+{% stylesheet %}
+  .landing-features {
+    --landing-features-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5l3 3 7-7' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+    display: grid;
+    gap: var(--gap-2xl);
+    min-width: 0;
+  }
+
+  .landing-features__intro {
+    display: grid;
+    gap: var(--gap-sm);
+    justify-items: center;
+    text-align: center;
+  }
+
+  .landing-features__heading {
+    margin: 0;
+    font-size: clamp(1.5rem, 1.2rem + 1.4vw, 2.25rem);
+    line-height: 1.2;
+    text-wrap: balance;
+  }
+
+  .landing-features__subheading {
+    max-width: 60ch;
+  }
+
+  .landing-features__subheading > * {
+    margin: 0;
+  }
+
+  .landing-features__list {
+    display: grid;
+    gap: var(--gap-2xl);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .landing-features__card {
+    display: grid;
+    gap: var(--gap-lg);
+    align-items: center;
+    min-width: 0;
+  }
+
+  .landing-features__media {
+    min-width: 0;
+  }
+
+  .landing-features__image {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--style-border-radius-lg);
+  }
+
+  .landing-features__placeholder {
+    aspect-ratio: 1;
+    background-color: rgb(var(--color-foreground-rgb) / var(--opacity-5));
+  }
+
+  .landing-features__content {
+    display: grid;
+    gap: var(--gap-md);
+    min-width: 0;
+    padding-inline: var(--padding-xs);
+  }
+
+  .landing-features__label {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-xs);
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .landing-features__label::before {
+    content: '';
+    width: 1.25rem;
+    height: 2px;
+    background-color: currentcolor;
+  }
+
+  .landing-features__card-heading {
+    margin: 0;
+    font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+    line-height: 1.25;
+    overflow-wrap: break-word;
+  }
+
+  .landing-features__text ul {
+    display: grid;
+    gap: var(--gap-sm);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .landing-features__text li {
+    position: relative;
+    padding-inline-start: 1.75rem;
+  }
+
+  .landing-features__text li::before {
+    content: '';
+    position: absolute;
+    inset-inline-start: 0;
+    inset-block-start: 0.2em;
+    width: 1.1rem;
+    height: 1.1rem;
+    background-color: var(--landing-features-accent, currentcolor);
+    mask: var(--landing-features-check) center / contain no-repeat;
+  }
+
+  .landing-features__text p {
+    margin: 0;
+  }
+
+  .landing-features__button {
+    width: 100%;
+    justify-content: center;
+    margin-block-start: var(--margin-xs);
+  }
+
+  @media screen and (min-width: 750px) {
+    .landing-features__card {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--gap-2xl);
+      padding: var(--padding-xl);
+      border: 1px solid rgb(var(--color-foreground-rgb) / var(--opacity-8));
+      border-radius: var(--style-border-radius-lg);
+      box-shadow: 0 6px 24px rgb(var(--color-shadow-rgb, 0 0 0) / var(--opacity-5));
+    }
+
+    .landing-features__card:nth-child(odd) .landing-features__media {
+      order: 2;
+    }
+
+    .landing-features__content {
+      padding-inline: 0;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .landing-features__list,
+    .landing-features__intro {
+      width: min(100%, 1100px);
+      margin-inline: auto;
+    }
+
+    .landing-features__button {
+      width: auto;
+      min-width: min(100%, 320px);
+      justify-self: start;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:landing.names.feature_cards",
+  "class": "landing-features-section",
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "t:settings.heading",
+      "default": "Reasons to love it"
+    },
+    {
+      "type": "richtext",
+      "id": "subheading",
+      "label": "t:landing.settings.subheading"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:landing.settings.button_label",
+      "default": "Shop now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:landing.settings.button_link",
+      "info": "t:landing.info.button_link"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "t:landing.settings.accent_color",
+      "default": "#9B7FC0"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:settings.background",
+      "alpha": true
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "t:landing.names.feature",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:settings.image"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "t:landing.settings.number_label",
+          "default": "01"
+        },
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "label": "t:settings.heading",
+          "default": "Feature heading"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "t:landing.settings.checklist",
+          "info": "t:landing.info.checklist",
+          "default": "<ul><li>First benefit</li><li>Second benefit</li><li>Third benefit</li></ul>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:landing.names.feature_cards",
+      "blocks": {
+        "feature_1": { "type": "feature", "settings": { "label": "01" } },
+        "feature_2": { "type": "feature", "settings": { "label": "02" } }
+      },
+      "block_order": ["feature_1", "feature_2"]
+    }
+  ]
+}
+{% endschema %}

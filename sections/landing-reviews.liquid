@@ -1,0 +1,320 @@
+{% comment %}
+  Section contract.
+  Customer testimonial cards with optional before/after photos, a star rating and a quote.
+  Cards scroll horizontally with snap points on mobile and tablet, and sit in one row of
+  up to four on desktop.
+  @example
+  <!-- Add "Testimonial cards" to a template and add one Testimonial block per customer -->
+{% endcomment %}
+
+{% render 'contrast-override', background_color: section.settings.background_color, section_id: section.id %}
+
+<div class="section-background color-custom-{{ section.id }}"></div>
+<div class="section section--page-width color-custom-{{ section.id }}">
+  <div
+    class="landing-reviews spacing-style"
+    style="
+      {% render 'spacing-style', settings: section.settings %}
+      --landing-reviews-card: {{ section.settings.card_color }};
+      --landing-reviews-star: {{ section.settings.star_color }};
+    "
+  >
+    {%- if section.settings.heading != blank -%}
+      <h2 class="landing-reviews__heading" id="LandingReviewsHeading-{{ section.id }}">
+        {{- section.settings.heading -}}
+      </h2>
+    {%- endif -%}
+
+    <ul
+      class="landing-reviews__list"
+      role="list"
+      tabindex="0"
+      {% if section.settings.heading != blank %}
+        aria-labelledby="LandingReviewsHeading-{{ section.id }}"
+      {% endif %}
+    >
+      {%- for block in section.blocks -%}
+        <li class="landing-reviews__card" {{ block.shopify_attributes }}>
+          {%- if block.settings.image_before != blank or block.settings.image_after != blank -%}
+            <div class="landing-reviews__photos">
+              {%- for image in (1..2) -%}
+                {%- liquid
+                  if forloop.first
+                    assign photo = block.settings.image_before
+                  else
+                    assign photo = block.settings.image_after
+                  endif
+                -%}
+                {%- if photo != blank -%}
+                  {{
+                    photo
+                    | image_url: width: 700
+                    | image_tag:
+                      widths: '300, 450, 600, 700',
+                      sizes: '(min-width: 990px) 280px, (min-width: 750px) 45vw, 80vw',
+                      loading: 'lazy',
+                      class: 'landing-reviews__photo'
+                  }}
+                {%- endif -%}
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+
+          <div class="landing-reviews__meta">
+            {%- if block.settings.name != blank -%}
+              <p class="landing-reviews__name">{{ block.settings.name | escape }}</p>
+            {%- endif -%}
+            <p class="landing-reviews__stars" role="img" aria-label="{{ 'accessibility.rating' | t: rating: block.settings.rating }}">
+              {%- for star in (1..5) -%}
+                <svg
+                  class="landing-reviews__star{% if star > block.settings.rating %} landing-reviews__star--empty{% endif %}"
+                  aria-hidden="true"
+                  focusable="false"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M10 1.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L10 14.9l-5.2 2.7 1-5.8L1.5 7.7l5.9-.9z"/>
+                </svg>
+              {%- endfor -%}
+            </p>
+          </div>
+
+          {%- if block.settings.quote != blank -%}
+            <blockquote class="landing-reviews__quote">{{ block.settings.quote }}</blockquote>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</div>
+
+{% stylesheet %}
+  .landing-reviews {
+    display: grid;
+    gap: var(--gap-lg);
+    width: min(100%, 1100px);
+    min-width: 0;
+    margin-inline: auto;
+  }
+
+  .landing-reviews__heading {
+    margin: 0;
+    font-size: clamp(1.5rem, 1.2rem + 1.4vw, 2.25rem);
+    line-height: 1.2;
+    text-align: center;
+    text-wrap: balance;
+  }
+
+  .landing-reviews__list {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 82%;
+    gap: var(--gap-md);
+    margin: 0;
+    padding: 0 0 var(--padding-sm);
+    list-style: none;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 0;
+    scrollbar-width: thin;
+  }
+
+  .landing-reviews__list:focus-visible {
+    outline: var(--focus-outline-width) solid currentcolor;
+    outline-offset: var(--focus-outline-offset);
+  }
+
+  .landing-reviews__card {
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+    gap: var(--gap-sm);
+    min-width: 0;
+    padding: var(--padding-md);
+    border-radius: var(--style-border-radius-lg);
+    background-color: var(--landing-reviews-card);
+    scroll-snap-align: start;
+  }
+
+  .landing-reviews__photos {
+    display: grid;
+    gap: 4px;
+  }
+
+  .landing-reviews__photo {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 2 / 1;
+    object-fit: cover;
+    border-radius: var(--style-border-radius-sm);
+  }
+
+  .landing-reviews__meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--gap-xs);
+  }
+
+  .landing-reviews__name {
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .landing-reviews__stars {
+    display: flex;
+    gap: 2px;
+    margin: 0;
+    color: var(--landing-reviews-star);
+  }
+
+  .landing-reviews__star {
+    width: 14px;
+    height: 14px;
+    fill: currentcolor;
+  }
+
+  .landing-reviews__star--empty {
+    opacity: var(--opacity-25);
+  }
+
+  .landing-reviews__quote {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 0.9375rem;
+    font-style: normal;
+    line-height: 1.5;
+  }
+
+  .landing-reviews__quote > * {
+    margin: 0;
+  }
+
+  @media screen and (min-width: 750px) {
+    .landing-reviews__list {
+      grid-auto-columns: calc((100% - var(--gap-md)) / 2.2);
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .landing-reviews__list {
+      grid-auto-columns: calc((100% - var(--gap-md) * 3) / 4);
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .landing-reviews__list {
+      scroll-behavior: smooth;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:landing.names.testimonial_cards",
+  "class": "landing-reviews-section",
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "t:settings.heading",
+      "default": "Loved by our customers"
+    },
+    {
+      "type": "color",
+      "id": "card_color",
+      "label": "t:landing.settings.card_background",
+      "alpha": true,
+      "default": "#F3F3F3"
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "t:landing.settings.star_color",
+      "default": "#B69FD1"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:settings.background",
+      "alpha": true
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "t:landing.names.testimonial",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image_before",
+          "label": "t:landing.settings.image_before"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_after",
+          "label": "t:landing.settings.image_after"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "t:landing.settings.customer_name",
+          "default": "Customer name"
+        },
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "t:landing.settings.rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        },
+        {
+          "type": "richtext",
+          "id": "quote",
+          "label": "t:landing.settings.quote",
+          "default": "<p>Share what this customer said about the product.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:landing.names.testimonial_cards",
+      "blocks": {
+        "testimonial_1": { "type": "testimonial" },
+        "testimonial_2": { "type": "testimonial" },
+        "testimonial_3": { "type": "testimonial" }
+      },
+      "block_order": ["testimonial_1", "testimonial_2", "testimonial_3"]
+    }
+  ]
+}
+{% endschema %}

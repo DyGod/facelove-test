@@ -1,0 +1,760 @@
+{
+  "sections": {
+    "main": {
+      "type": "product-information",
+      "blocks": {
+        "media-gallery": {
+          "type": "_product-media-gallery",
+          "static": true,
+          "settings": {
+            "media_presentation": "carousel",
+            "media_columns": "two",
+            "image_gap": 4,
+            "large_first_image": false,
+            "slideshow_controls_style": "thumbnails",
+            "slideshow_mobile_controls_style": "dots",
+            "thumbnail_position": "bottom",
+            "thumbnail_width": 44,
+            "thumbnail_radius": 0,
+            "aspect_ratio": "adapt",
+            "constrain_to_viewport": false,
+            "media_fit": "contain",
+            "media_radius": 8,
+            "extend_media": false,
+            "zoom": true,
+            "video_loop": false,
+            "hide_variants": true,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "product-details": {
+          "type": "_product-details",
+          "static": true,
+          "settings": {
+            "width": "fill",
+            "custom_width": 100,
+            "width_mobile": "fill",
+            "custom_width_mobile": 100,
+            "height": "fit",
+            "details_position": "flex-start",
+            "gap": 16,
+            "sticky_details_desktop": true,
+            "background_media": "none",
+            "background_color": "",
+            "video_position": "cover",
+            "background_image_position": "cover",
+            "border": "none",
+            "border_width": 1,
+            "border_opacity": 100,
+            "border_color": "",
+            "border_radius": 0,
+            "padding-block-start": 24,
+            "padding-block-end": 24,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {
+            "group_icgrde": {
+              "type": "group",
+              "name": "t:names.header",
+              "settings": {
+                "content_direction": "column",
+                "vertical_on_mobile": true,
+                "horizontal_alignment": "flex-start",
+                "vertical_alignment": "center",
+                "align_baseline": false,
+                "horizontal_alignment_flex_direction_column": "flex-start",
+                "vertical_alignment_flex_direction_column": "center",
+                "gap": 8,
+                "width": "fill",
+                "custom_width": 100,
+                "width_mobile": "fill",
+                "custom_width_mobile": 100,
+                "height": "fit",
+                "custom_height": 100,
+                "background_media": "none",
+                "background_color": "",
+                "video_position": "cover",
+                "background_image_position": "cover",
+                "toggle_overlay": false,
+                "overlay_color": "#00000026",
+                "overlay_style": "solid",
+                "gradient_direction": "to top",
+                "border": "none",
+                "border_width": 1,
+                "border_opacity": 100,
+                "border_color": "",
+                "border_radius": 0,
+                "open_in_new_tab": false,
+                "placeholder": "",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "text_xrnftG": {
+                  "type": "text",
+                  "name": "t:names.product_title",
+                  "settings": {
+                    "text": "<h1>{{ closest.product.title }}</h1>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "h3",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "text_color": "",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                },
+                "price_tVjtKg": {
+                  "type": "price",
+                  "settings": {
+                    "show_sale_price_first": true,
+                    "show_installments": false,
+                    "show_tax_info": false,
+                    "type_preset": "paragraph",
+                    "width": "100%",
+                    "alignment": "left",
+                    "font": "var(--font-body--family)",
+                    "font_size": "1rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "text_color": "",
+                    "padding-block-start": 4,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                },
+                "rating": {
+                  "type": "text",
+                  "settings": {
+                    "text": "<p><strong>★★★★★</strong> Excellent 4.8 | 7,295+ reviews</p>",
+                    "width": "100%",
+                    "max_width": "normal",
+                    "alignment": "left",
+                    "type_preset": "custom",
+                    "font": "var(--font-body--family)",
+                    "font_size": "0.875rem",
+                    "line_height": "normal",
+                    "letter_spacing": "normal",
+                    "case": "none",
+                    "wrap": "pretty",
+                    "text_color": "",
+                    "background": false,
+                    "background_color": "#00000026",
+                    "corner_radius": 0,
+                    "padding-block-start": 0,
+                    "padding-block-end": 0,
+                    "padding-inline-start": 0,
+                    "padding-inline-end": 0
+                  },
+                  "blocks": {}
+                }
+              },
+              "block_order": [
+                "text_xrnftG",
+                "rating",
+                "price_tVjtKg"
+              ]
+            },
+            "benefits": {
+              "type": "landing-benefits",
+              "settings": {
+                "benefits": "Adapts to your skin tone\nHides imperfections\nNatural look for 24+ hours\nLightweight & breathable",
+                "icon_color": "#9B7FC0",
+                "padding-block-start": 0,
+                "padding-block-end": 0
+              }
+            },
+            "sale_label": {
+              "type": "text",
+              "settings": {
+                "text": "<p><strong>BLACK FRIDAY SALE</strong></p>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "center",
+                "type_preset": "custom",
+                "font": "var(--font-body--family)",
+                "font_size": "0.75rem",
+                "line_height": "normal",
+                "letter_spacing": "loose",
+                "case": "none",
+                "wrap": "pretty",
+                "text_color": "",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "variant_picker_R3rGDr": {
+              "type": "variant-picker",
+              "settings": {
+                "variant_style": "cards",
+                "show_swatches": false,
+                "option_label_text_color": "",
+                "variant_style_class": "default",
+                "custom_variant_background": "{{ settings.color_palette.background }}",
+                "custom_variant_text": "{{ settings.color_palette.foreground }}",
+                "custom_variant_border": "{{ settings.color_palette.foreground }}",
+                "selected_variant_style_class": "default",
+                "custom_selected_variant_background": "{{ settings.color_palette.foreground }}",
+                "custom_selected_variant_text": "{{ settings.color_palette.background }}",
+                "custom_selected_variant_border": "{{ settings.color_palette.foreground }}",
+                "alignment": "left",
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "buy_buttons_eYQEYi": {
+              "type": "buy-buttons",
+              "settings": {
+                "stacking": true,
+                "text_color": "",
+                "show_pickup_availability": false,
+                "gift_card_form": true,
+                "recipient_button_style": "default",
+                "recipient_button_background": "{{ settings.color_palette.background }}",
+                "recipient_button_text": "{{ settings.color_palette.foreground }}",
+                "recipient_button_border": "{{ settings.color_palette.foreground }}",
+                "selected_recipient_button_style": "default",
+                "selected_recipient_button_background": "{{ settings.color_palette.foreground }}",
+                "selected_recipient_button_text": "{{ settings.color_palette.background }}",
+                "selected_recipient_button_border": "{{ settings.color_palette.foreground }}",
+                "input_style": "default",
+                "input_background_color": "{{ settings.color_palette.background }}",
+                "input_text_color": "{{ settings.color_palette.foreground }}",
+                "input_border_color": "{{ settings.color_palette.foreground }}",
+                "border_width": 1,
+                "border_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {
+                "quantity": {
+                  "type": "quantity",
+                  "static": true,
+                  "settings": {
+                    "input_style": "default",
+                    "input_background_color": "{{ settings.color_palette.background }}",
+                    "input_text_color": "{{ settings.color_palette.foreground }}",
+                    "input_border_color": "{{ settings.color_palette.foreground }}",
+                    "border_width": 1,
+                    "border_radius": 0
+                  },
+                  "blocks": {}
+                },
+                "add-to-cart": {
+                  "type": "add-to-cart",
+                  "static": true,
+                  "settings": {
+                    "style_class": "button",
+                    "custom_button_background": "{{ settings.color_palette.foreground }}",
+                    "custom_button_text": "{{ settings.color_palette.background }}",
+                    "custom_button_border": "{{ settings.color_palette.background }}"
+                  },
+                  "blocks": {}
+                },
+                "accelerated-checkout": {
+                  "type": "accelerated-checkout",
+                  "static": true,
+                  "settings": {},
+                  "blocks": {}
+                }
+              },
+              "block_order": []
+            },
+            "subscription_note": {
+              "type": "text",
+              "settings": {
+                "text": "<p>This is <strong>not</strong> a subscription.</p>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "center",
+                "type_preset": "custom",
+                "font": "var(--font-body--family)",
+                "font_size": "0.75rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "text_color": "",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "guarantee": {
+              "type": "landing-callout",
+              "settings": {
+                "icon": "check_box",
+                "icon_color": "#9B7FC0",
+                "text": "<p>Every order comes with our <strong>30-Day Guarantee</strong>. Try it for 30 days — if it doesn't earn a spot in your routine, return it hassle-free for a full refund.</p>"
+              }
+            },
+            "testimonial": {
+              "type": "text",
+              "settings": {
+                "text": "<p><em>“Wore it all weekend — lake trip Saturday, backyard party Sunday, still looked flawless Monday. This foundation doesn't quit.”</em></p><p><strong>Nicole, 36</strong> · Verified buyer</p>",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "center",
+                "type_preset": "custom",
+                "font": "var(--font-body--family)",
+                "font_size": "0.875rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "text_color": "",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            },
+            "text_aEtTtq": {
+              "type": "text",
+              "name": "t:names.product_description",
+              "settings": {
+                "text": "{{ closest.product.description }}",
+                "width": "100%",
+                "max_width": "normal",
+                "alignment": "left",
+                "type_preset": "rte",
+                "font": "var(--font-body--family)",
+                "font_size": "1rem",
+                "line_height": "normal",
+                "letter_spacing": "normal",
+                "case": "none",
+                "wrap": "pretty",
+                "text_color": "",
+                "background": false,
+                "background_color": "#00000026",
+                "corner_radius": 0,
+                "padding-block-start": 0,
+                "padding-block-end": 0,
+                "padding-inline-start": 0,
+                "padding-inline-end": 0
+              },
+              "blocks": {}
+            }
+          },
+          "block_order": [
+            "group_icgrde",
+            "benefits",
+            "sale_label",
+            "variant_picker_R3rGDr",
+            "buy_buttons_eYQEYi",
+            "subscription_note",
+            "guarantee",
+            "testimonial",
+            "text_aEtTtq"
+          ]
+        }
+      },
+      "block_order": [],
+      "settings": {
+        "content_width": "content-center-aligned",
+        "desktop_media_position": "left",
+        "equal_columns": false,
+        "limit_details_width": false,
+        "gap": 48,
+        "enable_sticky_add_to_cart": true,
+        "background_color": "{{ settings.color_palette.background }}",
+        "padding-block-start": 0,
+        "padding-block-end": 0
+      }
+    },
+    "logos": {
+      "type": "landing-logos",
+      "settings": {
+        "label": "As seen on",
+        "note": "Sponsored content",
+        "logo_height": 20,
+        "background_color": "#F6F6F6",
+        "padding-block-start": 16,
+        "padding-block-end": 20
+      },
+      "blocks": {
+        "logo_1": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/landing-vogue.webp",
+            "name": "Vogue"
+          }
+        },
+        "logo_2": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/landing-frame.webp",
+            "name": "Elle"
+          }
+        },
+        "logo_3": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/landing-womens-health.webp",
+            "name": "Women's Health"
+          }
+        },
+        "logo_4": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/landing-daily-mail.webp",
+            "name": "Daily Mail"
+          }
+        },
+        "logo_5": {
+          "type": "logo",
+          "settings": {
+            "image": "shopify://shop_images/landing-cosmopolitan.webp",
+            "name": "Cosmopolitan"
+          }
+        }
+      },
+      "block_order": [
+        "logo_1",
+        "logo_2",
+        "logo_3",
+        "logo_4",
+        "logo_5"
+      ]
+    },
+    "comparison": {
+      "type": "landing-image-text",
+      "settings": {
+        "image": "shopify://shop_images/landing-ChatGPT_Image_May_14_2026_08_05_41_PM.png",
+        "image_position": "right",
+        "image_width": "large",
+        "heading": "Why more than 50,000 women over 40 love it",
+        "text": "<p>Switch to the only foundation truly made for mature skin.</p>",
+        "text_alignment": "center",
+        "button_label": "Shop now",
+        "button_link": "",
+        "padding-block-start": 40,
+        "padding-block-end": 40
+      }
+    },
+    "features": {
+      "type": "landing-features",
+      "settings": {
+        "heading": "5 reasons why over 50,000 women are enthusiastic",
+        "subheading": "<p>The Changing Foundation Stick, the foundation that <em>truly adapts</em> to your skin.</p>",
+        "button_label": "Shop now",
+        "button_link": "",
+        "accent_color": "#9B7FC0",
+        "padding-block-start": 40,
+        "padding-block-end": 40
+      },
+      "blocks": {
+        "feature_1": {
+          "type": "feature",
+          "settings": {
+            "image": "shopify://shop_images/landing-Before_and_After_of_a_202604292026.jpg",
+            "label": "01",
+            "heading": "Instantly a natural, even & youthful glow",
+            "text": "<ul><li>Even coverage without a masking effect</li><li>Instantly softens fine lines</li><li>Fresh, natural glow</li><li>Blends in within seconds, effortlessly, without streaks</li></ul>"
+          }
+        },
+        "feature_2": {
+          "type": "feature",
+          "settings": {
+            "image": "shopify://shop_images/landing-ChatGPT_Image_May_14_2026_07_48_12_PM.png",
+            "label": "02",
+            "heading": "Automatic color adjustment, always the perfect tone",
+            "text": "<ul><li>Adapts to your skin tone</li><li>No orange, grey or yellow tint</li><li>A shade that works for almost all women</li><li>No time wasted on complicated color choices</li></ul>"
+          }
+        },
+        "feature_3": {
+          "type": "feature",
+          "settings": {
+            "image": "shopify://shop_images/landing-ChatGPT_Image_May_14_2026_07_45_19_PM.png",
+            "label": "03",
+            "heading": "Ideal for mature and sensitive skin",
+            "text": "<ul><li>Does not settle into wrinkles or pores</li><li>Gentle, moisturizing formula</li><li>No cakey, dry or tight feeling</li><li>No irritation, redness or itching</li></ul>"
+          }
+        },
+        "feature_4": {
+          "type": "feature",
+          "settings": {
+            "image": "shopify://shop_images/landing-ChatGPT_Image_May_14_2026_07_56_18_PM.png",
+            "label": "04",
+            "heading": "Lasts all day and feels feather-light",
+            "text": "<ul><li>Stays even without smearing</li><li>No shine, no dryness</li><li>Long-lasting coverage without feeling heavy</li><li>Easy to remove, no rubbing required</li></ul>"
+          }
+        },
+        "feature_5": {
+          "type": "feature",
+          "settings": {
+            "image": "shopify://shop_images/landing-ChatGPT_Image_12_jun_2026_11_22_06.png",
+            "label": "05",
+            "heading": "Skincare & anti-aging for visibly smoother skin",
+            "text": "<ul><li>Nourishes, soothes and supports the skin barrier</li><li>Fine lines appear smoother with each application</li><li>Gives the skin more suppleness and freshness</li><li>Care, glow and an even complexion in one</li></ul>"
+          }
+        }
+      },
+      "block_order": [
+        "feature_1",
+        "feature_2",
+        "feature_3",
+        "feature_4",
+        "feature_5"
+      ]
+    },
+    "reviews": {
+      "type": "landing-reviews",
+      "settings": {
+        "heading": "Loved by thousands of women",
+        "card_color": "#F3F3F3",
+        "star_color": "#B69FD1",
+        "padding-block-start": 40,
+        "padding-block-end": 40
+      },
+      "blocks": {
+        "testimonial_1": {
+          "type": "testimonial",
+          "settings": {
+            "image_before": "shopify://shop_images/landing-1_17402013-bcf7-4e27-85d6-481b6a4f216b.png",
+            "image_after": "shopify://shop_images/landing-2_28446b53-5f11-4284-86c8-541b3431b402.png",
+            "name": "Sarah, 42",
+            "rating": 5,
+            "quote": "<p>“For years I bought the wrong foundation. It was either too orange or it settled into every wrinkle. With the Changing Foundation Stick, that's finally a thing of the past. It adapts perfectly to my skin tone and looks just as good in daylight as it does in the mirror. My skin looks much fresher and smoother – without looking cakey. For me, it's an absolute game-changer!”</p>"
+          }
+        },
+        "testimonial_2": {
+          "type": "testimonial",
+          "settings": {
+            "image_before": "shopify://shop_images/landing-3_e38fdf26-94d4-4f75-a8e4-d28a222b2dae.png",
+            "image_after": "shopify://shop_images/landing-4_1b490eef-6c33-48b5-bd2e-d0f280e8a659.png",
+            "name": "Monica, 52",
+            "rating": 5,
+            "quote": "<p>“I have sensitive, dry skin and almost every foundation I've used has felt tight or settled under my eyes. This stick is completely different. It blends right into the skin and feels super light. In the evening, my face still looks natural – no orange tint, no settling into fine lines. I won't use any other foundation anymore.”</p>"
+          }
+        },
+        "testimonial_3": {
+          "type": "testimonial",
+          "settings": {
+            "image_before": "shopify://shop_images/landing-5_fd939f78-ba9e-4f3b-bc41-8ececeede260.png",
+            "image_after": "shopify://shop_images/landing-6_d151b014-5bba-42e0-816a-eef0d3d27773.png",
+            "name": "Claudia, 38",
+            "rating": 5,
+            "quote": "<p>“I was incorrectly matched three times in the store and was just frustrated. The Changing Foundation Stick comes out white – at first I thought it wouldn't work. But when blended, it adapts perfectly to my tone. No visible line on my neck, no oxidation. My pigment spots are covered and yet it looks like my own skin.”</p>"
+          }
+        },
+        "testimonial_4": {
+          "type": "testimonial",
+          "settings": {
+            "image_before": "shopify://shop_images/landing-7_595ec7bf-14a3-49d7-9b68-2e62ac2bc7fd.png",
+            "image_after": "shopify://shop_images/landing-8_f5e8e19c-a05e-4238-9817-2113f68667fc.png",
+            "name": "Pamela, 67",
+            "rating": 5,
+            "quote": "<p>“At 67, I honestly thought foundation was no longer for me. Too heavy, too dry, too much. This stick is different – creamy, light, and it doesn't settle into my fine lines. My skin looks more even, and I'm getting compliments again. I never thought makeup could feel this good again.”</p>"
+          }
+        }
+      },
+      "block_order": [
+        "testimonial_1",
+        "testimonial_2",
+        "testimonial_3",
+        "testimonial_4"
+      ]
+    },
+    "guarantee": {
+      "type": "landing-image-text",
+      "settings": {
+        "image": "shopify://shop_images/landing-MoneyBack-ChangingFoundationStick.png",
+        "image_position": "left",
+        "image_width": "half",
+        "heading": "30-day money-back guarantee",
+        "text": "<p>We are convinced that you will love our Changing Foundation Stick – but we understand if you are not quite sure yet.</p><p>That's why we offer you a 30-day money-back guarantee.</p>",
+        "text_alignment": "center",
+        "button_label": "Shop now",
+        "button_link": "",
+        "padding-block-start": 40,
+        "padding-block-end": 40
+      }
+    },
+    "faq": {
+      "type": "landing-faq",
+      "settings": {
+        "heading": "Frequently asked questions",
+        "columns_desktop": "2",
+        "item_color": "#F7F7F7",
+        "padding-block-start": 40,
+        "padding-block-end": 40
+      },
+      "blocks": {
+        "question_1": {
+          "type": "question",
+          "settings": {
+            "question": "How can one stick match so many different skin tones?",
+            "answer": "<p>The Changing Foundation Stick doesn't contain just one fixed shade. It uses adaptive pigment technology that activates as you blend, so the color adjusts to your natural skin tone for a seamless-looking match.</p><p>Unlike traditional foundations that require choosing from dozens of shades, the formula gradually adapts during application, helping reduce visible lines between your face and neck.</p><p>For the best results:</p><ul><li>Blend longer for deeper skin tones.</li><li>Blend less for lighter skin tones.</li><li>Build coverage gradually as needed.</li></ul><p>The Changing Foundation Stick is best suited for light to medium skin tones.</p>"
+          }
+        },
+        "question_2": {
+          "type": "question",
+          "settings": {
+            "question": "How does the Changing Foundation Stick work?",
+            "answer": "<p>The secret lies in intelligent pigment capsules. The stick goes on as a creamy, white base — the perfect neutral canvas. As you blend (with the integrated brush or your fingers), the pigment capsules burst open and adapt to your skin tone.</p><p>At the same time, the formula — enriched with hyaluronic acid, aloe vera and nourishing ingredients — supports mature skin by:</p><ul><li>smoothing the appearance of fine lines</li><li>hydrating</li><li>preventing dryness and settling into fine lines</li></ul><p>Simply blend until the tone matches and a natural, healthy glow emerges. No primer needed.</p>"
+          }
+        },
+        "question_3": {
+          "type": "question",
+          "settings": {
+            "question": "What finish does the foundation have?",
+            "answer": "<p>Natural, with a gentle glow. Never flat. Never greasy. Never heavy. Simply your skin — only smoother, fresher, more even.</p>"
+          }
+        },
+        "question_4": {
+          "type": "question",
+          "settings": {
+            "question": "How long does it last?",
+            "answer": "<p>Tested on mature skin, the Changing Foundation Stick lasts up to 24 hours — without settling into lines or oxidizing. No color change by midday. No orange tones. No creasing.</p>"
+          }
+        },
+        "question_5": {
+          "type": "question",
+          "settings": {
+            "question": "Is it suitable for everyday use?",
+            "answer": "<p>Absolutely. The formula was developed to work with mature skin every day — not against it.</p><ul><li>Lasting hydration</li><li>Reduced visible redness</li><li>Softened lines</li><li>All-day comfort</li><li>Lightweight feel</li><li>No clogged pores</li></ul><p>Feels like skincare — with coverage.</p>"
+          }
+        },
+        "question_6": {
+          "type": "question",
+          "settings": {
+            "question": "Is it suitable for sensitive skin?",
+            "answer": "<p>Yes. The Facelove Changing Foundation Stick is gently formulated and suitable for mature and sensitive skin. It is free from harsh ingredients that can dry out or irritate the skin and contains soothing components such as aloe vera.</p>"
+          }
+        },
+        "question_7": {
+          "type": "question",
+          "settings": {
+            "question": "What are the most important ingredients?",
+            "answer": "<p>Squalane, Diisostearyl Malate, CI 77891, Limnanthes Alba (Meadowfoam) Seed Oil, Simmondsia Chinensis (Jojoba) Seed Oil, Butyrospermum Parkii (Shea) Butter, Euphorbia Cerifera (Candelilla) Wax, Copernicia Cerifera (Carnauba) Wax, Tocopheryl Acetate, Phytosteryl Oleate, Madecassoside, Ceramide NP, CI 77492, CI 77491, CI 77499.</p>"
+          }
+        },
+        "question_8": {
+          "type": "question",
+          "settings": {
+            "question": "Will it settle into fine lines and wrinkles?",
+            "answer": "<p>No. The creamy formula was developed with mature skin in mind and blends smoothly over the skin without emphasizing the appearance of fine lines or dry patches. For best results, apply to well-moisturized skin and blend thoroughly.</p>"
+          }
+        },
+        "question_9": {
+          "type": "question",
+          "settings": {
+            "question": "Does it oxidize or turn orange during the day?",
+            "answer": "<p>No. The Changing Foundation Stick adapts to your skin tone while blending — not after application. Once the color has fully adjusted, it is designed to keep a natural-looking finish throughout the day without turning noticeably orange. For best results, let the foundation fully adjust before applying additional makeup.</p>"
+          }
+        },
+        "question_10": {
+          "type": "question",
+          "settings": {
+            "question": "How do I remove the foundation?",
+            "answer": "<p>Remove it with your favorite makeup remover, cleansing balm or facial cleanser. The formula comes off easily without excessive rubbing, so it's gentle on mature skin. Follow with your regular skincare routine.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "question_1",
+        "question_2",
+        "question_3",
+        "question_4",
+        "question_5",
+        "question_6",
+        "question_7",
+        "question_8",
+        "question_9",
+        "question_10"
+      ]
+    },
+    "trust": {
+      "type": "landing-trust",
+      "settings": {
+        "icon_color": "#9B7FC0",
+        "padding-block-start": 24,
+        "padding-block-end": 40
+      },
+      "blocks": {
+        "point_1": {
+          "type": "point",
+          "settings": {
+            "icon": "truck",
+            "heading": "Free shipping",
+            "text": "<p>Free shipping on every order, nationwide.</p>"
+          }
+        },
+        "point_2": {
+          "type": "point",
+          "settings": {
+            "icon": "chat_bubble",
+            "heading": "Do you need help?",
+            "text": "<p>Our customer service team is ready to help you: support@facelove-cosmetics.com</p>"
+          }
+        },
+        "point_3": {
+          "type": "point",
+          "settings": {
+            "icon": "lock",
+            "heading": "Secure payment",
+            "text": "<p>Pay securely with PayPal, American Express, Apple Pay, Google Pay, Maestro, Mastercard, Visa and Shop Pay.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "point_1",
+        "point_2",
+        "point_3"
+      ]
+    }
+  },
+  "order": [
+    "main",
+    "logos",
+    "comparison",
+    "features",
+    "reviews",
+    "guarantee",
+    "faq",
+    "trust"
+  ]
+}

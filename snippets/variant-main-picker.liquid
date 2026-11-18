@@ -58,7 +58,7 @@
           assign swatch_count = product_option.values | map: 'swatch' | compact | size
           assign variant_style = block_settings.variant_style
 
-          if swatch_count > 0 and block_settings.show_swatches
+          if swatch_count > 0 and block_settings.show_swatches and variant_style != 'cards'
             if block_settings.variant_style == 'dropdown'
               assign variant_style = 'swatch_dropdown'
             else
@@ -86,6 +86,84 @@
               {{- product_option.selected_value -}}
             </span>
           </div>
+        {%- elsif variant_style == 'cards' -%}
+          {%- comment -%}
+            Card style: each option value is a full-width card showing that value's variant price.
+            Inputs keep the button markup contract (data attributes, input directly inside the label)
+            so variant-picker.js handles selection and section updates unchanged.
+          {%- endcomment -%}
+          <fieldset
+            class="variant-option variant-option--cards"
+            data-fieldset-index="{{ fieldset_index }}"
+            ref="fieldsets[]"
+          >
+            <legend>{{ product_option.name | escape }}</legend>
+            {%- for product_option_value in product_option.values -%}
+              {%- liquid
+                assign card_variant = product_option_value.variant
+                assign card_on_sale = false
+                if card_variant.compare_at_price > card_variant.price
+                  assign card_on_sale = true
+                  assign card_savings = card_variant.compare_at_price | minus: card_variant.price
+                endif
+              -%}
+              <label class="variant-option__card">
+                <input
+                  type="radio"
+                  class="variant-option__card-input"
+                  name="{{ product_option.name | escape }}-{{ block.id }}-{{ product_resource.id }}"
+                  value="{{ product_option_value | escape }}"
+                  {% if product_option_value.available == false %}
+                    aria-disabled="true"
+                  {% endif %}
+                  data-previous-checked="false"
+                  data-fieldset-index="{{ fieldset_index }}"
+                  data-input-index="{{ forloop.index0 }}"
+                  data-input-id="{{ product_option.position }}-{{ forloop.index0 }}"
+                  data-option-name="{{ product_option.name | escape }}"
+                  data-option-value-id="{{ product_option_value.id }}"
+                  data-option-available="{{ product_option_value.available }}"
+                  data-connected-product-url="{{ product_option_value.product_url }}"
+                  {% if card_variant.id %}
+                    data-variant-id="{{ card_variant.id }}"
+                  {% endif %}
+                  {% if product_option_value.selected %}
+                    data-current-checked="true"
+                    checked
+                  {% else %}
+                    data-current-checked="false"
+                  {% endif %}
+                >
+                <span class="variant-option__card-main">
+                  <span class="variant-option__card-title">{{ product_option_value | escape }}</span>
+                  {%- if card_on_sale -%}
+                    {%- capture card_savings_html -%}{% render 'format-price', price: card_savings %}{%- endcapture -%}
+                    <span class="variant-option__card-badge">
+                      {{- 'content.save_amount_html' | t: amount: card_savings_html -}}
+                    </span>
+                  {%- endif -%}
+                  {%- if product_option_value.available == false -%}
+                    <span class="variant-option__card-note">{{ 'products.product.sold_out' | t }}</span>
+                  {%- endif -%}
+                </span>
+                {%- if card_variant -%}
+                  <span class="variant-option__card-price">
+                    {%- if card_on_sale -%}
+                      <span class="visually-hidden">{{ 'content.price_sale' | t }}</span>
+                    {%- endif -%}
+                    <span class="variant-option__card-amount">{% render 'format-price', price: card_variant.price %}</span>
+                    {%- if card_on_sale -%}
+                      <span class="visually-hidden">{{ 'content.price_regular' | t }}</span>
+                      <s class="variant-option__card-compare">
+                        {%- render 'format-price', price: card_variant.compare_at_price -%}
+                      </s>
+                    {%- endif -%}
+                  </span>
+                {%- endif -%}
+              </label>
+            {%- endfor -%}
+          </fieldset>
+          {%- assign fieldset_index = fieldset_index | plus: 1 -%}
         {%- elsif variant_style == 'swatch' or block_settings.variant_style == 'buttons' -%}
           <fieldset
             class="variant-option variant-option--buttons{% if variant_style == 'swatch' %} variant-option--swatches{% else %} variant-option--{{ settings.variant_button_width }}{% endif %}"

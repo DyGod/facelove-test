@@ -1,0 +1,228 @@
+{% comment %}
+  Section contract.
+  A heading and a list of expandable questions built on native details/summary, so it works
+  without JavaScript. One column on mobile and tablet, optional two columns on desktop
+  (questions read down the first column, then the second).
+  @example
+  <!-- Add "FAQ" to a template and add one Question block per question -->
+{% endcomment %}
+
+{% render 'contrast-override', background_color: section.settings.background_color, section_id: section.id %}
+
+<div class="section-background color-custom-{{ section.id }}"></div>
+<div class="section section--page-width color-custom-{{ section.id }}">
+  <div
+    class="landing-faq landing-faq--columns-{{ section.settings.columns_desktop }} spacing-style"
+    style="
+      {% render 'spacing-style', settings: section.settings %}
+      --landing-faq-item: {{ section.settings.item_color }};
+    "
+  >
+    {%- if section.settings.heading != blank -%}
+      <h2 class="landing-faq__heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+
+    <div class="landing-faq__list">
+      {%- for block in section.blocks -%}
+        <details class="landing-faq__item" {{ block.shopify_attributes }}>
+          <summary class="landing-faq__question">
+            <span>{{ block.settings.question | escape }}</span>
+            <svg class="landing-faq__icon" aria-hidden="true" focusable="false" viewBox="0 0 16 16">
+              <path d="M8 3v10M3 8h10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </summary>
+          {%- if block.settings.answer != blank -%}
+            <div class="landing-faq__answer rte">{{ block.settings.answer }}</div>
+          {%- endif -%}
+        </details>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .landing-faq {
+    display: grid;
+    gap: var(--gap-lg);
+    width: min(100%, 1100px);
+    min-width: 0;
+    margin-inline: auto;
+  }
+
+  .landing-faq__heading {
+    margin: 0;
+    font-size: clamp(1.5rem, 1.2rem + 1.4vw, 2.25rem);
+    line-height: 1.2;
+    text-align: center;
+    text-wrap: balance;
+  }
+
+  .landing-faq__list {
+    min-width: 0;
+  }
+
+  .landing-faq__item {
+    margin-block-end: var(--margin-sm);
+    border-radius: var(--style-border-radius-md);
+    background-color: var(--landing-faq-item);
+    break-inside: avoid;
+  }
+
+  .landing-faq__question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--gap-md);
+    min-height: 44px;
+    padding: var(--padding-md) var(--padding-lg);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .landing-faq__question::-webkit-details-marker {
+    display: none;
+  }
+
+  .landing-faq__question:focus-visible {
+    outline: var(--focus-outline-width) solid currentcolor;
+    outline-offset: var(--focus-outline-offset);
+    border-radius: var(--style-border-radius-md);
+  }
+
+  .landing-faq__question > span {
+    min-width: 0;
+    overflow-wrap: break-word;
+  }
+
+  .landing-faq__icon {
+    flex: none;
+    width: 14px;
+    height: 14px;
+    transition: transform var(--animation-speed-fast) var(--animation-easing);
+  }
+
+  .landing-faq__item[open] .landing-faq__icon {
+    transform: rotate(45deg);
+  }
+
+  .landing-faq__answer {
+    padding: 0 var(--padding-lg) var(--padding-lg);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+  }
+
+  .landing-faq__answer > * {
+    margin-block: 0 var(--margin-sm);
+  }
+
+  .landing-faq__answer > :last-child {
+    margin-block-end: 0;
+  }
+
+  @media screen and (min-width: 990px) {
+    .landing-faq--columns-2 .landing-faq__list {
+      columns: 2;
+      column-gap: var(--gap-xl);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .landing-faq__icon {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:landing.names.faq",
+  "class": "landing-faq-section",
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "t:settings.heading",
+      "default": "Frequently asked questions"
+    },
+    {
+      "type": "select",
+      "id": "columns_desktop",
+      "label": "t:landing.settings.columns_desktop",
+      "options": [
+        { "value": "1", "label": "t:landing.options.one_column" },
+        { "value": "2", "label": "t:landing.options.two_columns" }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "color",
+      "id": "item_color",
+      "label": "t:landing.settings.question_background",
+      "alpha": true,
+      "default": "#F7F7F7"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:settings.background",
+      "alpha": true
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "t:landing.names.question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "t:landing.settings.question",
+          "default": "Question"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "t:landing.settings.answer",
+          "default": "<p>Answer</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:landing.names.faq",
+      "blocks": {
+        "question_1": { "type": "question" },
+        "question_2": { "type": "question" }
+      },
+      "block_order": ["question_1", "question_2"]
+    }
+  ]
+}
+{% endschema %}

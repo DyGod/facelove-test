@@ -1,0 +1,202 @@
+{% comment %}
+  Section contract.
+  A slim band of press or partner logos with a short label, used on product landing pages.
+  @example
+  <!-- Add "Logo strip" to a template and add one Logo block per publication -->
+{% endcomment %}
+
+{% render 'contrast-override', background_color: section.settings.background_color, section_id: section.id %}
+
+<div class="section-background color-custom-{{ section.id }}"></div>
+<div class="section section--page-width color-custom-{{ section.id }}">
+  <div
+    class="landing-logos spacing-style"
+    style="
+      {% render 'spacing-style', settings: section.settings %}
+      --landing-logos-height: {{ section.settings.logo_height }}px;
+    "
+  >
+    {%- if section.settings.label != blank or section.settings.note != blank -%}
+      <p class="landing-logos__label">
+        {{- section.settings.label | escape -}}
+        {%- if section.settings.note != blank %}
+          <span class="landing-logos__note">{{ section.settings.note | escape }}</span>
+        {%- endif -%}
+      </p>
+    {%- endif -%}
+
+    <ul class="landing-logos__list" role="list">
+      {%- for block in section.blocks -%}
+        <li class="landing-logos__item" {{ block.shopify_attributes }}>
+          {%- if block.settings.image != blank -%}
+            {{
+              block.settings.image
+              | image_url: width: 400
+              | image_tag:
+                widths: '120, 200, 300, 400',
+                sizes: '(min-width: 750px) 160px, 30vw',
+                loading: 'lazy',
+                alt: block.settings.name,
+                class: 'landing-logos__image'
+            }}
+          {%- elsif block.settings.name != blank -%}
+            <span class="landing-logos__name">{{ block.settings.name | escape }}</span>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</div>
+
+{% stylesheet %}
+  .landing-logos {
+    display: grid;
+    justify-items: center;
+    gap: var(--gap-sm);
+    min-width: 0;
+  }
+
+  .landing-logos__label {
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-align: center;
+    text-transform: uppercase;
+    color: var(--color-foreground-muted);
+  }
+
+  .landing-logos__note {
+    margin-inline-start: var(--margin-2xs);
+    font-weight: 400;
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-40));
+  }
+
+  .landing-logos__list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: var(--gap-md) var(--gap-xl);
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .landing-logos__image {
+    display: block;
+    width: auto;
+    max-width: 30vw;
+    height: var(--landing-logos-height);
+    object-fit: contain;
+  }
+
+  .landing-logos__name {
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  @media screen and (min-width: 750px) {
+    .landing-logos__list {
+      gap: var(--gap-md) var(--gap-3xl);
+    }
+
+    .landing-logos__image {
+      max-width: 160px;
+      height: calc(var(--landing-logos-height) * 1.25);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:landing.names.logo_strip",
+  "class": "landing-logos-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label",
+      "label": "t:landing.settings.label",
+      "default": "As seen on"
+    },
+    {
+      "type": "text",
+      "id": "note",
+      "label": "t:landing.settings.note",
+      "default": "Sponsored content"
+    },
+    {
+      "type": "range",
+      "id": "logo_height",
+      "label": "t:landing.settings.logo_height",
+      "min": 12,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:settings.background",
+      "alpha": true,
+      "default": "#F6F6F6"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    }
+  ],
+  "blocks": [
+    {
+      "type": "logo",
+      "name": "t:landing.names.logo",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "t:settings.image"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "t:landing.settings.logo_name",
+          "info": "t:landing.info.logo_name"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:landing.names.logo_strip",
+      "blocks": {
+        "logo_1": { "type": "logo", "settings": { "name": "Vogue" } },
+        "logo_2": { "type": "logo", "settings": { "name": "Elle" } },
+        "logo_3": { "type": "logo", "settings": { "name": "Women's Health" } }
+      },
+      "block_order": ["logo_1", "logo_2", "logo_3"]
+    }
+  ]
+}
+{% endschema %}

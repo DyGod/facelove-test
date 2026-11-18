@@ -1,0 +1,192 @@
+{% comment %}
+  Section contract.
+  A row of short reassurance points (shipping, support, payment) each with a theme icon.
+  Stacks on mobile and shows up to three columns with dividers from tablet up.
+  @example
+  <!-- Add "Trust points" to a template and add one Point block per message -->
+{% endcomment %}
+
+{% render 'contrast-override', background_color: section.settings.background_color, section_id: section.id %}
+
+<div class="section-background color-custom-{{ section.id }}"></div>
+<div class="section section--page-width color-custom-{{ section.id }}">
+  <div
+    class="landing-trust spacing-style"
+    style="
+      {% render 'spacing-style', settings: section.settings %}
+      --landing-trust-icon: {{ section.settings.icon_color }};
+    "
+  >
+    <ul class="landing-trust__list" role="list">
+      {%- for block in section.blocks -%}
+        <li class="landing-trust__item" {{ block.shopify_attributes }}>
+          {%- if block.settings.icon != 'none' -%}
+            <svg class="landing-trust__icon" aria-hidden="true" focusable="false" viewBox="0 0 20 20">
+              {%- render 'icon', icon: block.settings.icon -%}
+            </svg>
+          {%- endif -%}
+          {%- if block.settings.heading != blank -%}
+            <h3 class="landing-trust__heading">{{ block.settings.heading | escape }}</h3>
+          {%- endif -%}
+          {%- if block.settings.text != blank -%}
+            <div class="landing-trust__text rte">{{ block.settings.text }}</div>
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</div>
+
+{% stylesheet %}
+  .landing-trust__list {
+    display: grid;
+    width: min(100%, 1100px);
+    margin: 0;
+    margin-inline: auto;
+    padding: 0;
+    list-style: none;
+  }
+
+  .landing-trust__item {
+    display: grid;
+    align-content: start;
+    justify-items: center;
+    gap: var(--gap-xs);
+    min-width: 0;
+    padding: var(--padding-lg) var(--padding-md);
+    text-align: center;
+  }
+
+  .landing-trust__item + .landing-trust__item {
+    border-block-start: 1px solid rgb(var(--color-foreground-rgb) / var(--opacity-10));
+  }
+
+  .landing-trust__icon {
+    width: 28px;
+    height: 28px;
+    color: var(--landing-trust-icon);
+    fill: currentcolor;
+  }
+
+  .landing-trust__heading {
+    margin: 0;
+    font-size: 1.0625rem;
+    font-weight: 600;
+  }
+
+  .landing-trust__text {
+    max-width: 36ch;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--color-foreground-muted);
+    overflow-wrap: anywhere;
+  }
+
+  .landing-trust__text > * {
+    margin: 0;
+  }
+
+  @media screen and (min-width: 750px) {
+    .landing-trust__list {
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(0, 1fr);
+    }
+
+    .landing-trust__item + .landing-trust__item {
+      border-block-start: 0;
+      border-inline-start: 1px solid rgb(var(--color-foreground-rgb) / var(--opacity-10));
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:landing.names.trust_points",
+  "class": "landing-trust-section",
+  "settings": [
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "t:landing.settings.icon_color",
+      "default": "#9B7FC0"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:settings.background",
+      "alpha": true
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 24
+    }
+  ],
+  "blocks": [
+    {
+      "type": "point",
+      "name": "t:landing.names.point",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "t:settings.icon",
+          "options": [
+            { "value": "none", "label": "t:options.none" },
+            { "value": "truck", "label": "t:options.truck" },
+            { "value": "chat_bubble", "label": "t:options.chat_bubble" },
+            { "value": "lock", "label": "t:options.lock" },
+            { "value": "return", "label": "t:options.return" },
+            { "value": "heart", "label": "t:options.heart" },
+            { "value": "leaf", "label": "t:options.leaf" },
+            { "value": "star", "label": "t:options.star" }
+          ],
+          "default": "truck"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "t:settings.heading",
+          "default": "Free shipping"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "t:settings.text",
+          "default": "<p>Add a short reassurance message.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:landing.names.trust_points",
+      "blocks": {
+        "point_1": { "type": "point", "settings": { "icon": "truck" } },
+        "point_2": { "type": "point", "settings": { "icon": "chat_bubble", "heading": "Need help?" } },
+        "point_3": { "type": "point", "settings": { "icon": "lock", "heading": "Secure payment" } }
+      },
+      "block_order": ["point_1", "point_2", "point_3"]
+    }
+  ]
+}
+{% endschema %}
