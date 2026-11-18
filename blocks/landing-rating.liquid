@@ -1,6 +1,8 @@
 {%- doc -%}
   Renders a star rating summary with a short label and review count, e.g.
   "★★★★★ Excellent 4.8 | (7,295+ Reviews)". Partial stars are filled proportionally.
+  When `block.settings.link` is set, the whole row is a link and the text is underlined,
+  for example `#reviews` to jump to a reviews section with that anchor ID.
 
   @example
   {% content_for 'block', type: 'landing-rating', id: 'rating' %}
@@ -11,8 +13,17 @@
   assign rating_label = 'landing.rating_label' | t: rating: rating
 -%}
 
-<div
-  class="landing-rating spacing-style"
+{%- if block.settings.link != blank -%}
+  {%- assign rating_tag = 'a' -%}
+{%- else -%}
+  {%- assign rating_tag = 'div' -%}
+{%- endif -%}
+
+<{{ rating_tag }}
+  {% if block.settings.link != blank %}
+    href="{{ block.settings.link | escape }}"
+  {% endif %}
+  class="landing-rating spacing-style{% if block.settings.link != blank %} landing-rating--link{% endif %}"
   style="
     {% render 'spacing-style', settings: block.settings %}
     --landing-rating-star: {{ block.settings.star_color }};
@@ -42,7 +53,7 @@
   {%- if block.settings.review_count != blank -%}
     <span class="visually-hidden">{{ 'landing.review_count' | t: count: block.settings.review_count }}</span>
   {%- endif -%}
-</div>
+</{{ rating_tag }}>
 
 {% stylesheet %}
   .landing-rating {
@@ -88,6 +99,34 @@
     color: var(--color-foreground);
   }
 
+  .landing-rating--link {
+    position: relative;
+    color: var(--color-foreground);
+    text-decoration: none;
+  }
+
+  /* Extends the tap area to 44px tall without adding space around the row. */
+  .landing-rating--link::after {
+    content: '';
+    position: absolute;
+    inset-block: calc((44px - 100%) / -2);
+    inset-inline: 0;
+  }
+
+  .landing-rating--link .landing-rating__meta {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .landing-rating--link:hover .landing-rating__meta {
+    text-decoration-thickness: 2px;
+  }
+
+  .landing-rating--link:focus-visible {
+    outline: var(--focus-outline-width, 2px) solid currentcolor;
+    outline-offset: var(--focus-outline-offset, 3px);
+  }
+
   .landing-rating__sep {
     font-weight: 400;
     color: rgb(var(--color-foreground-rgb) / var(--opacity-20));
@@ -119,6 +158,13 @@
       "id": "review_count",
       "label": "t:landing.settings.review_count",
       "default": "7,295+"
+    },
+    {
+      "type": "text",
+      "id": "link",
+      "label": "t:landing.settings.rating_link",
+      "info": "t:landing.info.rating_link",
+      "placeholder": "#reviews"
     },
     {
       "type": "color",

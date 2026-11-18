@@ -328,6 +328,8 @@
       "icon_3": "Icon for line 3",
       "icon_4": "Icon for line 4",
       "rating_label": "Rating label",
+      "rating_link": "Link",
+      "anchor_id": "Anchor ID",
       "review_count": "Review count",
       "shipping_image": "Free shipping image",
       "show_free_shipping": "Show free shipping row",
@@ -342,6 +344,8 @@
     },
     "info": {
       "bundle_cards": "Card extras. For accent colors, set Selected style to Custom.",
+      "rating_link": "Makes the rating clickable. Use #reviews to jump to a reviews section on this page.",
+      "anchor_id": "Links to # plus this ID jump to this section, for example #reviews.",
       "card_subtitles": "One line per option value, as Value | Subtitle (for example: 2 Sticks | Temporary Deal).",
       "card_gift_value": "Option value whose card lists the gifts (for example: 2 Sticks). Match this to your automatic discount.",
       "unlock_variants": "Variant names, separated by commas, that unlock the gifts (for example: 2 Sticks). Leave empty to always show them unlocked.",

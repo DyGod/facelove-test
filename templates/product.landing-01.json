@@ -114,36 +114,13 @@
                     "review_count": "7,295+",
                     "star_color": "#F9BC4B",
                     "padding-block-start": 0,
-                    "padding-block-end": 0
-                  },
-                  "blocks": {}
-                },
-                "landing_badge": {
-                  "type": "landing-badge",
-                  "settings": {
-                    "text": "Hot product | Low stock",
-                    "color": "#DC2626",
-                    "alignment": "center",
-                    "padding-block-start": 0,
-                    "padding-block-end": 0
-                  },
-                  "blocks": {}
-                },
-                "landing_social_proof": {
-                  "type": "landing-social-proof",
-                  "settings": {
-                    "name": "Freya",
-                    "text": "and <strong>1M+</strong> others purchased",
-                    "badge_color": "#3B82F6",
-                    "padding-block-start": 0,
-                    "padding-block-end": 0
+                    "padding-block-end": 0,
+                    "link": "#reviews"
                   },
                   "blocks": {}
                 }
               },
               "block_order": [
-                "landing_badge",
-                "landing_social_proof",
                 "landing_title",
                 "landing_rating"
               ]
@@ -256,31 +233,6 @@
               },
               "block_order": []
             },
-            "subscription_note": {
-              "type": "text",
-              "settings": {
-                "text": "<p><strong>This is NOT a subscription.</strong></p>",
-                "width": "100%",
-                "max_width": "normal",
-                "alignment": "center",
-                "type_preset": "custom",
-                "font": "var(--font-body--family)",
-                "font_size": "0.75rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "text_color": "",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
             "guarantee": {
               "type": "landing-callout",
               "settings": {
@@ -327,38 +279,6 @@
                 "padding-block-end": 0
               },
               "blocks": {}
-            },
-            "gift_unlocks": {
-              "type": "landing-gift-unlocks",
-              "settings": {
-                "qualifying_variants": "2 Sticks",
-                "show_shipping": true,
-                "shipping_label": "FREE Shipping",
-                "gifts": [
-                  "mystery-gift",
-                  "dream-skin-primer"
-                ],
-                "gift_labels": "FREE Mystery Gift\nFree Primer",
-                "unlocked_color": "#15803D",
-                "padding-block-start": 0,
-                "padding-block-end": 0
-              },
-              "blocks": {}
-            },
-            "sale_progress": {
-              "type": "landing-sale-progress",
-              "settings": {
-                "heading": "Black Friday Sale - Selling fast",
-                "text": "Due to high demand, limited quantities available",
-                "percent": 87,
-                "accent_color": "#B69FD1",
-                "ends_at": "2026-12-01 00:00",
-                "timer_label": "Ends in",
-                "timer_color": "#7753A2",
-                "padding-block-start": 0,
-                "padding-block-end": 0
-              },
-              "blocks": {}
             }
           },
           "block_order": [
@@ -367,10 +287,7 @@
             "sale_timer",
             "variant_picker_R3rGDr",
             "buy_buttons_eYQEYi",
-            "subscription_note",
             "guarantee",
-            "gift_unlocks",
-            "sale_progress",
             "text_aEtTtq"
           ]
         }
@@ -534,7 +451,8 @@
         "card_color": "#F3F3F3",
         "star_color": "#B69FD1",
         "padding-block-start": 40,
-        "padding-block-end": 40
+        "padding-block-end": 40,
+        "anchor_id": "reviews"
       },
       "blocks": {
         "testimonial_1": {

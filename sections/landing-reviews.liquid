@@ -10,7 +10,12 @@
 {% render 'contrast-override', background_color: section.settings.background_color, section_id: section.id %}
 
 <div class="section-background color-custom-{{ section.id }}"></div>
-<div class="section section--page-width color-custom-{{ section.id }}">
+<div
+  class="section section--page-width color-custom-{{ section.id }} landing-reviews-section"
+  {% if section.settings.anchor_id != blank %}
+    id="{{ section.settings.anchor_id | handleize }}"
+  {% endif %}
+>
   <div
     class="landing-reviews spacing-style"
     style="
@@ -88,6 +93,11 @@
 </div>
 
 {% stylesheet %}
+  /* Keeps the heading clear of the sticky header when a link jumps here. */
+  .landing-reviews-section {
+    scroll-margin-block-start: var(--header-height, 0px);
+  }
+
   .landing-reviews {
     display: grid;
     gap: var(--gap-lg);
@@ -221,6 +231,13 @@
       "id": "heading",
       "label": "t:settings.heading",
       "default": "Loved by our customers"
+    },
+    {
+      "type": "text",
+      "id": "anchor_id",
+      "label": "t:landing.settings.anchor_id",
+      "info": "t:landing.info.anchor_id",
+      "default": "reviews"
     },
     {
       "type": "color",

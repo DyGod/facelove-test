@@ -707,6 +707,20 @@
       box-shadow: 0 0 0 2px var(--color-selected-variant-border);
     }
 
+    /* Keep the card colors on hover; base.css radio hover would swap in the foreground (black) */
+    .variant-option__card-input:not(:disabled):hover,
+    .variant-option__card:hover .variant-option__card-input:not(:disabled) {
+      border-color: var(--color-selected-variant-background);
+      background-color: var(--color-selected-variant-background);
+      box-shadow: 0 0 0 2px var(--color-variant-hover-border);
+    }
+
+    .variant-option__card-input:not(:disabled):hover:checked,
+    .variant-option__card:hover .variant-option__card-input:not(:disabled):checked {
+      background-color: var(--color-selected-variant-border);
+      box-shadow: 0 0 0 2px var(--color-selected-variant-border);
+    }
+
     .variant-option__card-input::after {
       content: none;
     }
