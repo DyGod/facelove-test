@@ -2,7 +2,8 @@
   Section contract.
   A heading followed by numbered feature cards. Each card pairs an image with a heading,
   a checklist and a call-to-action. Cards stack image-first on mobile and alternate the
-  image side from tablet up. Buttons scroll to the product buy box (#landing-buy) unless a link is set.
+  image side from tablet up. Card backgrounds alternate between two merchant colors, each
+  with its own contrast scope; buttons and check marks adapt to the card color. Buttons scroll to the product buy box (#landing-buy) unless a link is set.
   A card's media can be a single image or a before/after slider (<landing-compare>, which extends
   @theme/comparison-slider); landing-compare.js loads only when a card uses the slider.
   @example
@@ -31,6 +32,22 @@
 
 {% render 'contrast-override', background_color: section.settings.background_color, section_id: section.id %}
 
+{%- liquid
+  # Cards alternate between two merchant colors; each gets its own contrast scope.
+  assign card_scope = section.id | append: '-card'
+  assign card_alt_scope = section.id | append: '-card-alt'
+  render 'contrast-override', background_color: section.settings.card_background, section_id: card_scope
+  render 'contrast-override', background_color: section.settings.card_background_alt, section_id: card_alt_scope
+
+  assign card_alt_is_dark = false
+  if section.settings.card_background_alt != blank
+    assign card_alt_brightness = section.settings.card_background_alt | color_brightness
+    if card_alt_brightness < 128
+      assign card_alt_is_dark = true
+    endif
+  endif
+-%}
+
 <div class="section-background color-custom-{{ section.id }}"></div>
 <div class="section section--page-width color-custom-{{ section.id }}">
   <div
@@ -38,6 +55,7 @@
     style="
       {% render 'spacing-style', settings: section.settings %}
       --landing-features-accent: {{ section.settings.accent_color }};
+      --landing-features-accent-base: {{ section.settings.accent_color }};
     "
   >
     {%- if section.settings.heading != blank or section.settings.subheading != blank -%}
@@ -53,7 +71,17 @@
 
     <ol class="landing-features__list" role="list">
       {%- for block in section.blocks -%}
-        <li class="landing-features__card" {{ block.shopify_attributes }}>
+        {%- liquid
+          assign card_is_alt = false
+          assign card_parity = forloop.index0 | modulo: 2
+          if card_parity == 1
+            assign card_is_alt = true
+          endif
+        -%}
+        <li
+          class="landing-features__card{% if card_is_alt %} landing-features__card--alt color-custom-{{ card_alt_scope }}{% if card_alt_is_dark %} landing-features__card--dark{% endif %}{% else %} color-custom-{{ card_scope }}{% endif %}"
+          {{ block.shopify_attributes }}
+        >
           <div class="landing-features__media">
             {%- if block.settings.media_type == 'compare' -%}
               {%- liquid
@@ -70,10 +98,16 @@
                     {%- liquid
                       if side == 'before'
                         assign side_image = block.settings.before_image
-                        assign side_label = 'landing.compare_before' | t
+                        assign side_label = block.settings.before_label | escape
+                        if side_label == blank
+                          assign side_label = 'landing.compare_before' | t
+                        endif
                       else
                         assign side_image = block.settings.after_image
-                        assign side_label = 'landing.compare_after' | t
+                        assign side_label = block.settings.after_label | escape
+                        if side_label == blank
+                          assign side_label = 'landing.compare_after' | t
+                        endif
                       endif
                     -%}
                     <div class="landing-features__compare-layer landing-features__compare-layer--{{ side }}">
@@ -209,17 +243,37 @@
 
   .landing-features__list {
     display: grid;
-    gap: var(--gap-2xl);
+    gap: 0;
     margin: 0;
     padding: 0;
     list-style: none;
   }
 
+  /* Cards stack as touching bands: no borders or gaps, alternating backgrounds. */
   .landing-features__card {
     display: grid;
-    gap: var(--gap-lg);
+    gap: var(--gap-xl);
     align-items: center;
     min-width: 0;
+    padding: var(--padding-lg) var(--padding-lg) var(--padding-2xl);
+    border-radius: var(--style-border-radius-lg);
+
+    /* Buttons follow the card's own contrast colors so they read on light and dark cards. */
+    --color-primary-button-background: var(--color-foreground);
+    --color-primary-button-text: var(--color-background);
+    --color-primary-button-border: var(--color-foreground);
+    --color-primary-button-hover-background: rgb(var(--color-foreground-rgb) / var(--opacity-85));
+    --color-primary-button-hover-text: var(--color-background);
+    --color-primary-button-hover-border: rgb(var(--color-foreground-rgb) / var(--opacity-85));
+  }
+
+  .landing-features__card--dark {
+    --landing-features-accent: color-mix(in srgb, var(--landing-features-accent-base) 55%, white);
+  }
+
+  .landing-features__card .landing-features__image,
+  .landing-features__card .landing-features__compare-media {
+    border-radius: var(--style-border-radius-md);
   }
 
   .landing-features__media {
@@ -451,10 +505,7 @@
     .landing-features__card {
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: var(--gap-2xl);
-      padding: var(--padding-xl);
-      border: 1px solid rgb(var(--color-foreground-rgb) / var(--opacity-8));
-      border-radius: var(--style-border-radius-lg);
-      box-shadow: 0 6px 24px rgb(var(--color-shadow-rgb, 0 0 0) / var(--opacity-5));
+      padding: var(--padding-2xl);
     }
 
     .landing-features__card:nth-child(odd) .landing-features__media {
@@ -471,6 +522,11 @@
     .landing-features__intro {
       width: min(100%, 1100px);
       margin-inline: auto;
+    }
+
+    .landing-features__card {
+      gap: var(--gap-3xl);
+      padding: var(--padding-4xl);
     }
 
     .landing-features__button {
@@ -514,6 +570,19 @@
       "id": "accent_color",
       "label": "t:landing.settings.accent_color",
       "default": "#9B7FC0"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "t:landing.settings.card_background",
+      "alpha": true
+    },
+    {
+      "type": "color",
+      "id": "card_background_alt",
+      "label": "t:landing.settings.card_background_alt",
+      "alpha": true,
+      "default": "#F1EDF5"
     },
     {
       "type": "color",
@@ -577,6 +646,20 @@
           "type": "image_picker",
           "id": "after_image",
           "label": "t:settings.after_image",
+          "visible_if": "{{ block.settings.media_type == 'compare' }}"
+        },
+        {
+          "type": "text",
+          "id": "before_label",
+          "label": "t:landing.settings.before_label",
+          "info": "t:landing.info.compare_labels",
+          "visible_if": "{{ block.settings.media_type == 'compare' }}"
+        },
+        {
+          "type": "text",
+          "id": "after_label",
+          "label": "t:landing.settings.after_label",
+          "info": "t:landing.info.compare_labels",
           "visible_if": "{{ block.settings.media_type == 'compare' }}"
         },
         {

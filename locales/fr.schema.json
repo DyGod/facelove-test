@@ -65,6 +65,9 @@
       "button_label": "Button label",
       "button_link": "Button link",
       "card_background": "Card background",
+      "card_background_alt": "Alternate card background",
+      "before_label": "Before label",
+      "after_label": "After label",
       "checklist": "Checklist",
       "columns_desktop": "Desktop columns",
       "customer_name": "Customer name",
@@ -109,6 +112,7 @@
       "benefit_icons": "Benefit icons"
     },
     "info": {
+      "compare_labels": "Laisser vide pour utiliser Avant / Après.",
       "table_position": "S'applique sur ordinateur. Sur les petits écrans, le tableau s'affiche sous le texte.",
       "bundle_cards": "Card extras. For accent colors, set Selected style to Custom.",
       "rating_link": "Makes the rating clickable. Use #reviews to jump to a reviews section on this page.",

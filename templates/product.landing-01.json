@@ -480,7 +480,12 @@
         "feature_4": {
           "type": "feature",
           "settings": {
+            "media_type": "compare",
             "image": "shopify://shop_images/landing-ChatGPT_Image_May_14_2026_07_56_18_PM.png",
+            "before_image": "shopify://shop_images/landing-feature-04-before.jpg",
+            "after_image": "shopify://shop_images/landing-feature-04-after.jpg",
+            "before_label": "10 AM",
+            "after_label": "10 PM",
             "label": "04",
             "heading": "Lasts all day and feels feather-light",
             "text": "<ul><li>Stays even without smearing</li><li>No shine, no dryness</li><li>Long-lasting coverage without feeling heavy</li><li>Easy to remove, no rubbing required</li></ul>"
