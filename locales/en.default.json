@@ -374,6 +374,7 @@
     }
   },
   "landing": {
+    "reviews_short": "{{ count }} reviews",
     "gift_locked": "Locked",
     "gift_unlocked": "Unlocked",
     "percent_sold": "{{ percent }}% sold",

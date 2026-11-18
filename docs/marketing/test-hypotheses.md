@@ -117,3 +117,21 @@ We added a section after the five reasons that names four ingredients from the r
 What we expect: fewer shoppers open the sensitive skin and ingredient questions in the FAQ, and conversion rate holds or rises.
 
 What would prove us wrong: conversion rate drops, or scroll depth past this section drops sharply. A sharp drop would mean the page is now too long, and this section should move into the FAQ area or be removed.
+
+## H8. A sticky bar that reassures
+
+Shipped 2026-11-18. Page: `product.landing-01`.
+
+The sticky bar is the add to cart button shoppers use once they have scrolled into the reviews and features. The old bar showed only the product name, price and a button, and on phones the button was a bare cart icon. The guarantee, free shipping and rating sat in the buy box, several screens up, at the moment the shopper is deciding.
+
+We made the bar full width and put the three trust points, a short rating and the crossed-out old price in it, with a labelled plum button.
+
+- The shopper sees the guarantee and free shipping right next to the button they are about to press, wherever they are on the page.
+- A labelled button is clearer than an icon, and a full-width button is easier to hit with a thumb.
+- The serif name, gold accents and plum button match the rest of the page, so the bar looks like part of the brand.
+- We dropped a "Save 34%" badge from the prototype. The crossed-out price already shows the discount, and the badge made the bar feel crowded.
+
+What we expect: more add to cart clicks from the sticky bar, and conversion rate holds or rises.
+
+What would prove us wrong: sticky bar clicks fall, or the taller bar on phones (three rows instead of one) gets in the way of reading the page. If that happens, drop the trust line on phones first.
+

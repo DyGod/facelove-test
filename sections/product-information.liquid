@@ -44,13 +44,52 @@
     data-initial-quantity="{{ initial_quantity }}"
     data-default-variant-title="{{ 'products.product.default_title' | t }}"
   >
+    {%- liquid
+      assign sticky_settings = section.settings
+      assign has_custom_button = false
+      if sticky_settings.sticky_button_background != blank and sticky_settings.sticky_button_text != blank
+        assign has_custom_button = true
+      endif
+    -%}
     <div
       class="sticky-add-to-cart__bar color-custom-popover"
       data-stuck="false"
       ref="stickyBar"
       role="region"
       aria-label="{{ 'products.product.sticky_add_to_cart' | t }}"
+      style="
+        --sticky-atc-accent: {{ sticky_settings.sticky_accent_color }};
+        {%- if has_custom_button -%}
+          --sticky-atc-button-background: {{ sticky_settings.sticky_button_background }};
+          --sticky-atc-button-text: {{ sticky_settings.sticky_button_text }};
+        {%- endif -%}
+      "
     >
+      {%- # DOM order follows the mobile reading order: trust points sit above the product row. -%}
+      {%- capture sticky_trust_items -%}
+        {%- for i in (1..3) -%}
+          {%- liquid
+            assign trust_text_key = 'sticky_trust_text_' | append: i
+            assign trust_icon_key = 'sticky_trust_icon_' | append: i
+            assign trust_text = sticky_settings[trust_text_key]
+            assign trust_icon = sticky_settings[trust_icon_key]
+          -%}
+          {%- if trust_text != blank -%}
+            <li class="sticky-add-to-cart__trust-item">
+              {%- if trust_icon != 'none' -%}
+                {%- render 'landing-icon', icon: trust_icon, class: 'sticky-add-to-cart__trust-icon' -%}
+              {%- endif -%}
+              <span>{{ trust_text | escape }}</span>
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endcapture -%}
+      {%- if sticky_trust_items != blank -%}
+        <ul class="sticky-add-to-cart__trust" role="list">
+          {{- sticky_trust_items -}}
+        </ul>
+      {%- endif -%}
+
       {% liquid
         assign image_to_show = current_variant.featured_image | default: product.featured_image
       %}
@@ -112,6 +151,23 @@
             {{ variant_title }}
           {% endunless %}
         </div>
+        {%- if sticky_settings.sticky_show_rating -%}
+          <p class="sticky-add-to-cart__rating">
+            <span class="visually-hidden">
+              {{- 'landing.rating_label' | t: rating: sticky_settings.sticky_rating -}}
+              {%- if sticky_settings.sticky_review_count != blank -%}
+                , {{ 'landing.reviews_short' | t: count: sticky_settings.sticky_review_count -}}
+              {%- endif -%}
+            </span>
+            <span aria-hidden="true">
+              <span class="sticky-add-to-cart__rating-star">★</span>
+              {{ sticky_settings.sticky_rating -}}
+              {%- if sticky_settings.sticky_review_count != blank %}
+                · {{ 'landing.reviews_short' | t: count: sticky_settings.sticky_review_count -}}
+              {%- endif -%}
+            </span>
+          </p>
+        {%- endif -%}
       </div>
 
       <div
@@ -123,7 +179,7 @@
 
       <button
         type="button"
-        class="sticky-add-to-cart__button add-to-cart-button button"
+        class="sticky-add-to-cart__button add-to-cart-button button{% if has_custom_button %} sticky-add-to-cart__button--custom{% endif %}"
         ref="addToCartButton"
         on:click="/handleAddToCartClick"
         {% unless current_variant.available %}
@@ -184,41 +240,39 @@
 %}
 
 {% stylesheet %}
+  /* Full-width bar at every size. Mobile: trust row, product row, full-width button.
+     Desktop (990px+): one row with the trust points in a narrow column. */
   .sticky-add-to-cart__bar {
+    --sticky-atc-hidden: translateY(calc(100% + var(--padding-xl)));
+    --sticky-atc-content-width: 1200px;
+
     position: fixed;
-    bottom: max(20px, var(--safe-area-inset-bottom));
-    left: 50%; /* stylelint-disable-line csstools/use-logical -- centring pair with a physical translateX(-50%) */
-    opacity: 0;
-    transform: translateX(-50%) translateY(calc(100% + 40px));
+    inset-inline: 0;
+    inset-block-end: 0;
     z-index: calc(var(--layer-sticky) - 1); /* Below sticky header */
-    display: block;
-    width: 600px;
-    border-radius: calc(
-      var(--style-border-radius-buttons-primary) + min(var(--padding-sm), var(--style-border-radius-buttons-primary))
-    );
-    box-shadow: var(--shadow-popover);
-    padding: var(--padding-sm);
-    /* Layout styling */
-    display: flex;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      'trust trust trust'
+      'image info price'
+      'button button button';
     align-items: center;
-    gap: var(--gap-md);
+    gap: var(--gap-sm) var(--gap-md);
+    box-sizing: border-box;
+    width: 100%;
+    padding-block: var(--padding-sm) calc(var(--padding-md) + var(--safe-area-inset-bottom));
+    padding-inline: max(var(--padding-lg), calc((100% - var(--sticky-atc-content-width)) / 2));
+    border-start-start-radius: var(--style-border-radius-lg);
+    border-start-end-radius: var(--style-border-radius-lg);
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    box-shadow: 0 -8px 30px -6px rgb(var(--color-foreground-rgb) / var(--opacity-15));
+    opacity: 0;
+    transform: var(--sticky-atc-hidden);
 
     @starting-style {
       opacity: 0;
-      transform: translateX(-50%) translateY(calc(100% + 40px));
-    }
-
-    &::before {
-      --border: 2px;
-      content: '';
-      position: absolute;
-      inset: calc(var(--border) * -1);
-      background: linear-gradient(var(--color-background) 0 100%), linear-gradient(hsl(0 0% 0% / 0.15) 0 100%);
-      background-clip: content-box, border-box;
-      border: var(--border) solid #0000;
-      border-radius: inherit;
-      z-index: -1;
-      backdrop-filter: blur(20px) saturate(180%) brightness(1.5);
+      transform: var(--sticky-atc-hidden);
     }
   }
 
@@ -232,26 +286,77 @@
   }
 
   .sticky-add-to-cart__bar[data-stuck='true'] {
-    transform: translateX(-50%) translateY(0%);
+    transform: translateY(0);
     opacity: 1;
   }
 
   sticky-add-to-cart:not([data-variant-available='true']) .sticky-add-to-cart__bar {
     opacity: 0;
-    transform: translateX(-50%) translateY(calc(100% + 40px));
+    transform: var(--sticky-atc-hidden);
     display: none;
   }
 
-  .sticky-add-to-cart__info[data-has-image='false'] {
-    padding-inline-start: var(--padding-lg);
+  /* Collapse empty tracks so their gaps don't leave holes */
+  .sticky-add-to-cart__bar:not(:has(.sticky-add-to-cart__trust)) {
+    grid-template-areas:
+      'image info price'
+      'button button button';
+    padding-block-start: var(--padding-md);
+  }
+
+  /* Without an image, info spans the empty image column */
+  .sticky-add-to-cart__bar:not(:has(.sticky-add-to-cart__image)) {
+    grid-template-areas:
+      'trust trust trust'
+      'info info price'
+      'button button button';
+  }
+
+  .sticky-add-to-cart__bar:not(:has(.sticky-add-to-cart__image, .sticky-add-to-cart__trust)) {
+    grid-template-areas:
+      'info info price'
+      'button button button';
+  }
+
+  .sticky-add-to-cart__trust {
+    grid-area: trust;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--gap-3xs) var(--gap-xs);
+    margin: 0;
+    padding: 0 0 var(--padding-xs);
+    list-style: none;
+    border-block-end: 1px solid rgb(var(--color-foreground-rgb) / var(--opacity-8));
+    font-size: 0.625rem;
+    letter-spacing: 0.02em;
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-subdued-text));
+  }
+
+  .sticky-add-to-cart__trust-item {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-3xs);
+    min-width: 0;
+    white-space: nowrap;
+  }
+
+  /* Icons appear from 360px so all three points fit on one line at 320px */
+  .sticky-add-to-cart__trust-icon {
+    display: none;
+    flex-shrink: 0;
+    width: 13px;
+    height: 13px;
+    color: var(--sticky-atc-accent);
   }
 
   .sticky-add-to-cart__image {
+    grid-area: image;
     flex-shrink: 0;
     aspect-ratio: 1;
-    height: var(--height-buy-buttons);
+    height: 48px;
     overflow: hidden;
-    border-radius: var(--style-border-radius-buttons-primary);
+    border-radius: 50%;
     background: var(--color-background-secondary);
   }
 
@@ -262,112 +367,136 @@
   }
 
   .sticky-add-to-cart__info {
-    flex: 1;
+    grid-area: info;
     min-width: 0; /* Allow text truncation */
   }
 
   .sticky-add-to-cart__title {
-    font-size: var(--font-paragraph-medium--size);
-    font-weight: var(--font-weight-semibold);
-    line-height: var(--font-paragraph--line-height);
     margin: 0;
     overflow: hidden;
+    font-family: var(--font-heading--family);
+    font-style: var(--font-heading--style);
+    font-weight: var(--font-heading--weight);
+    font-size: 1.0625rem;
+    line-height: 1.15;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
   .sticky-add-to-cart__variant {
+    overflow: hidden;
+    margin-block-start: var(--margin-3xs);
     color: rgb(var(--color-foreground-rgb) / var(--opacity-subdued-text));
     font-size: var(--font-paragraph-small--size);
-    margin-top: var(--margin-3xs);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .sticky-add-to-cart__rating {
+    margin: 1px 0 0;
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-subdued-text));
+    font-size: 0.6875rem;
+    white-space: nowrap;
+  }
+
+  .sticky-add-to-cart__rating-star {
+    color: var(--sticky-atc-accent);
   }
 
   .sticky-add-to-cart__price {
-    font-weight: var(--font-weight-semibold);
+    grid-area: price;
+    font-weight: 600;
+    text-align: end;
+
+    > div {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .compare-at-price {
+      font-size: 0.75rem;
+      font-weight: 400;
+    }
   }
 
   .sticky-add-to-cart__button {
-    height: var(--height-buy-buttons);
+    grid-area: button;
     position: relative;
-  }
+    width: 100%;
+    height: var(--height-buy-buttons);
+    padding-block: 0;
+    letter-spacing: 0.02em;
+    box-shadow: 0 12px 24px -16px rgb(var(--color-foreground-rgb) / var(--opacity-60));
 
-  /* Mobile adjustments */
-  @media screen and (max-width: 749px) {
-    .sticky-add-to-cart__bar {
-      bottom: 0;
-      width: 100%;
-      max-width: none;
-      border-radius: 0;
-
-      /* Full-bleed bar touches the physical bottom edge (viewport-fit=cover); keep the
-         controls above the home indicator while the background fills the safe area */
-      padding-block-end: calc(var(--padding-sm) + var(--safe-area-inset-bottom));
-
-      &::before {
-        --border: 1px;
-      }
-    }
-
-    .sticky-add-to-cart__bar .add-to-cart-text__content {
+    .add-to-cart-text .svg-wrapper {
       display: none;
     }
+  }
 
-    .sticky-add-to-cart__info[data-has-image='false'] {
-      padding-inline-start: 0;
+  .sticky-add-to-cart__button--custom,
+  .sticky-add-to-cart__button--custom:hover {
+    --button-background-color: var(--sticky-atc-button-background);
+    --button-border-color: var(--sticky-atc-button-background);
+    --button-color: var(--sticky-atc-button-text);
+  }
+
+  .sticky-add-to-cart__button--custom:hover {
+    filter: brightness(1.15);
+  }
+
+  @media screen and (min-width: 360px) {
+    .sticky-add-to-cart__trust-icon {
+      display: block;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .sticky-add-to-cart__bar,
+    .sticky-add-to-cart__bar:not(:has(.sticky-add-to-cart__trust)) {
+      grid-template-columns: auto minmax(0, 1fr) auto auto auto;
+      grid-template-areas: 'image info trust price button';
+      column-gap: var(--gap-xl);
+      padding-block: var(--padding-md) calc(var(--padding-md) + var(--safe-area-inset-bottom));
+      border-radius: 0;
+    }
+
+    .sticky-add-to-cart__bar:not(:has(.sticky-add-to-cart__trust)) {
+      grid-template-areas: 'image info info price button';
+    }
+
+    .sticky-add-to-cart__bar:not(:has(.sticky-add-to-cart__image)) {
+      grid-template-areas: 'info info trust price button';
+    }
+
+    .sticky-add-to-cart__bar:not(:has(.sticky-add-to-cart__image, .sticky-add-to-cart__trust)) {
+      grid-template-areas: 'info info info price button';
+    }
+
+    .sticky-add-to-cart__trust {
+      flex-direction: column;
+      gap: var(--gap-3xs);
+      padding: 0 var(--padding-xl);
+      border-block-end: 0;
+      border-inline: 1px solid rgb(var(--color-foreground-rgb) / var(--opacity-8));
+      font-size: 0.75rem;
+    }
+
+    .sticky-add-to-cart__image {
+      height: 56px;
     }
 
     .sticky-add-to-cart__title {
-      font-size: var(--font-paragraph--size);
-    }
-
-    .sticky-add-to-cart__button {
-      padding: var(--padding-lg);
+      font-size: 1.375rem;
     }
 
     .sticky-add-to-cart__price {
-      font-size: var(--font-paragraph-small--size);
+      font-size: 1.25rem;
     }
 
     .sticky-add-to-cart__button {
-      width: var(--height-buy-buttons);
-    }
-
-    sticky-add-to-cart:not([data-variant-available='true']) .add-to-cart-text__content {
-      display: initial;
-    }
-
-    sticky-add-to-cart:not([data-variant-available='true']) .sticky-add-to-cart__button {
       width: auto;
-    }
-  }
-
-  /* Small mobile - hide text content and compare price */
-  @media screen and (max-width: 389px) {
-    .sticky-add-to-cart__bar {
-      .compare-at-price {
-        display: none;
-      }
-    }
-
-    .sticky-add-to-cart__title {
-      display: none;
-    }
-
-    /* For product with only default variant show title */
-    .sticky-add-to-cart__info[data-singleton='true'] .sticky-add-to-cart__title {
-      display: block;
-    }
-
-    /* For single variant show title and variant, truncate both. variant should be identifiable with truncation */
-    .sticky-add-to-cart__info[data-single-option='true'] .sticky-add-to-cart__title {
-      display: block;
-    }
-
-    .sticky-add-to-cart__info[data-single-option='true'] .sticky-add-to-cart__variant {
-      display: block;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      min-width: 240px;
     }
   }
 {% endstylesheet %}
@@ -451,6 +580,172 @@
       "id": "enable_sticky_add_to_cart",
       "label": "t:settings.enable_sticky_add_to_cart",
       "default": true
+    },
+    {
+      "type": "header",
+      "content": "t:landing.content.sticky_bar",
+      "visible_if": "{{ section.settings.enable_sticky_add_to_cart }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky_show_rating",
+      "label": "t:landing.settings.show_rating",
+      "default": false,
+      "visible_if": "{{ section.settings.enable_sticky_add_to_cart }}"
+    },
+    {
+      "type": "range",
+      "id": "sticky_rating",
+      "label": "t:landing.settings.rating",
+      "min": 0,
+      "max": 5,
+      "step": 0.1,
+      "default": 4.8,
+      "visible_if": "{{ section.settings.enable_sticky_add_to_cart and section.settings.sticky_show_rating }}"
+    },
+    {
+      "type": "text",
+      "id": "sticky_review_count",
+      "label": "t:landing.settings.review_count",
+      "info": "t:landing.info.sticky_review_count",
+      "visible_if": "{{ section.settings.enable_sticky_add_to_cart and section.settings.sticky_show_rating }}"
+    },
+    {
+      "type": "select",
+      "id": "sticky_trust_icon_1",
+      "label": "t:landing.settings.badge_icon_1",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:options.none"
+        },
+        {
+          "value": "shield_check",
+          "label": "t:landing.options.shield_check"
+        },
+        {
+          "value": "shield",
+          "label": "t:landing.options.shield"
+        },
+        {
+          "value": "truck",
+          "label": "t:landing.options.truck"
+        },
+        {
+          "value": "lock",
+          "label": "t:landing.options.lock"
+        },
+        {
+          "value": "check",
+          "label": "t:landing.options.glyph_check"
+        }
+      ],
+      "default": "shield_check",
+      "visible_if": "{{ section.settings.enable_sticky_add_to_cart }}"
+    },
+    {
+      "type": "text",
+      "id": "sticky_trust_text_1",
+      "label": "t:landing.settings.badge_text_1",
+      "visible_if": "{{ section.settings.enable_sticky_add_to_cart }}"
+    },
+    {
+      "type": "select",
+      "id": "sticky_trust_icon_2",
+      "label": "t:landing.settings.badge_icon_2",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:options.none"
+        },
+        {
+          "value": "shield_check",
+          "label": "t:landing.options.shield_check"
+        },
+        {
+          "value": "shield",
+          "label": "t:landing.options.shield"
+        },
+        {
+          "value": "truck",
+          "label": "t:landing.options.truck"
+        },
+        {
+          "value": "lock",
+          "label": "t:landing.options.lock"
+        },
+        {
+          "value": "check",
+          "label": "t:landing.options.glyph_check"
+        }
+      ],
+      "default": "truck",
+      "visible_if": "{{ section.settings.enable_sticky_add_to_cart }}"
+    },
+    {
+      "type": "text",
+      "id": "sticky_trust_text_2",
+      "label": "t:landing.settings.badge_text_2",
+      "visible_if": "{{ section.settings.enable_sticky_add_to_cart }}"
+    },
+    {
+      "type": "select",
+      "id": "sticky_trust_icon_3",
+      "label": "t:landing.settings.badge_icon_3",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:options.none"
+        },
+        {
+          "value": "shield_check",
+          "label": "t:landing.options.shield_check"
+        },
+        {
+          "value": "shield",
+          "label": "t:landing.options.shield"
+        },
+        {
+          "value": "truck",
+          "label": "t:landing.options.truck"
+        },
+        {
+          "value": "lock",
+          "label": "t:landing.options.lock"
+        },
+        {
+          "value": "check",
+          "label": "t:landing.options.glyph_check"
+        }
+      ],
+      "default": "lock",
+      "visible_if": "{{ section.settings.enable_sticky_add_to_cart }}"
+    },
+    {
+      "type": "text",
+      "id": "sticky_trust_text_3",
+      "label": "t:landing.settings.badge_text_3",
+      "visible_if": "{{ section.settings.enable_sticky_add_to_cart }}"
+    },
+    {
+      "type": "color",
+      "id": "sticky_accent_color",
+      "label": "t:landing.settings.accent_color",
+      "default": "#B8976A",
+      "visible_if": "{{ section.settings.enable_sticky_add_to_cart }}"
+    },
+    {
+      "type": "color",
+      "id": "sticky_button_background",
+      "label": "t:landing.settings.sticky_button_background",
+      "info": "t:landing.info.sticky_button_colors",
+      "visible_if": "{{ section.settings.enable_sticky_add_to_cart }}"
+    },
+    {
+      "type": "color",
+      "id": "sticky_button_text",
+      "label": "t:landing.settings.sticky_button_text",
+      "visible_if": "{{ section.settings.enable_sticky_add_to_cart }}"
     },
     {
       "type": "color",

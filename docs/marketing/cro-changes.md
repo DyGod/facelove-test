@@ -2,6 +2,26 @@
 
 Newest first. Each entry says which page changed, what we did, and why.
 
+## 2026-11-18. A premium sticky add to cart bar
+
+Page: product template `product.landing-01`. The new bar layout applies to every product page that has the sticky bar turned on.
+
+The bar that slides up from the bottom once the buy box scrolls away was redesigned. It used to float as a rounded pill on desktop and show an icon-only button on phones. Now it runs the full width of the screen at every size. The reasoning is in [H8](test-hypotheses.md#h8-a-sticky-bar-that-reassures).
+
+On phones it has three rows:
+
+1. A trust line: "30-day guarantee", "Free shipping" and "Secure checkout", with small gold icons. On screens narrower than 360px the icons drop so the three points fit on one line.
+2. A round product thumbnail, the product name in the serif heading font, the bundle chosen (for example "1 Stick"), a short rating ("★ 4.8 · 7k+ reviews"), and the price with the old price crossed out.
+3. A full-width plum add to cart button that says "Add to cart".
+
+On desktop it is one row: product and rating on the left, the trust points in a narrow column, then price and button.
+
+We chose this layout from three prototypes (cream band, dark plum band, and this white sheet). The prototypes are kept on the `prototype/sticky-atc` branch.
+
+How to change things in the theme editor: open the product section and turn on "Sticky add to cart bar". The new settings appear below it: show rating, rating, review count, three trust points (icon and text each), accent color for the star and icons, and button background and text. If either button color is empty, the bar uses the theme's primary button. Other product templates start with no trust points and no rating, so nothing appears there until it is filled in.
+
+What to watch over the next two weeks: add to cart clicks that come from the sticky bar, and conversion rate on this page, compared with the two weeks before.
+
 ## 2026-11-18. A more premium look for the landing page
 
 Page: product template `product.landing-01`, plus one store-wide font setting.

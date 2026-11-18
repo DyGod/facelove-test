@@ -353,6 +353,7 @@
     "separator": "tot"
   },
   "landing": {
+    "reviews_short": "{{ count }} reviews",
     "gift_locked": "Vergrendeld",
     "gift_unlocked": "Ontgrendeld",
     "percent_sold": "{{ percent }}% verkocht",

@@ -38,6 +38,9 @@
       "ingredient": "Ingrédient"
     },
     "settings": {
+      "show_rating": "Afficher la note",
+      "sticky_button_background": "Arrière-plan du bouton",
+      "sticky_button_text": "Texte du bouton",
       "table_position": "Position du tableau",
       "ours_image": "Image de notre marque",
       "theirs_image": "Image des autres marques",
@@ -122,12 +125,15 @@
       "show_dividers": "Afficher des lignes en haut et en bas"
     },
     "content": {
+      "sticky_bar": "Barre d’ajout au panier flottante",
       "comparison_table": "Tableau comparatif",
       "bundle_cards": "Bundle cards",
       "benefit_icons": "Benefit icons",
       "payment_icons": "Icônes de paiement"
     },
     "info": {
+      "sticky_review_count": "Une forme courte garde la barre lisible, par exemple 7k+",
+      "sticky_button_colors": "Définissez les deux couleurs pour remplacer le bouton du thème. Laissez vide pour utiliser le style du bouton principal.",
       "compare_labels": "Laisser vide pour utiliser Avant / Après.",
       "table_position": "S'applique sur ordinateur. Sur les petits écrans, le tableau s'affiche sous le texte.",
       "bundle_cards": "Card extras. For accent colors, set Selected style to Custom.",

@@ -38,6 +38,9 @@
       "ingredient": "Inhaltsstoff"
     },
     "settings": {
+      "show_rating": "Bewertung anzeigen",
+      "sticky_button_background": "Button-Hintergrund",
+      "sticky_button_text": "Button-Text",
       "table_position": "Tabellenposition",
       "ours_image": "Bild unserer Marke",
       "theirs_image": "Bild anderer Marken",
@@ -122,12 +125,15 @@
       "show_dividers": "Linien oben und unten anzeigen"
     },
     "content": {
+      "sticky_bar": "Fixierte Warenkorb-Leiste",
       "comparison_table": "Vergleichstabelle",
       "bundle_cards": "Bundle cards",
       "benefit_icons": "Benefit icons",
       "payment_icons": "Zahlungssymbole"
     },
     "info": {
+      "sticky_review_count": "Eine Kurzform hält die Leiste übersichtlich, z. B. 7k+",
+      "sticky_button_colors": "Beide Farben festlegen, um den Theme-Button zu überschreiben. Leer lassen für den primären Button-Stil.",
       "compare_labels": "Leer lassen, um Vorher / Nachher zu verwenden.",
       "table_position": "Gilt auf dem Desktop. Auf kleineren Bildschirmen steht die Tabelle unter dem Text.",
       "bundle_cards": "Card extras. For accent colors, set Selected style to Custom.",

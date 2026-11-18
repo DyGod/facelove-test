@@ -367,6 +367,7 @@
     "separator": "до"
   },
   "landing": {
+    "reviews_short": "{{ count }} отзывов",
     "gift_locked": "Заблокировано",
     "gift_unlocked": "Разблокировано",
     "percent_sold": "Продано {{ percent }}%",

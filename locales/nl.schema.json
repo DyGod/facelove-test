@@ -38,6 +38,9 @@
       "ingredient": "Ingrediënt"
     },
     "settings": {
+      "show_rating": "Beoordeling tonen",
+      "sticky_button_background": "Knopachtergrond",
+      "sticky_button_text": "Knoptekst",
       "table_position": "Positie van de tabel",
       "ours_image": "Afbeelding van ons merk",
       "theirs_image": "Afbeelding van andere merken",
@@ -122,12 +125,15 @@
       "show_dividers": "Lijnen boven en onder tonen"
     },
     "content": {
+      "sticky_bar": "Vaste 'Toevoegen aan winkelwagen'-balk",
       "comparison_table": "Vergelijkingstabel",
       "bundle_cards": "Bundle cards",
       "benefit_icons": "Benefit icons",
       "payment_icons": "Betaaliconen"
     },
     "info": {
+      "sticky_review_count": "Een korte vorm houdt de balk overzichtelijk, bijvoorbeeld 7k+",
+      "sticky_button_colors": "Stel beide kleuren in om de themaknop te overschrijven. Laat leeg voor de primaire knopstijl.",
       "compare_labels": "Laat leeg om Voor / Na te gebruiken.",
       "table_position": "Geldt op desktop. Op kleinere schermen staat de tabel onder de tekst.",
       "bundle_cards": "Card extras. For accent colors, set Selected style to Custom.",

@@ -330,6 +330,7 @@
     }
   },
   "landing": {
+    "reviews_short": "{{ count }} Bewertungen",
     "gift_locked": "Gesperrt",
     "gift_unlocked": "Freigeschaltet",
     "percent_sold": "{{ percent }} % verkauft",

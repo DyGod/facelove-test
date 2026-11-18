@@ -283,6 +283,9 @@
       "ingredient": "Ingredient"
     },
     "settings": {
+      "show_rating": "Show rating",
+      "sticky_button_background": "Button background",
+      "sticky_button_text": "Button text",
       "table_position": "Table position",
       "ours_image": "Our brand image",
       "theirs_image": "Other brands image",
@@ -367,12 +370,15 @@
       "show_dividers": "Show lines above and below"
     },
     "content": {
+      "sticky_bar": "Sticky add to cart bar",
       "comparison_table": "Comparison table",
       "bundle_cards": "Bundle cards",
       "benefit_icons": "Benefit icons",
       "payment_icons": "Payment icons"
     },
     "info": {
+      "sticky_review_count": "Short form keeps the bar tidy, for example 7k+",
+      "sticky_button_colors": "Set both colors to override the theme button. Leave empty to use the primary button style.",
       "compare_labels": "Leave blank to use Before / After.",
       "table_position": "Applies on desktop. On smaller screens the table sits below the text.",
       "bundle_cards": "Card extras. For accent colors, set Selected style to Custom.",
