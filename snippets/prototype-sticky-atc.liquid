@@ -1,0 +1,438 @@
+{%- comment -%}
+  PROTOTYPE, throwaway. Lives on branch prototype/sticky-atc only. Do not merge.
+  Question: what should a more premium, full-width sticky add-to-cart bar look like on landing-01?
+  Variants switch with ?sticky=0|A|B|C. Without ?sticky= nothing here runs.
+    0  Current bar (floating pill on desktop)
+    A  Cream editorial: one row everywhere, thumbnail, serif title, rating, plum pill
+    B  Plum noir: dark band, type only (no image), full-width cream CTA on mobile
+    C  Reassurance sheet: rounded-top white sheet, savings + trust row, stacked on mobile
+  All variants are full width from mobile to desktop; content is held to a 1200px column.
+  Copy (rating, trust lines) is hardcoded from templates/product.landing-01.json for the prototype.
+{%- endcomment -%}
+
+<style>
+  :root {
+    --proto-plum: #3b2a4a;
+    --proto-plum-rgb: 59 42 74;
+    --proto-gold: #b8976a;
+    --proto-cream: #f7f3ee;
+    --proto-serif: var(--font-heading--family);
+  }
+
+  /* Injected bits hidden unless a variant turns them on */
+  .proto-sticky-rating,
+  .proto-sticky-trust,
+  .proto-sticky-save { display: none; }
+
+  /* ================= Shared: full width at every size ================= */
+  html[data-proto-sticky] .sticky-add-to-cart__bar {
+    left: 0; /* stylelint-disable-line csstools/use-logical */
+    right: 0; /* stylelint-disable-line csstools/use-logical */
+    bottom: 0;
+    width: 100%;
+    max-width: none;
+    border-radius: 0;
+    transform: translateY(calc(100% + 24px));
+    padding-block: 12px calc(12px + var(--safe-area-inset-bottom, 0px));
+    padding-inline: max(16px, calc((100% - 1200px) / 2));
+    box-sizing: border-box;
+  }
+  html[data-proto-sticky] .sticky-add-to-cart__bar::before { display: none; }
+  html[data-proto-sticky] .sticky-add-to-cart__bar[data-stuck='true'] { transform: translateY(0); }
+  html[data-proto-sticky] .sticky-add-to-cart__variant { display: none; }
+  html[data-proto-sticky] .sticky-add-to-cart__bar .add-to-cart-text .svg-wrapper { display: none; }
+  html[data-proto-sticky] .sticky-add-to-cart__bar .add-to-cart-text__content { display: inline; }
+  html[data-proto-sticky] .sticky-add-to-cart__title {
+    display: block;
+    font-family: var(--proto-serif);
+    font-weight: 500;
+    letter-spacing: 0;
+  }
+  html[data-proto-sticky] .sticky-add-to-cart__button {
+    width: auto;
+    padding-block: 0;
+    text-transform: none;
+    letter-spacing: 0.02em;
+    font-weight: 500;
+  }
+  html[data-proto-sticky] .sticky-add-to-cart__button * { text-transform: none; }
+
+  /* ================= A. Cream editorial ================= */
+  html[data-proto-sticky='A'] .sticky-add-to-cart__bar {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas: 'img title btn' 'img price btn';
+    column-gap: 12px;
+    row-gap: 2px;
+    align-items: center;
+    background: var(--proto-cream);
+    color: var(--proto-plum);
+    border-block-start: 1px solid rgb(184 151 106 / 0.45);
+    box-shadow: 0 -12px 32px -20px rgb(var(--proto-plum-rgb) / 0.35);
+  }
+  html[data-proto-sticky='A'] .sticky-add-to-cart__image {
+    grid-area: img;
+    height: 52px;
+    border-radius: 10px;
+    background: #fff;
+  }
+  html[data-proto-sticky='A'] .sticky-add-to-cart__info { grid-area: title; align-self: end; }
+  html[data-proto-sticky='A'] .sticky-add-to-cart__title { font-size: 1.125rem; line-height: 1.15; }
+  html[data-proto-sticky='A'] .sticky-add-to-cart__price {
+    grid-area: price;
+    align-self: start;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+  html[data-proto-sticky='A'] .sticky-add-to-cart__price .compare-at-price { font-weight: 400; opacity: 0.55; }
+  html[data-proto-sticky='A'] .proto-sticky-rating {
+    display: none;
+    font-size: 0.75rem;
+    color: rgb(var(--proto-plum-rgb) / 0.7);
+    white-space: nowrap;
+  }
+  html[data-proto-sticky='A'] .proto-sticky-rating b { color: var(--proto-gold); font-weight: 400; letter-spacing: 0.1em; }
+  html[data-proto-sticky='A'] .sticky-add-to-cart__button {
+    grid-area: btn;
+    --button-background-color: var(--proto-plum);
+    --button-border-color: var(--proto-plum);
+    --button-color: var(--proto-cream);
+    height: 48px;
+    padding-inline: 22px;
+    border-radius: 999px;
+    box-shadow: 0 10px 22px -14px rgb(var(--proto-plum-rgb) / 0.8);
+  }
+
+  @media screen and (min-width: 750px) {
+    html[data-proto-sticky='A'] .sticky-add-to-cart__bar {
+      grid-template-columns: auto minmax(0, 1fr) auto auto;
+      grid-template-areas: 'img title price btn';
+      column-gap: 20px;
+      padding-block: 14px calc(14px + var(--safe-area-inset-bottom, 0px));
+    }
+    html[data-proto-sticky='A'] .sticky-add-to-cart__info { align-self: center; }
+    html[data-proto-sticky='A'] .proto-sticky-rating { display: block; margin-block-start: 2px; }
+    html[data-proto-sticky='A'] .sticky-add-to-cart__image { height: 60px; }
+    html[data-proto-sticky='A'] .sticky-add-to-cart__title { font-size: 1.375rem; }
+    html[data-proto-sticky='A'] .sticky-add-to-cart__price {
+      align-self: center;
+      font-family: var(--proto-serif);
+      font-size: 1.375rem;
+      font-weight: 500;
+    }
+    html[data-proto-sticky='A'] .sticky-add-to-cart__button { height: 52px; min-width: 220px; }
+  }
+
+  /* ================= B. Plum noir ================= */
+  html[data-proto-sticky='B'] .sticky-add-to-cart__bar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: 'title price' 'btn btn';
+    column-gap: 12px;
+    row-gap: 10px;
+    align-items: baseline;
+    background: var(--proto-plum);
+    color: var(--proto-cream);
+    border-block-start: 1px solid rgb(184 151 106 / 0.6);
+    box-shadow: 0 -16px 40px -24px rgb(0 0 0 / 0.5);
+  }
+  html[data-proto-sticky='B'] .sticky-add-to-cart__image { display: none; }
+  html[data-proto-sticky='B'] .sticky-add-to-cart__info { grid-area: title; padding-inline-start: 0; }
+  html[data-proto-sticky='B'] .sticky-add-to-cart__title { font-size: 1.125rem; font-style: italic; }
+  html[data-proto-sticky='B'] .sticky-add-to-cart__price {
+    grid-area: price;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-family: var(--proto-serif);
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--proto-gold);
+  }
+  html[data-proto-sticky='B'] .sticky-add-to-cart__price .compare-at-price {
+    font-size: 0.875rem;
+    color: rgb(247 243 238 / 0.55);
+  }
+  html[data-proto-sticky='B'] .sticky-add-to-cart__button {
+    grid-area: btn;
+    --button-background-color: var(--proto-cream);
+    --button-border-color: var(--proto-cream);
+    --button-color: var(--proto-plum);
+    width: 100%;
+    height: 50px;
+    border-radius: 4px;
+    letter-spacing: 0.14em;
+    font-size: 0.8125rem;
+  }
+  html[data-proto-sticky='B'] .sticky-add-to-cart__button .add-to-cart-text__content * { text-transform: uppercase; }
+  html[data-proto-sticky='B'] .sticky-add-to-cart__button:hover {
+    --button-background-color: var(--proto-gold);
+    --button-border-color: var(--proto-gold);
+    --button-color: var(--proto-plum);
+  }
+
+  @media screen and (min-width: 750px) {
+    html[data-proto-sticky='B'] .sticky-add-to-cart__bar {
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      grid-template-areas: 'title price btn';
+      column-gap: 28px;
+      align-items: center;
+      padding-block: 16px calc(16px + var(--safe-area-inset-bottom, 0px));
+    }
+    html[data-proto-sticky='B'] .sticky-add-to-cart__title { font-size: 1.5rem; }
+    html[data-proto-sticky='B'] .sticky-add-to-cart__price { font-size: 1.5rem; }
+    html[data-proto-sticky='B'] .sticky-add-to-cart__button { width: auto; min-width: 260px; height: 52px; }
+  }
+
+  /* ================= C. Reassurance sheet ================= */
+  html[data-proto-sticky='C'] .sticky-add-to-cart__bar {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      'trust trust trust'
+      'img title price'
+      'btn btn btn';
+    column-gap: 12px;
+    row-gap: 10px;
+    align-items: center;
+    padding-block-start: 10px;
+    background: #fff;
+    color: var(--color-foreground);
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -8px 30px -6px rgb(var(--proto-plum-rgb) / 0.18);
+  }
+  html[data-proto-sticky='C'] .proto-sticky-trust {
+    grid-area: trust;
+    display: flex;
+    justify-content: center;
+    gap: 6px 16px;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0 0 8px;
+    list-style: none;
+    border-block-end: 1px solid rgb(var(--proto-plum-rgb) / 0.08);
+    font-size: 0.6875rem;
+    letter-spacing: 0.04em;
+    color: rgb(var(--proto-plum-rgb) / 0.75);
+  }
+  html[data-proto-sticky='C'] .proto-sticky-trust li { display: flex; align-items: center; gap: 5px; white-space: nowrap; }
+  html[data-proto-sticky='C'] .proto-sticky-trust li:nth-child(3) { display: none; }
+  html[data-proto-sticky='C'] .proto-sticky-trust svg { width: 14px; height: 14px; color: var(--proto-gold); flex-shrink: 0; }
+  html[data-proto-sticky='C'] .sticky-add-to-cart__image {
+    grid-area: img;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--proto-cream);
+  }
+  html[data-proto-sticky='C'] .sticky-add-to-cart__info { grid-area: title; }
+  html[data-proto-sticky='C'] .sticky-add-to-cart__title { font-size: 1.0625rem; line-height: 1.15; }
+  html[data-proto-sticky='C'] .proto-sticky-rating { display: block; margin-block-start: 2px; font-size: 0.75rem; color: rgb(var(--proto-plum-rgb) / 0.7); }
+  html[data-proto-sticky='C'] .proto-sticky-rating b { color: var(--proto-gold); font-weight: 400; letter-spacing: 0.1em; }
+  html[data-proto-sticky='C'] .sticky-add-to-cart__price {
+    grid-area: price;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--proto-plum);
+  }
+  html[data-proto-sticky='C'] .sticky-add-to-cart__price > div { display: flex; flex-direction: column; align-items: flex-end; }
+  html[data-proto-sticky='C'] .sticky-add-to-cart__price .compare-at-price { font-size: 0.75rem; font-weight: 400; opacity: 0.5; }
+  html[data-proto-sticky='C'] .proto-sticky-save {
+    display: inline-block;
+    margin-block-start: 2px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgb(184 151 106 / 0.15);
+    color: #7a5f3a;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  html[data-proto-sticky='C'] .proto-sticky-save:empty { display: none; }
+  html[data-proto-sticky='C'] .sticky-add-to-cart__button {
+    grid-area: btn;
+    --button-background-color: var(--proto-plum);
+    --button-border-color: var(--proto-plum);
+    --button-color: #fff;
+    width: 100%;
+    height: 52px;
+    border-radius: 999px;
+    font-size: 1rem;
+    box-shadow: 0 12px 24px -16px rgb(var(--proto-plum-rgb) / 0.9);
+  }
+
+  @media screen and (min-width: 990px) {
+    html[data-proto-sticky='C'] .sticky-add-to-cart__bar {
+      grid-template-columns: auto minmax(0, 1fr) auto auto auto;
+      grid-template-areas: 'img title trust price btn';
+      column-gap: 24px;
+      padding-block: 14px calc(14px + var(--safe-area-inset-bottom, 0px));
+      border-radius: 0;
+    }
+    html[data-proto-sticky='C'] .proto-sticky-trust {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+      padding: 0 24px;
+      border-block-end: 0;
+      border-inline: 1px solid rgb(var(--proto-plum-rgb) / 0.08);
+      font-size: 0.75rem;
+    }
+    html[data-proto-sticky='C'] .proto-sticky-trust li:nth-child(3) { display: flex; }
+    html[data-proto-sticky='C'] .sticky-add-to-cart__image { height: 56px; }
+    html[data-proto-sticky='C'] .sticky-add-to-cart__title { font-size: 1.375rem; }
+    html[data-proto-sticky='C'] .sticky-add-to-cart__price { font-size: 1.25rem; }
+    html[data-proto-sticky='C'] .sticky-add-to-cart__button { width: auto; min-width: 240px; }
+  }
+
+  /* ================= Switcher (not part of the design) ================= */
+  .proto-switch {
+    position: fixed;
+    z-index: 2147483000;
+    inset-block-start: 12px;
+    inset-inline-start: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: min(92vw, 440px);
+    font: 500 13px/1.4 ui-sans-serif, system-ui, sans-serif;
+  }
+  .proto-switch__pill {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px;
+    border-radius: 999px;
+    background: #111;
+    color: #fff;
+    box-shadow: 0 6px 20px rgb(0 0 0 / 0.3);
+  }
+  .proto-switch__pill button {
+    width: 32px; height: 32px; border: 0; border-radius: 50%;
+    background: #333; color: #fff; cursor: pointer; font-size: 15px;
+  }
+  .proto-switch__label { padding-inline: 10px; white-space: nowrap; }
+  .proto-switch__note {
+    margin: 0; padding: 8px 12px; border-radius: 10px;
+    background: rgb(17 17 17 / 0.88); color: #eee; font-size: 12px;
+  }
+  .proto-switch__note[hidden] { display: none; }
+  .proto-switch__hint { font-size: 11px; color: #555; background: rgb(255 255 255 / 0.85); padding: 2px 8px; border-radius: 999px; }
+</style>
+
+<template id="proto-sticky-extras">
+  <span class="proto-sticky-rating"><b>★★★★★</b> 4.8 · 7,295+ reviews</span>
+  <ul class="proto-sticky-trust">
+    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>30-day money-back</li>
+    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.5"/><circle cx="17" cy="17.5" r="1.5"/></svg>Free shipping</li>
+    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>Secure checkout</li>
+  </ul>
+  <span class="proto-sticky-save"></span>
+</template>
+
+<script>
+  (() => {
+    const params = new URLSearchParams(location.search);
+    if (!params.has('sticky')) return;
+
+    const variants = [
+      { key: '0', name: 'Current bar', note: 'Today: floating pill on desktop, icon-only button on mobile.' },
+      { key: 'A', name: 'Cream editorial', note: 'One row at every size. Cream band with a gold hairline, serif title, plum pill that keeps its label on mobile. Rating appears from tablet up.' },
+      { key: 'B', name: 'Plum noir', note: 'Type only, no image. Dark plum band, italic serif title, gold price, full-width cream CTA on mobile that collapses into one row on tablet/desktop.' },
+      { key: 'C', name: 'Reassurance sheet', note: 'Rounded-top white sheet. Trust row + savings chip + rating, stacked on mobile with a full-width plum CTA; one row with a trust column on desktop.' },
+    ];
+
+    const root = document.documentElement;
+    const bar = document.querySelector('.sticky-add-to-cart__bar');
+    const tpl = document.getElementById('proto-sticky-extras');
+
+    // Savings % from the rendered prices (prototype shortcut)
+    const toNum = (el) => (el ? parseFloat(el.textContent.replace(/[^0-9.,]/g, '').replace(',', '.')) : NaN);
+
+    function inject() {
+      if (!bar || !tpl || bar.querySelector('.proto-sticky-rating')) return;
+      const [rating, trust, save] = [...tpl.content.children].map((n) => n.cloneNode(true));
+      bar.querySelector('.sticky-add-to-cart__info')?.appendChild(rating);
+      bar.prepend(trust);
+      const price = bar.querySelector('.sticky-add-to-cart__price');
+      const now = toNum(price?.querySelector('.price bdi'));
+      const was = toNum(price?.querySelector('.compare-at-price bdi'));
+      if (now && was && was > now) save.textContent = `Save ${Math.round((1 - now / was) * 100)}%`;
+      price?.appendChild(save);
+    }
+    inject();
+    // The component morphs the bar's children on variant change; put the extras back.
+    if (bar) new MutationObserver(inject).observe(bar, { childList: true });
+
+    const keyOf = (v) => (variants.some((x) => x.key === v) ? v : '0');
+    let current = keyOf((params.get('sticky') || '').toUpperCase());
+
+    // Force the bar visible so it can be judged without scrolling (toggle with "Pin")
+    let pinned = true;
+
+    const ui = document.createElement('div');
+    ui.className = 'proto-switch';
+    ui.innerHTML = `
+      <div class="proto-switch__pill">
+        <button type="button" aria-label="Previous variant">&larr;</button>
+        <span class="proto-switch__label" aria-live="polite"></span>
+        <button type="button" aria-label="Next variant">&rarr;</button>
+        <button type="button" class="proto-switch__pin" aria-label="Toggle pinned bar" title="Pin bar visible">📌</button>
+      </div>
+      <p class="proto-switch__note"></p>
+      <span class="proto-switch__hint">PROTOTYPE · ← → to switch · 📌 pin/unpin bar</span>`;
+    document.body.appendChild(ui);
+    const label = ui.querySelector('.proto-switch__label');
+    const note = ui.querySelector('.proto-switch__note');
+    const [prev, next, pin] = ui.querySelectorAll('button');
+
+    function applyPin() {
+      if (!bar) return;
+      if (pinned) bar.dataset.stuck = 'true';
+      pin.style.background = pinned ? '#b8976a' : '#333';
+    }
+
+    function apply(v) {
+      current = v;
+      if (v === '0') delete root.dataset.protoSticky;
+      else root.dataset.protoSticky = v;
+      const meta = variants.find((x) => x.key === v);
+      label.textContent = `${v} · ${meta.name}`;
+      note.textContent = meta.note;
+      const url = new URL(location.href);
+      url.searchParams.set('sticky', v);
+      history.replaceState(null, '', url);
+      applyPin();
+    }
+
+    const step = (dir) => {
+      const i = variants.findIndex((x) => x.key === current);
+      apply(variants[(i + dir + variants.length) % variants.length].key);
+    };
+    prev.addEventListener('click', () => step(-1));
+    next.addEventListener('click', () => step(1));
+    pin.addEventListener('click', () => {
+      pinned = !pinned;
+      if (!pinned && bar) bar.dataset.stuck = 'false';
+      applyPin();
+    });
+    // Keep pinned even when the component's observer un-sticks it
+    if (bar) new MutationObserver(() => pinned && bar.dataset.stuck !== 'true' && (bar.dataset.stuck = 'true'))
+      .observe(bar, { attributes: true, attributeFilter: ['data-stuck'] });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.target.closest('input, textarea, select, [contenteditable]')) return;
+      if (e.key === 'ArrowLeft') step(-1);
+      if (e.key === 'ArrowRight') step(1);
+    });
+
+    apply(current);
+  })();
+</script>
