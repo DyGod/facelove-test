@@ -35,7 +35,10 @@
       "sale_timer": "Sale countdown",
       "trust_badges": "Vertrauenssymbole",
       "ingredients": "Inhaltsstoffe im Fokus",
-      "ingredient": "Inhaltsstoff"
+      "ingredient": "Inhaltsstoff",
+      "cross_sell": "Cross-Selling",
+      "cross_sell_rows": "Cross-Selling-Zeilen",
+      "cross_sell_product": "Cross-Selling-Produkt"
     },
     "settings": {
       "show_rating": "Bewertung anzeigen",
@@ -122,7 +125,11 @@
       "eyebrow": "Überzeile",
       "footnote": "Fußnote",
       "ingredient_name": "Name des Inhaltsstoffs",
-      "show_dividers": "Linien oben und unten anzeigen"
+      "show_dividers": "Linien oben und unten anzeigen",
+      "short_name": "Kurzname",
+      "benefit_line": "Vorteilszeile",
+      "button_color": "Schaltflächenfarbe",
+      "added_color": "Akzent für „Hinzugefügt“"
     },
     "content": {
       "sticky_bar": "Fixierte Warenkorb-Leiste",
@@ -154,7 +161,9 @@
       "ends_at": "Format YYYY-MM-DD HH:MM in your store's time zone. The block hides after this time. Leave empty to show only the heading.",
       "show_offer_price": "Replaces the cart icon with the variant's compare-at and sale price.",
       "qualifying_variants": "Variant names, separated by commas, that get the gifts (for example: 2 Sticks). Leave empty for every variant. Match this to your automatic discount.",
-      "payment_types": "Durch Kommas getrennt. Verwende die Shopify-Namen: visa, master, american_express, paypal, apple_pay, google_pay, maestro, shopify_pay."
+      "payment_types": "Durch Kommas getrennt. Verwende die Shopify-Namen: visa, master, american_express, paypal, apple_pay, google_pay, maestro, shopify_pay.",
+      "short_name": "Leer lassen, um den Produkttitel zu verwenden.",
+      "cross_sell": "Produkte, die zu diesem passen. Jedes wird direkt in den Warenkorb gelegt, ohne ihn zu öffnen. Ausverkaufte Produkte werden ausgeblendet."
     },
     "options": {
       "badge_all": "Every card on sale",

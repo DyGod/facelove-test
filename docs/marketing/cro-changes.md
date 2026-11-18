@@ -2,6 +2,39 @@
 
 Newest first. Each entry says which page changed, what we did, and why.
 
+## 2026-11-18. Cross-sells: "Complete your routine"
+
+Page: product template `product.landing-01`.
+
+The page now offers the three other products alongside the Foundation Stick: Everlove Mascara, IronBoost+ Lash Serum and Dream Skin Primer. We call these Cross-sells (see the [glossary](../../GLOSSARY.md)). They appear in two places. The reasoning is in [H9](test-hypotheses.md#h9-cross-sells-in-the-buy-box-under-the-button) and [H10](test-hypotheses.md#h10-a-cross-sell-section-after-the-reviews).
+
+1. In the buy box, under the add to cart button and trust badges. A small "Complete your routine" heading, then one row per product: thumbnail, short name, one benefit line, price with the old price crossed out, and an outlined "+ Add" button.
+2. A section right after the reviews, with the same products as large cards. On phones the cards are a swipe row with the next card peeking in. From 990px wide they sit three across.
+
+How "+ Add" works:
+
+- It puts the product in the cart without leaving the page and without opening the cart. The button changes to "Added ✓" and the cart count goes up.
+- The mascara has three colours. Tapping "+ Add" first shows the three colours, and tapping one adds it.
+- Sold-out products are hidden.
+- Nothing is pre-selected, and there is no extra discount. The crossed-out prices are each product's own compare-at price.
+- Every Cross-sell in the cart carries a hidden note, `_cross_sell: landing-01`, which shows on the order. Use it to count how many orders include a Cross-sell and how much revenue they bring.
+
+We chose this from three prototypes, kept on the `prototype/cross-sell` branch.
+
+How to change things in the theme editor:
+
+- The buy box list is the "Cross-sell rows" block inside the product section. The card section is "Cross-sell", after the reviews.
+- Each product is its own "Cross-sell product" block: pick the product, and optionally set a short name and a benefit line. Drag the blocks to change the order.
+- Both have settings for the heading, the text under it, the button colour and the colour of the "Added" state. The section also has an eyebrow line, background and spacing.
+
+Before this goes further:
+
+- Check the three benefit lines. We wrote them for the launch, and they must match what each product actually does.
+- The mascara colours show as text only. To show a colour dot next to each name, set a swatch colour on the mascara's Color option in Shopify admin.
+- The Dream Skin Primer is also the free gift in the 2-stick bundle. A shopper can pay $30 for it here while it is free with 2 sticks. Decide whether to keep it as a Cross-sell or swap it for another product.
+
+What to watch over the next two weeks: average order value, the share of orders that include a Cross-sell (use the hidden note), and the add to cart rate for the stick, compared with the two weeks before.
+
 ## 2026-11-18. A premium sticky add to cart bar
 
 Page: product template `product.landing-01`. The new bar layout applies to every product page that has the sticky bar turned on.

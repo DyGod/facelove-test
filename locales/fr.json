@@ -18,6 +18,13 @@
     },
     "filter": "Filtrer",
     "payment_methods": "Moyens de paiement",
+    "cross_sell": {
+      "add": "Ajouter",
+      "added": "Ajouté",
+      "add_label": "Ajouter {{ product }} au panier",
+      "choose_option": "Choisir : {{ option }}",
+      "error": "Impossible d'ajouter cet article. Veuillez réessayer."
+    },
     "contact_form": {
       "name": "Nom",
       "email": "E-mail",

@@ -95,7 +95,11 @@ class CartDrawerComponent extends Component {
    * @param {import('@shopify/events').CartLinesUpdateEvent} event
    */
   #handleCartLinesUpdate = (event) => {
-    const shouldAutoOpen = this.hasAttribute('auto-open') && event.action === 'add' && !this.#themeDrawer?.isOpen;
+    // Sources marked data-cart-auto-open="false" (e.g. Cross-sells) add in place and keep the drawer closed.
+    const optedOut =
+      event.target instanceof Element && event.target.closest('[data-cart-auto-open="false"]') !== null;
+    const shouldAutoOpen =
+      this.hasAttribute('auto-open') && event.action === 'add' && !optedOut && !this.#themeDrawer?.isOpen;
 
     // When the event originates inside an open MODAL <dialog> (e.g. quick-add),
     // defer the auto-open until that dialog's native `close` fires so its focus

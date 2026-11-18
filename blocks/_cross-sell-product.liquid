@@ -1,0 +1,323 @@
+{%- doc -%}
+  Renders one Cross-sell: a product offered next to the hero product, with its image, a short
+  name, a benefit line, its price and an outlined "+ Add" button that adds it to the cart
+  without leaving the page. Products with several variants open a row of option buttons first.
+  Sold-out products render nothing. Layout comes from the parent (`cross-sell` block or section).
+
+  @example
+  {% content_for 'blocks' %}
+{%- enddoc -%}
+
+{%- liquid
+  assign product = block.settings.product
+  assign variant = product.selected_or_first_available_variant
+  assign name = block.settings.short_name | default: product.title
+  assign source = template.suffix | default: template.name
+  assign has_options = false
+  if product.has_only_default_variant == false
+    assign has_options = true
+  endif
+-%}
+
+{%- if product != blank and product.available -%}
+  <script src="{{ 'cross-sell.js' | asset_url }}" type="module" fetchpriority="low"></script>
+
+  <cross-sell-item
+    class="cross-sell-item"
+    data-variant-id="{{ variant.id }}"
+    data-source="{{ source | escape }}"
+    data-cart-auto-open="false"
+    data-added-text="{{ 'blocks.cross_sell.added' | t | escape }}"
+    data-error-text="{{ 'blocks.cross_sell.error' | t | escape }}"
+    {{ block.shopify_attributes }}
+  >
+    <div class="cross-sell-item__media">
+      {%- if product.featured_image -%}
+        {{
+          product.featured_image
+          | image_url: width: 640
+          | image_tag:
+            loading: 'lazy',
+            alt: '',
+            widths: '112, 168, 240, 320, 480, 640',
+            sizes: 'auto, (min-width: 990px) 340px, (min-width: 750px) 42vw, 72vw',
+            class: 'cross-sell-item__image'
+        }}
+      {%- endif -%}
+    </div>
+
+    <div class="cross-sell-item__body">
+      <h3 class="cross-sell-item__name">{{ name | escape }}</h3>
+      {%- if block.settings.benefit != blank -%}
+        <p class="cross-sell-item__benefit">{{ block.settings.benefit | escape }}</p>
+      {%- endif -%}
+      <p class="cross-sell-item__price">
+        <span>{{ variant.price | money_without_trailing_zeros }}</span>
+        {%- if variant.compare_at_price > variant.price -%}
+          <s>
+            <span class="visually-hidden">{{ 'content.price_regular' | t }}</span>
+            {{- variant.compare_at_price | money_without_trailing_zeros -}}
+          </s>
+        {%- endif -%}
+      </p>
+    </div>
+
+    <div class="cross-sell-item__action">
+      <button
+        type="button"
+        class="cross-sell-item__add"
+        ref="addButton"
+        on:click="/handleAdd"
+        aria-label="{{ 'blocks.cross_sell.add_label' | t: product: name | escape }}"
+        {% if has_options %}
+          aria-expanded="false"
+          aria-controls="CrossSellOptions-{{ block.id }}"
+        {% endif %}
+      >
+        <span class="cross-sell-item__plus" aria-hidden="true">+</span>
+        <span ref="label">{{ 'blocks.cross_sell.add' | t }}</span>
+      </button>
+    </div>
+
+    {%- if has_options -%}
+      {%- assign option = product.options_with_values.first -%}
+      <fieldset class="cross-sell-item__options" id="CrossSellOptions-{{ block.id }}" ref="options" hidden>
+        <legend class="cross-sell-item__legend">
+          {{- 'blocks.cross_sell.choose_option' | t: option: option.name | escape -}}
+        </legend>
+        <div class="cross-sell-item__option-list">
+          {%- for product_variant in product.variants -%}
+            {%- assign swatch = product_variant.options.first -%}
+            {%- assign swatch_value = option.values | where: 'name', swatch | first -%}
+            <button
+              type="button"
+              class="cross-sell-item__option"
+              on:click="/handleOptionAdd"
+              data-variant-id="{{ product_variant.id }}"
+              {% unless product_variant.available %}
+                disabled
+              {% endunless %}
+            >
+              {%- if swatch_value.swatch.color or swatch_value.swatch.image -%}
+                <span
+                  class="cross-sell-item__swatch"
+                  style="
+                    {%- if swatch_value.swatch.color -%}--cross-sell-swatch: {{ swatch_value.swatch.color }};{%- endif -%}
+                    {%- if swatch_value.swatch.image -%}--cross-sell-swatch-image: url({{ swatch_value.swatch.image | image_url: width: 48 }});{%- endif -%}
+                  "
+                  aria-hidden="true"
+                ></span>
+              {%- endif -%}
+              {{ product_variant.title | escape }}
+            </button>
+          {%- endfor -%}
+        </div>
+      </fieldset>
+    {%- endif -%}
+
+    <span class="visually-hidden" role="status" ref="status"></span>
+  </cross-sell-item>
+{%- endif -%}
+
+{% stylesheet %}
+  .cross-sell-item {
+    --cross-sell-line: rgb(var(--color-foreground-rgb) / var(--opacity-10));
+
+    position: relative;
+    display: grid;
+    min-width: 0;
+  }
+
+  .cross-sell-item__media {
+    overflow: hidden;
+    background-color: rgb(var(--color-foreground-rgb) / var(--opacity-5));
+  }
+
+  .cross-sell-item__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .cross-sell-item__body {
+    display: grid;
+    gap: 2px;
+    align-content: start;
+    min-width: 0;
+  }
+
+  .cross-sell-item__name {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+  }
+
+  .cross-sell-item__benefit {
+    margin: 0;
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-70));
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+  }
+
+  .cross-sell-item__price {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px;
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .cross-sell-item__price s {
+    font-size: 0.9em;
+    font-weight: 400;
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-70));
+  }
+
+  .cross-sell-item__add {
+    min-height: 44px;
+    padding-inline: 18px;
+    border: 1px solid var(--cross-sell-accent, var(--color-foreground));
+    border-radius: 999px;
+    background-color: transparent;
+    color: var(--cross-sell-accent, var(--color-foreground));
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color var(--animation-speed) var(--animation-easing),
+      color var(--animation-speed) var(--animation-easing);
+  }
+
+  .cross-sell-item__add:hover {
+    background-color: var(--cross-sell-accent, var(--color-foreground));
+    color: var(--color-background);
+  }
+
+  .cross-sell-item__add:focus-visible,
+  .cross-sell-item__option:focus-visible {
+    outline: var(--focus-outline-width) solid currentcolor;
+    outline-offset: var(--focus-outline-offset);
+  }
+
+  .cross-sell-item[data-state='added'] .cross-sell-item__plus {
+    display: none;
+  }
+
+  .cross-sell-item[data-state='open'] .cross-sell-item__add {
+    border-color: var(--cross-sell-line);
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-70));
+  }
+
+  .cross-sell-item[data-state='added'] .cross-sell-item__add {
+    border-color: var(--cross-sell-highlight, currentcolor);
+    background-color: rgb(var(--color-foreground-rgb) / var(--opacity-5));
+    color: var(--cross-sell-accent, var(--color-foreground));
+  }
+
+  .cross-sell-item[aria-busy='true'] .cross-sell-item__add,
+  .cross-sell-item[aria-busy='true'] .cross-sell-item__option {
+    opacity: var(--opacity-60, 0.6);
+    pointer-events: none;
+  }
+
+  .cross-sell-item__options {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .cross-sell-item__legend {
+    float: inline-start;
+    width: 100%;
+    margin-block-end: 8px;
+    padding: 0;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-70));
+  }
+
+  .cross-sell-item__option-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    clear: both;
+  }
+
+  .cross-sell-item__option {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding-inline: 14px;
+    border: 1px solid var(--cross-sell-line);
+    border-radius: 999px;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font: inherit;
+    font-size: 0.8125rem;
+    cursor: pointer;
+  }
+
+  .cross-sell-item__option:hover {
+    border-color: currentcolor;
+  }
+
+  .cross-sell-item__option:disabled {
+    opacity: var(--opacity-40, 0.4);
+    text-decoration: line-through;
+    cursor: not-allowed;
+  }
+
+  .cross-sell-item__swatch {
+    flex: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--cross-sell-swatch-image, none) center / cover, var(--cross-sell-swatch, transparent);
+    box-shadow: inset 0 0 0 2px var(--color-background), 0 0 0 1px var(--cross-sell-line);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cross-sell-item__add {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:landing.names.cross_sell_product",
+  "tag": null,
+  "settings": [
+    {
+      "type": "product",
+      "id": "product",
+      "label": "t:settings.product"
+    },
+    {
+      "type": "text",
+      "id": "short_name",
+      "label": "t:landing.settings.short_name",
+      "info": "t:landing.info.short_name"
+    },
+    {
+      "type": "text",
+      "id": "benefit",
+      "label": "t:landing.settings.benefit_line"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:landing.names.cross_sell_product"
+    }
+  ]
+}
+{% endschema %}

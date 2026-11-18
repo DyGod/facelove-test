@@ -35,7 +35,10 @@
       "sale_timer": "Sale countdown",
       "trust_badges": "Badges de confiance",
       "ingredients": "Ingrédients phares",
-      "ingredient": "Ingrédient"
+      "ingredient": "Ingrédient",
+      "cross_sell": "Vente croisée",
+      "cross_sell_rows": "Lignes de vente croisée",
+      "cross_sell_product": "Produit de vente croisée"
     },
     "settings": {
       "show_rating": "Afficher la note",
@@ -122,7 +125,11 @@
       "eyebrow": "Surtitre",
       "footnote": "Note de bas",
       "ingredient_name": "Nom de l'ingrédient",
-      "show_dividers": "Afficher des lignes en haut et en bas"
+      "show_dividers": "Afficher des lignes en haut et en bas",
+      "short_name": "Nom court",
+      "benefit_line": "Ligne d’avantage",
+      "button_color": "Couleur du bouton",
+      "added_color": "Accent de l’état « Ajouté »"
     },
     "content": {
       "sticky_bar": "Barre d’ajout au panier flottante",
@@ -154,7 +161,9 @@
       "ends_at": "Format YYYY-MM-DD HH:MM in your store's time zone. The block hides after this time. Leave empty to show only the heading.",
       "show_offer_price": "Replaces the cart icon with the variant's compare-at and sale price.",
       "qualifying_variants": "Variant names, separated by commas, that get the gifts (for example: 2 Sticks). Leave empty for every variant. Match this to your automatic discount.",
-      "payment_types": "Séparés par des virgules. Utilisez les noms Shopify : visa, master, american_express, paypal, apple_pay, google_pay, maestro, shopify_pay."
+      "payment_types": "Séparés par des virgules. Utilisez les noms Shopify : visa, master, american_express, paypal, apple_pay, google_pay, maestro, shopify_pay.",
+      "short_name": "Laissez vide pour utiliser le titre du produit.",
+      "cross_sell": "Produits qui accompagnent celui-ci. Chacun s’ajoute au panier sur place, sans l’ouvrir. Les produits épuisés sont masqués."
     },
     "options": {
       "badge_all": "Every card on sale",

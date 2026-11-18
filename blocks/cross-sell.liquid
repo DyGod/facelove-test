@@ -1,0 +1,145 @@
+{%- doc -%}
+  Renders Cross-sells as compact rows inside the buy box, under a small heading, so shoppers
+  can add a product that pairs with the hero product without leaving the page.
+  Each row is a Cross-sell product block.
+
+  @example
+  {% content_for 'block', type: 'cross-sell', id: 'cross_sell' %}
+{%- enddoc -%}
+
+{%- capture rows -%}
+  {% content_for 'blocks' %}
+{%- endcapture -%}
+
+{%- if rows contains 'cross-sell-item' or request.design_mode -%}
+  <div
+    class="cross-sell-rows"
+    style="
+      --cross-sell-accent: {{ block.settings.accent_color }};
+      --cross-sell-highlight: {{ block.settings.highlight_color }};
+    "
+    {{ block.shopify_attributes }}
+  >
+    {%- if block.settings.heading != blank -%}
+      <h2 class="cross-sell-rows__heading">{{ block.settings.heading | escape }}</h2>
+    {%- endif -%}
+    {%- if block.settings.text != blank -%}
+      <p class="cross-sell-rows__text">{{ block.settings.text | escape }}</p>
+    {%- endif -%}
+    <div class="cross-sell-rows__list">
+      {{ rows }}
+    </div>
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .cross-sell-rows {
+    display: grid;
+    padding-block-start: var(--padding-xl);
+    border-block-start: 1px solid rgb(var(--color-foreground-rgb) / var(--opacity-10));
+  }
+
+  .cross-sell-rows__heading {
+    margin: 0;
+    font-size: 1.375rem;
+    line-height: 1.2;
+  }
+
+  .cross-sell-rows__text {
+    margin: 4px 0 var(--gap-2xs);
+    font-size: 0.8125rem;
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-70));
+  }
+
+  .cross-sell-rows__list {
+    display: grid;
+  }
+
+  .cross-sell-rows .cross-sell-item {
+    grid-template-columns: 56px minmax(0, 1fr) auto;
+    column-gap: var(--gap-sm);
+    align-items: center;
+    padding-block: var(--padding-md);
+    border-block-end: 1px solid rgb(var(--color-foreground-rgb) / var(--opacity-10));
+  }
+
+  .cross-sell-rows .cross-sell-item:last-of-type {
+    border-block-end: 0;
+  }
+
+  .cross-sell-rows .cross-sell-item__media {
+    width: 56px;
+    aspect-ratio: 1;
+    border-radius: 12px;
+  }
+
+  .cross-sell-rows .cross-sell-item__name {
+    font-size: 1.125rem;
+  }
+
+  .cross-sell-rows .cross-sell-item__benefit {
+    font-size: 0.75rem;
+  }
+
+  .cross-sell-rows .cross-sell-item__price {
+    font-size: 0.875rem;
+  }
+
+  .cross-sell-rows .cross-sell-item__options {
+    grid-column: 1 / -1;
+    padding-block-start: var(--padding-md);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:landing.names.cross_sell_rows",
+  "tag": null,
+  "blocks": [
+    {
+      "type": "_cross-sell-product"
+    }
+  ],
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "t:landing.info.cross_sell"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:settings.heading",
+      "default": "Complete your routine"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "t:landing.settings.subheading",
+      "default": "Add with one tap. Ships with your order."
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "t:landing.settings.button_color",
+      "default": "#3B2A4A"
+    },
+    {
+      "type": "color",
+      "id": "highlight_color",
+      "label": "t:landing.settings.added_color",
+      "default": "#B8976A"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:landing.names.cross_sell_rows",
+      "blocks": {
+        "product_1": { "type": "_cross-sell-product" },
+        "product_2": { "type": "_cross-sell-product" },
+        "product_3": { "type": "_cross-sell-product" }
+      },
+      "block_order": ["product_1", "product_2", "product_3"]
+    }
+  ]
+}
+{% endschema %}

@@ -135,3 +135,37 @@ What we expect: more add to cart clicks from the sticky bar, and conversion rate
 
 What would prove us wrong: sticky bar clicks fall, or the taller bar on phones (three rows instead of one) gets in the way of reading the page. If that happens, drop the trust line on phones first.
 
+
+## H9. Cross-sells in the buy box, under the button
+
+Shipped 2026-11-18. Page: `product.landing-01`.
+
+The page sold one product and offered nothing else. Shoppers who buy a foundation often want the mascara, lash serum or primer that go with it, but the only way to find those was to leave the page.
+
+We put a "Complete your routine" list under the add to cart button and trust badges: three compact rows, each with its own outlined "+ Add" button.
+
+- The rows sit below the main button, so the add to cart button stays where it was. Shoppers see them right after they decide to buy.
+- Each "+ Add" puts the product in the cart without leaving the page or opening the cart, so the shopper keeps reading.
+- Nothing is ticked by default. Pre-ticked add-ons raise order value but feel like a trick, and they are not allowed in some markets.
+- The buttons are outlined, so add to cart stays the only filled button on the page.
+- We chose this layout from three prototypes (rows in the buy box, a card section after the reviews, and the same section before the FAQ). The prototypes are kept on the `prototype/cross-sell` branch.
+
+What we expect: average order value goes up, and the add to cart rate for the stick holds.
+
+What would prove us wrong: the add to cart rate for the stick drops, which would mean the rows distract from the main purchase. If that happens, remove the buy box rows first and keep the section (H10).
+
+## H10. A Cross-sell section after the reviews
+
+Shipped 2026-11-18. Page: `product.landing-01`.
+
+The reviews are where shoppers come to trust the brand. Right after them is the best moment to show the rest of the routine, before the page goes back to selling the stick.
+
+We added a "Complete your routine" section after the reviews, with the same three products as large cards. On phones it is a swipe row with the next card peeking in, and on desktop three cards side by side.
+
+- The large cards show the products properly, which the small buy box rows cannot.
+- It reaches shoppers who scrolled past the buy box without deciding yet.
+- Same "+ Add" behaviour as H9: it adds in place and never opens the cart.
+
+What we expect: more shoppers add a Cross-sell, and the share of orders with more than one product goes up.
+
+What would prove us wrong: scroll depth past this section drops compared with before, which would mean the extra section makes shoppers stop reading. If that happens, move it lower, after the guarantee.

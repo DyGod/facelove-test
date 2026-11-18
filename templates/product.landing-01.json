@@ -294,6 +294,46 @@
                 "payment_source": "list",
                 "payment_types": "paypal, american_express, apple_pay, google_pay, maestro, master, visa, shopify_pay"
               }
+            },
+            "cross_sell": {
+              "type": "cross-sell",
+              "settings": {
+                "heading": "Complete your routine",
+                "text": "Add with one tap. Ships with your order.",
+                "accent_color": "#3B2A4A",
+                "highlight_color": "#B8976A"
+              },
+              "blocks": {
+                "product_1": {
+                  "type": "_cross-sell-product",
+                  "settings": {
+                    "product": "everlove-mascara-for-mature-lashes-new",
+                    "short_name": "Everlove Mascara",
+                    "benefit": "Lift and length without clumps"
+                  }
+                },
+                "product_2": {
+                  "type": "_cross-sell-product",
+                  "settings": {
+                    "product": "ironboost-eyelash-serum-main",
+                    "short_name": "IronBoost+ Lash Serum",
+                    "benefit": "Nourishes thin, brittle lashes"
+                  }
+                },
+                "product_3": {
+                  "type": "_cross-sell-product",
+                  "settings": {
+                    "product": "dream-skin-primer",
+                    "short_name": "Dream Skin Primer",
+                    "benefit": "Smooths texture so the stick glides on"
+                  }
+                }
+              },
+              "block_order": [
+                "product_1",
+                "product_2",
+                "product_3"
+              ]
             }
           },
           "block_order": [
@@ -303,6 +343,7 @@
             "variant_picker_R3rGDr",
             "buy_buttons_eYQEYi",
             "trust_badges",
+            "cross_sell",
             "guarantee",
             "text_aEtTtq"
           ]
@@ -801,12 +842,57 @@
         "ingredient_3",
         "ingredient_4"
       ]
+    },
+    "cross_sell": {
+      "type": "cross-sell",
+      "blocks": {
+        "product_1": {
+          "type": "_cross-sell-product",
+          "settings": {
+            "product": "everlove-mascara-for-mature-lashes-new",
+            "short_name": "Everlove Mascara",
+            "benefit": "Lift and length without clumps"
+          }
+        },
+        "product_2": {
+          "type": "_cross-sell-product",
+          "settings": {
+            "product": "ironboost-eyelash-serum-main",
+            "short_name": "IronBoost+ Lash Serum",
+            "benefit": "Nourishes thin, brittle lashes"
+          }
+        },
+        "product_3": {
+          "type": "_cross-sell-product",
+          "settings": {
+            "product": "dream-skin-primer",
+            "short_name": "Dream Skin Primer",
+            "benefit": "Smooths texture so the stick glides on"
+          }
+        }
+      },
+      "block_order": [
+        "product_1",
+        "product_2",
+        "product_3"
+      ],
+      "settings": {
+        "eyebrow": "Pairs with your stick",
+        "heading": "Complete your routine",
+        "text": "The finishing touches our customers add most.",
+        "accent_color": "#3B2A4A",
+        "highlight_color": "#B8976A",
+        "background_color": "#FFFFFF",
+        "padding-block-start": 48,
+        "padding-block-end": 48
+      }
     }
   },
   "order": [
     "main",
     "logos",
     "reviews",
+    "cross_sell",
     "comparison",
     "features",
     "ingredients",

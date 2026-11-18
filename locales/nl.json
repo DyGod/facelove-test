@@ -18,6 +18,13 @@
     },
     "filter": "Filter",
     "payment_methods": "Betaalmethoden",
+    "cross_sell": {
+      "add": "Toevoegen",
+      "added": "Toegevoegd",
+      "add_label": "{{ product }} aan winkelwagen toevoegen",
+      "choose_option": "Kies {{ option }}",
+      "error": "Dit artikel kon niet worden toegevoegd. Probeer het opnieuw."
+    },
     "contact_form": {
       "name": "Naam",
       "email": "E-mail",

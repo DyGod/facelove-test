@@ -35,7 +35,10 @@
       "sale_timer": "Sale countdown",
       "trust_badges": "Vertrouwensbadges",
       "ingredients": "Ingrediënten in de kijker",
-      "ingredient": "Ingrediënt"
+      "ingredient": "Ingrediënt",
+      "cross_sell": "Cross-sell",
+      "cross_sell_rows": "Cross-sell-rijen",
+      "cross_sell_product": "Cross-sell-product"
     },
     "settings": {
       "show_rating": "Beoordeling tonen",
@@ -122,7 +125,11 @@
       "eyebrow": "Bovenkop",
       "footnote": "Voetnoot",
       "ingredient_name": "Naam ingrediënt",
-      "show_dividers": "Lijnen boven en onder tonen"
+      "show_dividers": "Lijnen boven en onder tonen",
+      "short_name": "Korte naam",
+      "benefit_line": "Voordeelregel",
+      "button_color": "Knopkleur",
+      "added_color": "Accent voor ‘Toegevoegd’"
     },
     "content": {
       "sticky_bar": "Vaste 'Toevoegen aan winkelwagen'-balk",
@@ -154,7 +161,9 @@
       "ends_at": "Format YYYY-MM-DD HH:MM in your store's time zone. The block hides after this time. Leave empty to show only the heading.",
       "show_offer_price": "Replaces the cart icon with the variant's compare-at and sale price.",
       "qualifying_variants": "Variant names, separated by commas, that get the gifts (for example: 2 Sticks). Leave empty for every variant. Match this to your automatic discount.",
-      "payment_types": "Scheid met komma's. Gebruik de Shopify-namen: visa, master, american_express, paypal, apple_pay, google_pay, maestro, shopify_pay."
+      "payment_types": "Scheid met komma's. Gebruik de Shopify-namen: visa, master, american_express, paypal, apple_pay, google_pay, maestro, shopify_pay.",
+      "short_name": "Laat leeg om de producttitel te gebruiken.",
+      "cross_sell": "Producten die bij dit product passen. Elk product wordt ter plekke toegevoegd, zonder de winkelwagen te openen. Uitverkochte producten worden verborgen."
     },
     "options": {
       "badge_all": "Every card on sale",

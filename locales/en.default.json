@@ -151,6 +151,13 @@
     "load_video": "Load video: {{ description }}",
     "sold_out": "Sold out",
     "payment_methods": "Payment methods",
+    "cross_sell": {
+      "add": "Add",
+      "added": "Added",
+      "add_label": "Add {{ product }} to cart",
+      "choose_option": "Choose {{ option }}",
+      "error": "Couldn't add this item. Please try again."
+    },
     "slider_label": "Slider"
   },
   "blogs": {
