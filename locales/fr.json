@@ -335,6 +335,12 @@
       "expiration_date_html": "Expire le <bdi>{{ expires_on }}</bdi>"
     }
   },
+  "landing": {
+    "free_gift_item": "+ {{ title }} OFFERT",
+    "free_shipping": "+ Livraison OFFERTE",
+    "rating_label": "Noté {{ rating }} sur 5",
+    "review_count": "({{ count }} avis)"
+  },
   "placeholders": {
     "password": "Mot de passe",
     "search": "Rechercher",

@@ -373,6 +373,12 @@
       "expired": "Expired"
     }
   },
+  "landing": {
+    "free_gift_item": "+ FREE {{ title }}",
+    "free_shipping": "+ FREE Shipping",
+    "rating_label": "Rated {{ rating }} out of 5",
+    "review_count": "({{ count }} Reviews)"
+  },
   "placeholders": {
     "password": "Password",
     "search": "Search",

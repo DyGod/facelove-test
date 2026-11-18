@@ -1,0 +1,199 @@
+{%- doc -%}
+  Renders a sale heading between two rules and a colored countdown bar that counts down
+  to a merchant-set end time. The block hides itself once the end time passes, both at
+  render time and live in the browser. Without an end time only the heading renders.
+
+  @example
+  {% content_for 'block', type: 'landing-sale-timer', id: 'sale-timer' %}
+{%- enddoc -%}
+
+{%- liquid
+  assign now_ts = 'now' | date: '%s' | times: 1
+  assign end_ts = 0
+  if block.settings.ends_at != blank
+    assign end_ts = block.settings.ends_at | date: '%s' | times: 1
+  endif
+  assign has_timer = false
+  if end_ts > 0
+    assign has_timer = true
+  endif
+  assign is_ended = false
+  if has_timer and end_ts <= now_ts
+    assign is_ended = true
+  endif
+-%}
+
+{%- unless is_ended and request.design_mode == false -%}
+  <div
+    class="landing-sale-timer spacing-style"
+    style="
+      {% render 'spacing-style', settings: block.settings %}
+      --landing-sale-accent: {{ block.settings.accent_color }};
+      --landing-sale-accent-rgb: {{ block.settings.accent_color.red }} {{ block.settings.accent_color.green }} {{ block.settings.accent_color.blue }};
+      --landing-sale-text: {{ block.settings.text_color }};
+    "
+    {{ block.shopify_attributes }}
+  >
+    {%- if block.settings.heading != blank -%}
+      <p class="landing-sale-timer__heading">
+        <span>{{ block.settings.heading | escape }}</span>
+      </p>
+    {%- endif -%}
+
+    {%- if has_timer -%}
+      <script src="{{ 'landing-countdown.js' | asset_url }}" type="module" fetchpriority="low"></script>
+      <landing-countdown
+        class="landing-sale-timer__bar"
+        data-end="{{ end_ts }}"
+        {% if request.design_mode %}data-design-mode{% endif %}
+      >
+        <span class="landing-sale-timer__label">{{ block.settings.timer_label | escape }}</span>
+        {% comment %} Initial value is server time; the component replaces it on connect. {% endcomment %}
+        {%- liquid
+          assign remaining = end_ts | minus: now_ts | at_least: 0
+          assign r_days = remaining | divided_by: 86400
+          assign r_hours = remaining | modulo: 86400 | divided_by: 3600
+          assign r_minutes = remaining | modulo: 3600 | divided_by: 60
+          assign r_seconds = remaining | modulo: 60
+        -%}
+        <time class="landing-sale-timer__value" ref="value" role="timer" aria-live="off">
+          {%- if r_days > 0 -%}{{ r_days | prepend: '0' | slice: -2, 2 }}:{%- endif -%}
+          {{- r_hours | prepend: '0' | slice: -2, 2 }}:{{ r_minutes | prepend: '0' | slice: -2, 2 }}:{{ r_seconds | prepend: '0' | slice: -2, 2 -}}
+        </time>
+      </landing-countdown>
+    {%- endif -%}
+  </div>
+{%- endunless -%}
+
+{% stylesheet %}
+  .landing-sale-timer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .landing-sale-timer[hidden] {
+    display: none;
+  }
+
+  .landing-sale-timer__heading {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-xs);
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.4;
+    text-align: center;
+    text-transform: uppercase;
+    color: var(--color-foreground);
+  }
+
+  .landing-sale-timer__heading::before,
+  .landing-sale-timer__heading::after {
+    content: '';
+    flex: 1 1 var(--padding-sm);
+    height: 2px;
+    background-color: rgb(var(--landing-sale-accent-rgb) / var(--opacity-30));
+  }
+
+  .landing-sale-timer__heading > span {
+    flex: 0 1 auto;
+    min-width: 0;
+    overflow-wrap: break-word;
+  }
+
+  .landing-sale-timer__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0 0.35em;
+    min-height: 38px;
+    padding: 10px var(--padding-md, 20px);
+    border-radius: var(--style-border-radius-sm);
+    background-color: var(--landing-sale-accent);
+    color: var(--landing-sale-text);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    line-height: 1.4;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .landing-sale-timer__value {
+    font-variant-numeric: tabular-nums;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:landing.names.sale_timer",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:settings.heading",
+      "default": "Black Friday sale - while supplies last"
+    },
+    {
+      "type": "text",
+      "id": "timer_label",
+      "label": "t:landing.settings.timer_label",
+      "default": "Price increases in"
+    },
+    {
+      "type": "text",
+      "id": "ends_at",
+      "label": "t:landing.settings.ends_at",
+      "info": "t:landing.info.ends_at",
+      "placeholder": "2026-11-30 23:59"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "t:landing.settings.accent_color",
+      "default": "#B69FD1"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "t:landing.settings.timer_text_color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:landing.names.sale_timer",
+      "category": "t:categories.product"
+    }
+  ]
+}
+{% endschema %}

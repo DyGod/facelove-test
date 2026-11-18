@@ -3,3 +3,6 @@ node_modules/
 .shopify/
 *.log
 _import/
+.env
+.env.*
+!.env.example

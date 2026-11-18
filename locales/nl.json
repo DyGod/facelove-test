@@ -352,6 +352,12 @@
   "fields": {
     "separator": "tot"
   },
+  "landing": {
+    "free_gift_item": "+ GRATIS {{ title }}",
+    "free_shipping": "+ GRATIS verzending",
+    "rating_label": "Beoordeeld met {{ rating }} van 5",
+    "review_count": "({{ count }} reviews)"
+  },
   "placeholders": {
     "password": "Wachtwoord",
     "search": "Zoeken",

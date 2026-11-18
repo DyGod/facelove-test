@@ -200,6 +200,41 @@ cascade. Style ownership therefore controls CSS availability in that delivery pa
   provide reduced-motion behavior, and keep layout stable.
 - Match selector intent and property ordering in adjacent source.
 
+### Mobile-first design
+
+Always design and build mobile first, then tablet, then desktop. Never start from
+the desktop layout and shrink it down.
+
+- **Order of work.** Finish the mobile layout before you write any tablet or desktop
+  rules. Then do tablet, then desktop. Each larger breakpoint only adds to or
+  adjusts what the smaller one already set.
+- **Design references.** When a task comes with references (mockups, screenshots,
+  Figma frames, live URLs), work from the mobile reference first. Match it fully
+  before moving on to the tablet reference, then the desktop one. If a reference
+  for some viewport is missing, build that viewport by extending the next smaller
+  layout, and say in your report which viewport had no reference.
+- **Base styles are mobile.** Unqualified rules target the smallest viewport. Add
+  larger layouts with `min-width` queries. Use the theme's breakpoints:
+  - Mobile: base styles (below `750px`)
+  - Tablet: `@media screen and (min-width: 750px)`
+  - Desktop: `@media screen and (min-width: 990px)`
+  - Wide desktop, only when needed: `@media screen and (min-width: 1400px)`
+- **Avoid desktop-first overrides.** Don't add new `max-width` queries to undo
+  desktop styles. Keep existing `max-width: 749px` rules in source you're only
+  editing lightly, but write new rules mobile first. Container queries and
+  intrinsic layouts (`clamp()`, `minmax()`, `auto-fit`) are still preferred where
+  the component's own width matters more than the viewport.
+- **Mobile constraints come first.** Plan for touch targets of at least 44×44px,
+  one-column reading order, thumb-reachable primary actions, no horizontal scroll,
+  and long merchant text at 320px wide. Keep DOM order matching the mobile reading
+  order. Don't reorder content visually at larger sizes in a way that breaks
+  keyboard or screen-reader order.
+- **Media and performance.** Set image `sizes` and `widths` from mobile upward, and
+  make LCP and eager-loading decisions using the mobile layout first.
+- **Verify in the same order.** Preview at 375px (and check 320px), then about
+  768px, then 1280px or wider. Before reporting, confirm that each step up didn't
+  break the smaller layouts.
+
 ### Color values and active context
 
 Use complete color tokens directly, for example `color: var(--color-foreground)`,
@@ -374,6 +409,48 @@ When adding a feature module:
 4. Gate that path with the relevant markup or setting and execute it once.
 5. Keep asset imports and script placement consistent with
    `snippets/scripts.liquid`.
+
+## Admin API access (products and discounts)
+
+Use the Admin GraphQL API for store data such as products, variants, inventory, and
+discounts. Theme code never calls it. Never put Admin credentials in Liquid, assets,
+or any storefront output.
+
+- **Default: Shopify CLI.** Use the CLI's stored store session. It needs no app
+  and no secrets. Read the store from `SHOPIFY_STORE` in `.env`.
+  - Query:
+    `shopify store execute -s "$SHOPIFY_STORE" --no-input -j -q '<graphql>'`
+    (or `--query-file` and `--variables` / `--variable-file`). Add
+    `--version "$SHOPIFY_API_VERSION"` to pin the API version.
+  - Mutation: the same command plus `--allow-mutations`. Add that flag only after
+    the user has approved the change (see below).
+  - Large exports and imports: `shopify store bulk`.
+  - If the session has expired or a scope is missing, the command fails under
+    `--no-input`. Ask the user to run, in their own terminal:
+    `shopify store auth -s <store> --scopes <comma-separated scopes>`. Pass the
+    full list of scopes every time, because the new list replaces the old one.
+- **Fallback: own app token.** Only when the CLI isn't usable (for example in
+  scripts or CI), read `SHOPIFY_CLIENT_ID` + `SHOPIFY_CLIENT_SECRET` or
+  `SHOPIFY_ADMIN_TOKEN` from the gitignored `.env`. Get a token through the client
+  credentials grant (`POST https://$SHOPIFY_STORE/admin/oauth/access_token`), then call
+  `https://$SHOPIFY_STORE/admin/api/$SHOPIFY_API_VERSION/graphql.json` with the
+  `X-Shopify-Access-Token` header.
+- **Secrets.** Never print, log, commit, or echo tokens or secrets, and never copy
+  them out of the CLI's config files.
+- **Schema accuracy.** Check fields and mutations against the pinned version's docs,
+  not from memory.
+- **Read freely, confirm writes.** Queries are fine without asking. Before any
+  mutation (creating, updating, or deleting products, variants, prices, inventory,
+  publications, or discounts), show the user the exact change and the affected
+  IDs, and wait for approval. Approval covers only that change.
+- **Check results.** Always inspect `userErrors` and top-level `errors`. Report
+  failures as they are. Use cursor pagination for lists and respect throttle
+  limits (`extensions.cost`).
+- **Discounts.** Use the `discount*` mutations (for example `discountCodeBasicCreate`
+  and `discountAutomaticBasicCreate`) instead of the legacy price rule APIs. Create
+  test discounts with clear titles and an end date.
+- **Scopes.** If a call fails because a scope is missing, tell the user which scope
+  to add to the app. Don't look for a workaround.
 
 ## Verification
 

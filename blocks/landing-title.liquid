@@ -1,0 +1,73 @@
+{%- doc -%}
+  Renders the surrounding product's title as the page heading for landing buy boxes,
+  scaling fluidly from a compact mobile size up to the desktop size.
+
+  @example
+  {% content_for 'block', type: 'landing-title', id: 'title' %}
+{%- enddoc -%}
+
+{%- assign product = closest.product -%}
+
+{%- if product != blank -%}
+  <h1
+    class="landing-title spacing-style"
+    style="{% render 'spacing-style', settings: block.settings %}"
+    {{ block.shopify_attributes }}
+  >
+    {{- product.title | escape -}}
+  </h1>
+{%- endif -%}
+
+{% stylesheet %}
+  .landing-title {
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-size: clamp(1.4rem, 0.9rem + 1vw, 2rem);
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--color-foreground);
+    overflow-wrap: break-word;
+    text-wrap: pretty;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:landing.names.product_title",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:landing.names.product_title",
+      "category": "t:categories.product"
+    }
+  ]
+}
+{% endschema %}

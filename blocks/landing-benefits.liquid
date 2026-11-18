@@ -1,5 +1,7 @@
 {%- doc -%}
   Renders a two-column grid of short benefit pills from a list of lines, one benefit per line.
+  Each line can show its own icon image (icon_1 to icon_4, matched by line order); lines
+  without an image fall back to a check mark in the icon color.
   The wrapper carries the `landing-buy` anchor so landing page buttons can scroll to the buy box.
 
   @example
@@ -22,10 +24,29 @@
       {%- for benefit in benefits -%}
         {%- assign benefit_text = benefit | strip -%}
         {%- if benefit_text != blank -%}
+          {%- liquid
+            assign icon_key = 'icon_' | append: forloop.index
+            assign icon_image = block.settings[icon_key]
+          -%}
           <li class="landing-benefits__item">
-            <svg class="landing-benefits__icon" aria-hidden="true" focusable="false" viewBox="0 0 16 16">
-              <path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+            {%- if icon_image != blank -%}
+              {{
+                icon_image
+                | image_url: width: 72
+                | image_tag:
+                  class: 'landing-benefits__icon landing-benefits__icon--image',
+                  width: 18,
+                  height: 18,
+                  widths: '36, 54, 72',
+                  sizes: '18px',
+                  loading: 'lazy',
+                  alt: ''
+              }}
+            {%- else -%}
+              <svg class="landing-benefits__icon" aria-hidden="true" focusable="false" viewBox="0 0 16 16">
+                <path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            {%- endif -%}
             <span>{{ benefit_text | escape }}</span>
           </li>
         {%- endif -%}
@@ -44,7 +65,7 @@
   .landing-benefits__list {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--gap-xs);
+    gap: 6px;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -55,12 +76,14 @@
     align-items: center;
     gap: var(--gap-xs);
     min-width: 0;
-    padding: var(--padding-xs) var(--padding-sm);
+    min-height: 34px;
+    padding: var(--padding-xs) 10px;
     border-radius: var(--style-border-radius-sm);
     background-color: rgb(var(--color-foreground-rgb) / var(--opacity-5));
-    font-size: 0.8125rem;
-    font-weight: 500;
-    line-height: 1.3;
+    font-size: 0.625rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-85));
   }
 
   .landing-benefits__item > span {
@@ -70,9 +93,25 @@
 
   .landing-benefits__icon {
     flex: none;
-    width: 14px;
-    height: 14px;
+    width: 18px;
+    height: 18px;
     color: var(--landing-benefits-icon);
+  }
+
+  .landing-benefits__icon--image {
+    object-fit: contain;
+  }
+
+  @media screen and (min-width: 750px) {
+    .landing-benefits__item {
+      font-size: 0.6875rem;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .landing-benefits__item {
+      font-size: 0.75rem;
+    }
   }
 {% endstylesheet %}
 
@@ -93,6 +132,31 @@
       "id": "icon_color",
       "label": "t:landing.settings.icon_color",
       "default": "#9B7FC0"
+    },
+    {
+      "type": "header",
+      "content": "t:landing.content.benefit_icons",
+      "info": "t:landing.info.benefit_icons"
+    },
+    {
+      "type": "image_picker",
+      "id": "icon_1",
+      "label": "t:landing.settings.icon_1"
+    },
+    {
+      "type": "image_picker",
+      "id": "icon_2",
+      "label": "t:landing.settings.icon_2"
+    },
+    {
+      "type": "image_picker",
+      "id": "icon_3",
+      "label": "t:landing.settings.icon_3"
+    },
+    {
+      "type": "image_picker",
+      "id": "icon_4",
+      "label": "t:landing.settings.icon_4"
     },
     {
       "type": "header",

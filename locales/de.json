@@ -329,6 +329,12 @@
       "expiration_date_html": "Läuft ab am <bdi>{{ expires_on }}</bdi>"
     }
   },
+  "landing": {
+    "free_gift_item": "+ GRATIS {{ title }}",
+    "free_shipping": "+ GRATIS Versand",
+    "rating_label": "Mit {{ rating }} von 5 bewertet",
+    "review_count": "({{ count }} Bewertungen)"
+  },
   "placeholders": {
     "password": "Passwort",
     "search": "Suchen",

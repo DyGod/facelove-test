@@ -1,0 +1,161 @@
+{%- doc -%}
+  Renders a star rating summary with a short label and review count, e.g.
+  "★★★★★ Excellent 4.8 | (7,295+ Reviews)". Partial stars are filled proportionally.
+
+  @example
+  {% content_for 'block', type: 'landing-rating', id: 'rating' %}
+{%- enddoc -%}
+
+{%- liquid
+  assign rating = block.settings.rating | times: 1.0
+  assign rating_label = 'landing.rating_label' | t: rating: rating
+-%}
+
+<div
+  class="landing-rating spacing-style"
+  style="
+    {% render 'spacing-style', settings: block.settings %}
+    --landing-rating-star: {{ block.settings.star_color }};
+  "
+  {{ block.shopify_attributes }}
+>
+  <span class="landing-rating__stars" role="img" aria-label="{{ rating_label | escape }}">
+    {%- for i in (1..5) -%}
+      {%- liquid
+        assign star_floor = i | minus: 1
+        assign fill = rating | minus: star_floor | times: 100 | at_least: 0 | at_most: 100 | round
+      -%}
+      <span class="landing-rating__star" style="--landing-rating-fill: {{ fill }}%;"></span>
+    {%- endfor -%}
+  </span>
+  <span class="landing-rating__meta" aria-hidden="true">
+    {%- if block.settings.label != blank -%}
+      <span>{{ block.settings.label | escape }} {{ rating }}</span>
+    {%- endif -%}
+    {%- if block.settings.label != blank and block.settings.review_count != blank -%}
+      <span class="landing-rating__sep">|</span>
+    {%- endif -%}
+    {%- if block.settings.review_count != blank -%}
+      <span>{{ 'landing.review_count' | t: count: block.settings.review_count }}</span>
+    {%- endif -%}
+  </span>
+  {%- if block.settings.review_count != blank -%}
+    <span class="visually-hidden">{{ 'landing.review_count' | t: count: block.settings.review_count }}</span>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .landing-rating {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--gap-2xs) 10px;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .landing-rating__stars {
+    display: inline-flex;
+    gap: 2px;
+  }
+
+  .landing-rating__star {
+    display: block;
+    width: 16px;
+    height: 16px;
+    background: linear-gradient(
+      to right,
+      var(--landing-rating-star) var(--landing-rating-fill),
+      rgb(var(--color-foreground-rgb) / var(--opacity-15)) var(--landing-rating-fill)
+    );
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M10 1.5l2.6 5.5 6 .8-4.4 4.1 1.1 5.9L10 15l-5.3 2.8 1.1-5.9L1.4 7.8l6-.8z'/%3E%3C/svg%3E")
+      center / contain no-repeat;
+  }
+
+  .landing-rating__star:dir(rtl) {
+    transform: scaleX(-1);
+  }
+
+  .landing-rating__meta {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    line-height: 1.55;
+    color: var(--color-foreground);
+  }
+
+  .landing-rating__sep {
+    font-weight: 400;
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-20));
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:landing.names.rating",
+  "tag": null,
+  "settings": [
+    {
+      "type": "range",
+      "id": "rating",
+      "label": "t:landing.settings.rating",
+      "min": 0,
+      "max": 5,
+      "step": 0.1,
+      "default": 4.8
+    },
+    {
+      "type": "text",
+      "id": "label",
+      "label": "t:landing.settings.rating_label",
+      "default": "Excellent"
+    },
+    {
+      "type": "text",
+      "id": "review_count",
+      "label": "t:landing.settings.review_count",
+      "default": "7,295+"
+    },
+    {
+      "type": "color",
+      "id": "star_color",
+      "label": "t:landing.settings.star_color",
+      "default": "#F9BC4B"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:landing.names.rating",
+      "category": "t:categories.product"
+    }
+  ]
+}
+{% endschema %}

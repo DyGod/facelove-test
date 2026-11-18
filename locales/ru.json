@@ -366,6 +366,12 @@
   "fields": {
     "separator": "до"
   },
+  "landing": {
+    "free_gift_item": "+ БЕСПЛАТНО: {{ title }}",
+    "free_shipping": "+ БЕСПЛАТНАЯ доставка",
+    "rating_label": "Оценка {{ rating }} из 5",
+    "review_count": "({{ count }} отзывов)"
+  },
   "placeholders": {
     "password": "Пароль",
     "search": "Поиск",

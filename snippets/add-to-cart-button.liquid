@@ -8,6 +8,8 @@
   @param {string} [class] - Additional CSS classes to apply to the button.
   @param {string} [id] - The ID attribute for the button.
   @param {string} [data_testid] - The data-testid attribute for testing.
+  @param {boolean} [show_offer_price] - Replaces the cart icon with a price pill (compare-at price
+    struck through, then the price) and a trailing arrow, for the selected or first available variant.
 {%- enddoc -%}
 
 {%- liquid
@@ -47,7 +49,27 @@
         {{- 'icon-add-to-cart.svg' | inline_asset_content -}}
       </span>
     {% endif %}
-    {{- add_to_cart_text | default: default_add_to_cart_text -}}
+    {%- if show_offer_price and can_add_to_cart -%}
+      {%- assign offer_variant = product.selected_or_first_available_variant -%}
+      <span class="add-to-cart-offer">
+        <span class="add-to-cart-offer__label">{{- add_to_cart_text | default: default_add_to_cart_text -}}</span>
+        <span class="add-to-cart-offer__prices">
+          {%- if offer_variant.compare_at_price > offer_variant.price -%}
+            <s class="add-to-cart-offer__was">
+              <span class="visually-hidden">{{ 'content.price_regular' | t }}</span>
+              {{- offer_variant.compare_at_price | money -}}
+            </s>
+            <span class="visually-hidden">{{ 'content.price_sale' | t }}</span>
+          {%- endif -%}
+          <span class="add-to-cart-offer__now">{{ offer_variant.price | money }}</span>
+        </span>
+        <span class="svg-wrapper add-to-cart-offer__arrow" aria-hidden="true">
+          {{- 'icon-arrow.svg' | inline_asset_content -}}
+        </span>
+      </span>
+    {%- else -%}
+      {{- add_to_cart_text | default: default_add_to_cart_text -}}
+    {%- endif -%}
     {% comment %} checkmark burst markup {% endcomment %}
     <span class="add-to-cart__added">
       <span class="svg-wrapper add-to-cart__added-icon">

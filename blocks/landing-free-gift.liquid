@@ -1,0 +1,280 @@
+{%- doc -%}
+  Lists free gifts included with the purchase ("+ FREE Dream Skin Primer  $30"), plus an
+  optional free shipping row. With auto add on, each available gift's first available
+  variant is attached to the section's buy buttons form through hidden `free_gift_id`
+  inputs, and `product-form.js` adds those gifts to the cart with the main product.
+  Gift pricing at checkout is the store's job (for example an automatic discount);
+  the shown price is the gift's regular price, struck through.
+  With qualifying variants set, rows and gift inputs render only while one of those
+  variants is selected; the component re-renders on variant change.
+
+  @example
+  {% content_for 'block', type: 'landing-free-gift', id: 'free-gift' %}
+{%- enddoc -%}
+
+{%- liquid
+  assign product = closest.product
+  assign product_form_id = 'BuyButtons-ProductForm-' | append: section.id
+  assign selected_variant = product.selected_or_first_available_variant
+
+  assign qualifies = true
+  if block.settings.qualifying_variants != blank
+    assign qualifies = false
+    assign qualifying_titles = block.settings.qualifying_variants | split: ','
+    for qualifying_title in qualifying_titles
+      assign wanted = qualifying_title | strip | downcase
+      assign current = selected_variant.title | strip | downcase
+      if wanted != blank and wanted == current
+        assign qualifies = true
+        break
+      endif
+    endfor
+  endif
+
+  assign has_rows = false
+  if qualifies
+    if block.settings.gifts.count > 0 or block.settings.show_shipping
+      assign has_rows = true
+    endif
+  endif
+-%}
+
+<script src="{{ 'landing-free-gift.js' | asset_url }}" type="module" fetchpriority="low"></script>
+<landing-free-gift
+  class="landing-free-gift-host"
+  data-block-id="{{ block.id }}"
+  data-product-id="{{ product.id }}"
+  {{ block.shopify_attributes }}
+>
+{%- if has_rows -%}
+  <div
+    class="landing-free-gift spacing-style"
+    style="{% render 'spacing-style', settings: block.settings %}"
+  >
+    {%- if block.settings.heading != blank -%}
+      <p class="landing-free-gift__heading">{{ block.settings.heading | escape }}</p>
+    {%- endif -%}
+
+    <ul class="landing-free-gift__list" role="list">
+      {%- for gift in block.settings.gifts -%}
+        {%- assign gift_variant = gift.selected_or_first_available_variant -%}
+        <li class="landing-free-gift__item">
+          <span class="landing-free-gift__media">
+            {%- if gift.featured_image != blank -%}
+              {{
+                gift.featured_image
+                | image_url: width: 120
+                | image_tag:
+                  class: 'landing-free-gift__image',
+                  width: 30,
+                  height: 30,
+                  widths: '60, 90, 120',
+                  sizes: '30px',
+                  loading: 'lazy',
+                  alt: ''
+              }}
+            {%- endif -%}
+          </span>
+          <span class="landing-free-gift__text">{{ 'landing.free_gift_item' | t: title: gift.title }}</span>
+          {%- if gift.price > 0 -%}
+            <s class="landing-free-gift__price">
+              <span class="visually-hidden">{{ 'content.price_regular' | t }}</span>
+              {{- gift.price | money -}}
+            </s>
+          {%- endif -%}
+          {%- if block.settings.auto_add and gift_variant.available -%}
+            <input type="hidden" name="free_gift_id" value="{{ gift_variant.id }}" form="{{ product_form_id }}">
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+
+      {%- if block.settings.show_shipping -%}
+        <li class="landing-free-gift__item">
+          <span class="landing-free-gift__media">
+            {%- if block.settings.shipping_image != blank -%}
+              {{
+                block.settings.shipping_image
+                | image_url: width: 120
+                | image_tag:
+                  class: 'landing-free-gift__image',
+                  width: 30,
+                  height: 30,
+                  widths: '60, 90, 120',
+                  sizes: '30px',
+                  loading: 'lazy',
+                  alt: ''
+              }}
+            {%- else -%}
+              <svg class="landing-free-gift__icon" aria-hidden="true" focusable="false" viewBox="0 0 20 20">
+                {%- render 'icon', icon: 'truck' -%}
+              </svg>
+            {%- endif -%}
+          </span>
+          <span class="landing-free-gift__text">{{ 'landing.free_shipping' | t }}</span>
+        </li>
+      {%- endif -%}
+    </ul>
+  </div>
+{%- endif -%}
+</landing-free-gift>
+
+{% stylesheet %}
+  .landing-free-gift-host {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .landing-free-gift-host:empty {
+    display: none;
+  }
+
+  .landing-free-gift {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-xs);
+    width: 100%;
+    min-width: 0;
+  }
+
+  .landing-free-gift__heading {
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .landing-free-gift__list {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border-radius: var(--style-border-radius-sm);
+    background-color: rgb(var(--color-foreground-rgb) / var(--opacity-8));
+    list-style: none;
+  }
+
+  .landing-free-gift__item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    padding: 7px 20px 7px var(--padding-xs);
+  }
+
+  .landing-free-gift__item + .landing-free-gift__item {
+    border-block-start: 1px solid rgb(var(--color-foreground-rgb) / var(--opacity-8));
+  }
+
+  .landing-free-gift__media {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    overflow: hidden;
+    border-radius: var(--style-border-radius-xs);
+    background-color: var(--color-background);
+  }
+
+  .landing-free-gift__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .landing-free-gift__icon {
+    width: 20px;
+    height: 20px;
+    fill: currentcolor;
+  }
+
+  .landing-free-gift__text {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    line-height: 1.4;
+    overflow-wrap: break-word;
+  }
+
+  .landing-free-gift__price {
+    flex: none;
+    font-size: 0.75rem;
+    color: var(--color-foreground);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:landing.names.free_gift",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:settings.heading"
+    },
+    {
+      "type": "product_list",
+      "id": "gifts",
+      "label": "t:landing.settings.gifts",
+      "limit": 3
+    },
+    {
+      "type": "text",
+      "id": "qualifying_variants",
+      "label": "t:landing.settings.qualifying_variants",
+      "info": "t:landing.info.qualifying_variants"
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_add",
+      "label": "t:landing.settings.auto_add_gifts",
+      "info": "t:landing.info.auto_add_gifts",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_shipping",
+      "label": "t:landing.settings.show_free_shipping",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "shipping_image",
+      "label": "t:landing.settings.shipping_image",
+      "visible_if": "{{ block.settings.show_shipping }}"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:landing.names.free_gift",
+      "category": "t:categories.product"
+    }
+  ]
+}
+{% endschema %}

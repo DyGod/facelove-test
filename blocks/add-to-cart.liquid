@@ -11,6 +11,13 @@
 {% liquid
   assign scoped_class = block.settings.style_class | append: '--' | append: block.id
   assign class = 'add-to-cart-button ' | append: block.settings.style_class | append: ' ' | append: scoped_class
+  if block.settings.show_offer_price
+    assign class = class | append: ' add-to-cart-button--offer'
+  endif
+  assign show_cart_icon = can_add_to_cart
+  if block.settings.show_offer_price
+    assign show_cart_icon = false
+  endif
   assign id = 'BuyButtons-ProductSubmitButton-' | append: block.id
 %}
 {% render 'button-custom-styles', block_settings: block.settings, block_id: block.id %}
@@ -25,7 +32,8 @@
     id: id,
     class: class,
     can_add_to_cart: can_add_to_cart,
-    show_icon: can_add_to_cart,
+    show_icon: show_cart_icon,
+    show_offer_price: block.settings.show_offer_price,
     product: closest.product,
     add_to_cart_text: add_to_cart_text,
     data_testid: 'standalone-add-to-cart'
@@ -57,6 +65,13 @@
       ],
       "default": "button-secondary",
       "info": "t:info.edit_button_style_in_theme_settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_offer_price",
+      "label": "t:landing.settings.show_offer_price",
+      "info": "t:landing.info.show_offer_price",
+      "default": false
     },
     {
       "type": "header",

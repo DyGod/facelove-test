@@ -15,6 +15,12 @@ const ERROR_BUTTON_REENABLE_DELAY = 1000;
 const SUCCESS_MESSAGE_DISPLAY_DURATION = 5000;
 
 /**
+ * Hidden inputs with this name (associated with the product form, e.g. through the `form`
+ * attribute from the landing-free-gift block) list gift variant IDs to add with the product.
+ */
+const FREE_GIFT_FIELD = 'free_gift_id';
+
+/**
  * @typedef {HTMLElement & {
  *   source: Element,
  *   destination: Element,
@@ -246,6 +252,67 @@ class ProductFormComponent extends Component {
     this.#abortController.abort();
   }
 
+  /**
+   * Drops duplicate gift IDs and gifts already in the cart, so repeated adds don't stack gifts.
+   * If the cart can't be read, all gifts are kept and Shopify's cart rules decide.
+   * @param {string[]} giftIds
+   * @returns {Promise<string[]>}
+   */
+  async #filterGiftsNotInCart(giftIds) {
+    const unique = [...new Set(giftIds)];
+    if (unique.length === 0) return unique;
+
+    try {
+      const response = await fetch(`${Theme.routes.cart_url}.js`, { headers: { Accept: 'application/json' } });
+      if (!response.ok) return unique;
+      /** @type {Cart} */
+      const cart = await response.json();
+      const inCart = new Set(cart.items.map((item) => String(item.variant_id)));
+      return unique.filter((id) => !inCart.has(id));
+    } catch {
+      return unique;
+    }
+  }
+
+  /**
+   * Returns the add request body. Without pending gifts it is the original form data; with gifts
+   * it is rewritten into Shopify's multi-item `items[n][...]` format, keeping the main item first
+   * along with its properties and selling plan, and marking gifts with a hidden `_free_gift` property.
+   * @param {FormData} formData
+   * @param {string[]} giftIds
+   * @param {number} quantity - Quantity for the main item.
+   * @returns {Promise<FormData>}
+   */
+  async #withFreeGifts(formData, giftIds, quantity) {
+    const pendingGiftIds = await this.#filterGiftsNotInCart(giftIds);
+    if (pendingGiftIds.length === 0) return formData;
+
+    const body = new FormData();
+    for (const [key, value] of formData) {
+      if (key === 'quantity') continue;
+      if (key === 'id') {
+        body.append('items[0][id]', value);
+        continue;
+      }
+      if (key === 'selling_plan') {
+        body.append('items[0][selling_plan]', value);
+        continue;
+      }
+      const property = key.match(/^properties\[(.+)\]$/);
+      body.append(property ? `items[0][properties][${property[1]}]` : key, value);
+    }
+    body.append('items[0][quantity]', String(quantity));
+
+    pendingGiftIds.forEach((giftId, index) => {
+      const position = index + 1;
+      body.append(`items[${position}][id]`, giftId);
+      body.append(`items[${position}][quantity]`, '1');
+      body.append(`items[${position}][properties][_free_gift]`, 'true');
+    });
+
+    return body;
+  }
+
   #getVariantIdInput() {
     return /** @type {HTMLInputElement | null} */ (this.querySelector('input[name="id"]'))?.value;
   }
@@ -436,6 +503,8 @@ class ProductFormComponent extends Component {
     });
 
     const itemCount = Number(formData.get('quantity')) || Number(this.dataset.quantityDefault);
+    const freeGiftIds = formData.getAll(FREE_GIFT_FIELD).map(String).filter(Boolean);
+    formData.delete(FREE_GIFT_FIELD);
     const deferredEventPromise = CartLinesUpdateEvent.createPromise();
 
     this.dispatchEvent(
@@ -454,13 +523,17 @@ class ProductFormComponent extends Component {
 
     const fetchCfg = fetchConfig('javascript', { body: formData });
 
-    fetch(Theme.routes.cart_add_url, {
-      ...fetchCfg,
-      headers: {
-        ...fetchCfg.headers,
-        Accept: 'text/html',
-      },
-    })
+    this.#withFreeGifts(formData, freeGiftIds, itemCount)
+      .then((body) =>
+        fetch(Theme.routes.cart_add_url, {
+          ...fetchCfg,
+          body,
+          headers: {
+            ...fetchCfg.headers,
+            Accept: 'text/html',
+          },
+        })
+      )
       .then((response) => response.json())
       .then(async (response) => {
         if (response.status) {
@@ -583,7 +656,7 @@ class ProductFormComponent extends Component {
       });
   }
 
-  /** @param {Array<{variantId: string, quantity: number}>} items */
+  /** @param {Array<{variantId: string, quantity: number, properties?: Record<string, string>}>} items */
   #processBatchAddToCart(items) {
     if (items.length === 0) return;
 
@@ -618,6 +691,7 @@ class ProductFormComponent extends Component {
       items: items.map((item) => ({
         id: Number(item.variantId),
         quantity: item.quantity,
+        ...(item.properties ? { properties: item.properties } : {}),
       })),
       sections: cartItemComponentsSectionIds.join(','),
     };
@@ -948,12 +1022,20 @@ class ProductFormComponent extends Component {
     const queuedItems = [...this.#addToCartQueue];
     this.#addToCartQueue = [];
 
-    /** @type {Array<{variantId: string, quantity: number}>} */
+    /** @type {Array<{variantId: string, quantity: number, properties?: Record<string, string>}>} */
     const resolvedItems = [];
     for (const item of queuedItems) {
       const resolvedItem = await this.#resolveQueuedAddToCartItem(item);
       if (resolvedItem) {
         resolvedItems.push(resolvedItem);
+      }
+    }
+
+    if (resolvedItems.length > 0) {
+      const form = this.querySelector('form');
+      const giftIds = form ? new FormData(form).getAll(FREE_GIFT_FIELD).map(String).filter(Boolean) : [];
+      for (const giftId of await this.#filterGiftsNotInCart(giftIds)) {
+        resolvedItems.push({ variantId: giftId, quantity: 1, properties: { _free_gift: 'true' } });
       }
     }
 

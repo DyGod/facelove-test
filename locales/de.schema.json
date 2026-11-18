@@ -22,7 +22,11 @@
       "question": "Question",
       "testimonial": "Testimonial",
       "testimonial_cards": "Testimonial cards",
-      "trust_points": "Trust points"
+      "trust_points": "Trust points",
+      "free_gift": "Free gifts",
+      "product_title": "Landing product title",
+      "rating": "Star rating",
+      "sale_timer": "Sale countdown"
     },
     "settings": {
       "accent_color": "Accent color",
@@ -50,14 +54,37 @@
       "rating": "Rating",
       "star_color": "Star color",
       "subheading": "Subheading",
-      "text_alignment_desktop": "Text alignment on tablet and desktop"
+      "text_alignment_desktop": "Text alignment on tablet and desktop",
+      "auto_add_gifts": "Add gifts to cart with the product",
+      "ends_at": "Sale ends at",
+      "gifts": "Gift products",
+      "icon_1": "Icon for line 1",
+      "icon_2": "Icon for line 2",
+      "icon_3": "Icon for line 3",
+      "icon_4": "Icon for line 4",
+      "rating_label": "Rating label",
+      "review_count": "Review count",
+      "shipping_image": "Free shipping image",
+      "show_free_shipping": "Show free shipping row",
+      "show_offer_price": "Show price and arrow in button",
+      "timer_label": "Countdown label",
+      "timer_text_color": "Countdown text color",
+      "qualifying_variants": "Qualifying variants"
+    },
+    "content": {
+      "benefit_icons": "Benefit icons"
     },
     "info": {
       "benefits": "One benefit per line. The block also marks where landing page buttons scroll to.",
       "button_link": "Leave empty to scroll to the product's benefit pills and buy box.",
       "checklist": "Use a bulleted list to show check marks.",
       "image_position": "Applies from tablet width up. On mobile the image always comes first.",
-      "logo_name": "Used as the logo's alt text, or shown as text when there's no image."
+      "logo_name": "Used as the logo's alt text, or shown as text when there's no image.",
+      "auto_add_gifts": "Adds each gift once per cart. Make gifts free at checkout with an automatic discount.",
+      "benefit_icons": "Optional. Icons match benefit lines in order. Lines without an icon show a check mark.",
+      "ends_at": "Format YYYY-MM-DD HH:MM in your store's time zone. The block hides after this time. Leave empty to show only the heading.",
+      "show_offer_price": "Replaces the cart icon with the variant's compare-at and sale price.",
+      "qualifying_variants": "Variant names, separated by commas, that get the gifts (for example: 2 Sticks). Leave empty for every variant. Match this to your automatic discount."
     },
     "options": {
       "half": "Half",
