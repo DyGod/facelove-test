@@ -207,20 +207,23 @@
   html[data-proto-sticky='C'] .proto-sticky-trust {
     grid-area: trust;
     display: flex;
-    justify-content: center;
-    gap: 6px 16px;
+    justify-content: space-between;
+    gap: 4px 8px;
     flex-wrap: wrap;
     margin: 0;
     padding: 0 0 8px;
     list-style: none;
     border-block-end: 1px solid rgb(var(--proto-plum-rgb) / 0.08);
-    font-size: 0.6875rem;
-    letter-spacing: 0.04em;
+    font-size: 0.625rem;
+    letter-spacing: 0.02em;
     color: rgb(var(--proto-plum-rgb) / 0.75);
   }
-  html[data-proto-sticky='C'] .proto-sticky-trust li { display: flex; align-items: center; gap: 5px; white-space: nowrap; }
-  html[data-proto-sticky='C'] .proto-sticky-trust li:nth-child(3) { display: none; }
-  html[data-proto-sticky='C'] .proto-sticky-trust svg { width: 14px; height: 14px; color: var(--proto-gold); flex-shrink: 0; }
+  html[data-proto-sticky='C'] .proto-sticky-trust li { display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+  /* Icons drop below 360px so all three points stay on one line at 320px */
+  html[data-proto-sticky='C'] .proto-sticky-trust svg { display: none; width: 13px; height: 13px; color: var(--proto-gold); flex-shrink: 0; }
+  @media screen and (min-width: 360px) {
+    html[data-proto-sticky='C'] .proto-sticky-trust svg { display: block; }
+  }
   html[data-proto-sticky='C'] .sticky-add-to-cart__image {
     grid-area: img;
     height: 48px;
@@ -229,8 +232,8 @@
   }
   html[data-proto-sticky='C'] .sticky-add-to-cart__info { grid-area: title; }
   html[data-proto-sticky='C'] .sticky-add-to-cart__title { font-size: 1.0625rem; line-height: 1.15; }
-  html[data-proto-sticky='C'] .proto-sticky-rating { display: block; margin-block-start: 2px; font-size: 0.75rem; color: rgb(var(--proto-plum-rgb) / 0.7); }
-  html[data-proto-sticky='C'] .proto-sticky-rating b { color: var(--proto-gold); font-weight: 400; letter-spacing: 0.1em; }
+  html[data-proto-sticky='C'] .proto-sticky-rating { display: block; margin-block-start: 1px; font-size: 0.6875rem; color: rgb(var(--proto-plum-rgb) / 0.6); }
+  html[data-proto-sticky='C'] .proto-sticky-rating b { color: var(--proto-gold); font-weight: 400; }
   html[data-proto-sticky='C'] .sticky-add-to-cart__price {
     grid-area: price;
     display: flex;
@@ -241,19 +244,12 @@
     color: var(--proto-plum);
   }
   html[data-proto-sticky='C'] .sticky-add-to-cart__price > div { display: flex; flex-direction: column; align-items: flex-end; }
-  html[data-proto-sticky='C'] .sticky-add-to-cart__price .compare-at-price { font-size: 0.75rem; font-weight: 400; opacity: 0.5; }
-  html[data-proto-sticky='C'] .proto-sticky-save {
-    display: inline-block;
-    margin-block-start: 2px;
-    padding: 2px 8px;
-    border-radius: 999px;
-    background: rgb(184 151 106 / 0.15);
-    color: #7a5f3a;
-    font-size: 0.6875rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
+  html[data-proto-sticky='C'] .sticky-add-to-cart__price .compare-at-price {
+    font-size: 0.75rem;
+    font-weight: 400;
+    text-decoration: line-through;
+    opacity: 0.5;
   }
-  html[data-proto-sticky='C'] .proto-sticky-save:empty { display: none; }
   html[data-proto-sticky='C'] .sticky-add-to-cart__button {
     grid-area: btn;
     --button-background-color: var(--proto-plum);
@@ -283,7 +279,6 @@
       border-inline: 1px solid rgb(var(--proto-plum-rgb) / 0.08);
       font-size: 0.75rem;
     }
-    html[data-proto-sticky='C'] .proto-sticky-trust li:nth-child(3) { display: flex; }
     html[data-proto-sticky='C'] .sticky-add-to-cart__image { height: 56px; }
     html[data-proto-sticky='C'] .sticky-add-to-cart__title { font-size: 1.375rem; }
     html[data-proto-sticky='C'] .sticky-add-to-cart__price { font-size: 1.25rem; }
@@ -328,13 +323,12 @@
 </style>
 
 <template id="proto-sticky-extras">
-  <span class="proto-sticky-rating"><b>★★★★★</b> 4.8 · 7,295+ reviews</span>
+  <span class="proto-sticky-rating"><b>★</b> 4.8 · 7k+ reviews</span>
   <ul class="proto-sticky-trust">
-    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>30-day money-back</li>
+    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 3l7 3v5c0 4.5-3 8.3-7 10-4-1.7-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg>30-day guarantee</li>
     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.5"/><circle cx="17" cy="17.5" r="1.5"/></svg>Free shipping</li>
     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg>Secure checkout</li>
   </ul>
-  <span class="proto-sticky-save"></span>
 </template>
 
 <script>
@@ -346,26 +340,18 @@
       { key: '0', name: 'Current bar', note: 'Today: floating pill on desktop, icon-only button on mobile.' },
       { key: 'A', name: 'Cream editorial', note: 'One row at every size. Cream band with a gold hairline, serif title, plum pill that keeps its label on mobile. Rating appears from tablet up.' },
       { key: 'B', name: 'Plum noir', note: 'Type only, no image. Dark plum band, italic serif title, gold price, full-width cream CTA on mobile that collapses into one row on tablet/desktop.' },
-      { key: 'C', name: 'Reassurance sheet', note: 'Rounded-top white sheet. Trust row + savings chip + rating, stacked on mobile with a full-width plum CTA; one row with a trust column on desktop.' },
+      { key: 'C', name: 'Reassurance sheet', note: 'Rounded-top white sheet. Three-point trust row + compact rating + struck-through compare price, stacked on mobile with a full-width plum CTA; one row with a trust column on desktop.' },
     ];
 
     const root = document.documentElement;
     const bar = document.querySelector('.sticky-add-to-cart__bar');
     const tpl = document.getElementById('proto-sticky-extras');
 
-    // Savings % from the rendered prices (prototype shortcut)
-    const toNum = (el) => (el ? parseFloat(el.textContent.replace(/[^0-9.,]/g, '').replace(',', '.')) : NaN);
-
     function inject() {
       if (!bar || !tpl || bar.querySelector('.proto-sticky-rating')) return;
-      const [rating, trust, save] = [...tpl.content.children].map((n) => n.cloneNode(true));
+      const [rating, trust] = [...tpl.content.children].map((n) => n.cloneNode(true));
       bar.querySelector('.sticky-add-to-cart__info')?.appendChild(rating);
       bar.prepend(trust);
-      const price = bar.querySelector('.sticky-add-to-cart__price');
-      const now = toNum(price?.querySelector('.price bdi'));
-      const was = toNum(price?.querySelector('.compare-at-price bdi'));
-      if (now && was && was > now) save.textContent = `Save ${Math.round((1 - now / was) * 100)}%`;
-      price?.appendChild(save);
     }
     inject();
     // The component morphs the bar's children on variant change; put the extras back.
