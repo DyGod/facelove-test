@@ -1,0 +1,464 @@
+{%- comment -%}
+  PROTOTYPE, throwaway. Lives on branch prototype/cross-sell only. Do not merge.
+  Question: where and how should the "Complete your routine" Cross-sell sit on landing-01?
+  Variants switch with ?xsell=A|B|C. Without ?xsell= nothing here runs.
+    A  Buy box rows: compact rows under the add to cart button and trust badges
+    B  Section after reviews: swipe row with a peek on mobile, 3-column grid from 990px
+    C  Same section, low on the page: after the guarantee, before the FAQ
+  Products, short names and benefit lines are hardcoded here; the real build uses one block per Cross-sell.
+  "+ Add" really adds to the cart (with _cross_sell: landing-01) and bumps the cart count without opening the drawer.
+{%- endcomment -%}
+
+{%- liquid
+  assign handles = 'everlove-mascara-for-mature-lashes-new,ironboost-eyelash-serum-main,dream-skin-primer' | split: ','
+  assign names = 'Everlove Mascara|IronBoost+ Lash Serum|Dream Skin Primer' | split: '|'
+  assign benefits = 'Lift and length without clumps|Nourishes thin, brittle lashes|Smooths texture so the stick glides on' | split: '|'
+  assign swatches = 'Intense Black:#151515,Balm Brown:#6b4a36,Royal Blue:#26428b' | split: ','
+-%}
+
+<template id="proto-xsell-items">
+  {%- for handle in handles -%}
+    {%- assign p = all_products[handle] -%}
+    {%- unless p.available -%}{%- continue -%}{%- endunless -%}
+    {%- assign i = forloop.index0 -%}
+    {%- assign v = p.selected_or_first_available_variant -%}
+    {%- assign multi = false -%}
+    {%- if p.has_only_default_variant == false -%}{%- assign multi = true -%}{%- endif -%}
+    <article class="proto-xsell__item" data-variant-id="{{ v.id }}" data-multi="{{ multi }}">
+      <div class="proto-xsell__media">
+        {{ p.featured_image | image_url: width: 600 | image_tag: loading: 'lazy', alt: '', widths: '120, 240, 360, 600', sizes: '(min-width: 990px) 320px, 70vw' }}
+      </div>
+      <div class="proto-xsell__body">
+        <h3 class="proto-xsell__name">{{ names[i] }}</h3>
+        <p class="proto-xsell__benefit">{{ benefits[i] }}</p>
+        <p class="proto-xsell__price">
+          <span>{{ v.price | money_without_trailing_zeros }}</span>
+          {%- if v.compare_at_price > v.price -%}
+            <s><span class="visually-hidden">Regular price</span>{{ v.compare_at_price | money_without_trailing_zeros }}</s>
+          {%- endif -%}
+        </p>
+      </div>
+      <div class="proto-xsell__action">
+        <button type="button" class="proto-xsell__add" data-add aria-label="Add {{ names[i] }} to cart">
+          <span class="proto-xsell__add-label">+ Add</span>
+        </button>
+      </div>
+      {%- if multi -%}
+        <fieldset class="proto-xsell__shades" hidden>
+          <legend>Choose a shade</legend>
+          <div class="proto-xsell__shade-list">
+            {%- for variant in p.variants -%}
+              {%- assign hex = '#999' -%}
+              {%- for s in swatches -%}
+                {%- assign pair = s | split: ':' -%}
+                {%- if pair[0] == variant.title -%}{%- assign hex = pair[1] -%}{%- endif -%}
+              {%- endfor -%}
+              <button
+                type="button"
+                class="proto-xsell__shade"
+                data-shade="{{ variant.id }}"
+                {% unless variant.available %}disabled{% endunless %}
+              >
+                <span class="proto-xsell__dot" style="--dot: {{ hex }}" aria-hidden="true"></span>
+                {{ variant.title }}
+              </button>
+            {%- endfor -%}
+          </div>
+        </fieldset>
+      {%- endif -%}
+    </article>
+  {%- endfor -%}
+</template>
+
+<style>
+  :root {
+    --xs-plum: #3b2a4a;
+    --xs-gold: #b8976a;
+    --xs-cream: #f7f3ee;
+    --xs-line: rgb(59 42 74 / 0.12);
+    --xs-muted: rgb(var(--color-foreground-rgb) / var(--opacity-70, 0.7));
+  }
+
+  /* ---------- Shared item parts ---------- */
+  .proto-xsell__item { position: relative; min-width: 0; }
+  .proto-xsell__media { background: var(--xs-cream); overflow: hidden; }
+  .proto-xsell__media img { display: block; width: 100%; height: 100%; object-fit: contain; }
+  .proto-xsell__name {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-weight: 500;
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+  }
+  .proto-xsell__benefit { margin: 0; color: var(--xs-muted); line-height: 1.35; }
+  .proto-xsell__price { margin: 0; display: flex; gap: 6px; align-items: baseline; font-weight: 600; }
+  .proto-xsell__price s { font-weight: 400; color: var(--xs-muted); font-size: 0.9em; }
+
+  .proto-xsell__add {
+    min-height: 44px;
+    padding-inline: 18px;
+    border: 1px solid var(--xs-plum);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--xs-plum);
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+  }
+  .proto-xsell__add:hover { background: var(--xs-plum); color: #fff; }
+  .proto-xsell__add[aria-busy='true'] { opacity: 0.6; pointer-events: none; }
+  .proto-xsell__item[data-added] .proto-xsell__add {
+    border-color: var(--xs-gold);
+    background: var(--xs-cream);
+    color: var(--xs-plum);
+  }
+  .proto-xsell__item[data-open] .proto-xsell__add { border-color: var(--xs-line); color: var(--xs-muted); background: transparent; }
+
+  .proto-xsell__shades { margin: 0; padding: 0; border: 0; min-width: 0; }
+  .proto-xsell__shades legend {
+    float: inline-start;
+    width: 100%;
+    padding: 0;
+    margin-block-end: 8px;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--xs-muted);
+  }
+  .proto-xsell__shade-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .proto-xsell__shade {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding-inline: 12px 14px;
+    border: 1px solid var(--xs-line);
+    border-radius: 999px;
+    background: #fff;
+    color: inherit;
+    font: inherit;
+    font-size: 0.8125rem;
+    cursor: pointer;
+  }
+  .proto-xsell__shade:hover { border-color: var(--xs-plum); }
+  .proto-xsell__dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--dot);
+    box-shadow: inset 0 0 0 2px #fff, 0 0 0 1px var(--xs-line);
+  }
+
+  /* ---------- A: rows in the buy box ---------- */
+  .proto-xsell--rows {
+    margin-block-start: 8px;
+    padding-block-start: 20px;
+    border-block-start: 1px solid var(--xs-line);
+  }
+  .proto-xsell--rows .proto-xsell__title {
+    margin: 0 0 4px;
+    font-family: var(--font-heading--family);
+    font-size: 1.375rem;
+    font-weight: 500;
+  }
+  .proto-xsell--rows .proto-xsell__sub { margin: 0 0 8px; font-size: 0.8125rem; color: var(--xs-muted); }
+  .proto-xsell--rows .proto-xsell__list { display: grid; }
+  .proto-xsell--rows .proto-xsell__item {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr) auto;
+    column-gap: 12px;
+    align-items: center;
+    padding-block: 12px;
+    border-block-end: 1px solid var(--xs-line);
+  }
+  .proto-xsell--rows .proto-xsell__item:last-child { border-block-end: 0; }
+  .proto-xsell--rows .proto-xsell__media { width: 56px; aspect-ratio: 1; border-radius: 12px; }
+  .proto-xsell--rows .proto-xsell__body { display: grid; gap: 2px; }
+  .proto-xsell--rows .proto-xsell__name { font-size: 1.125rem; }
+  .proto-xsell--rows .proto-xsell__benefit { font-size: 0.75rem; }
+  .proto-xsell--rows .proto-xsell__price { font-size: 0.875rem; }
+  .proto-xsell--rows .proto-xsell__shades { grid-column: 1 / -1; padding-block-start: 12px; }
+
+  /* ---------- B / C: page section ---------- */
+  .proto-xsell-section { padding-block: 48px; }
+  .proto-xsell-section { overflow-x: clip; }
+  .proto-xsell--cards {
+    width: min(100% - 32px, 1100px);
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+  }
+  .proto-xsell--cards .proto-xsell__head { text-align: center; display: grid; gap: 8px; }
+  .proto-xsell--cards .proto-xsell__eyebrow {
+    margin: 0;
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--xs-gold);
+  }
+  .proto-xsell--cards .proto-xsell__title {
+    margin: 0;
+    font-family: var(--font-heading--family);
+    font-size: clamp(1.875rem, 1.5rem + 1.6vw, 2.75rem);
+    font-weight: 500;
+    line-height: 1.1;
+    text-wrap: balance;
+  }
+  .proto-xsell--cards .proto-xsell__sub { margin: 0; color: var(--xs-muted); }
+  .proto-xsell--cards .proto-xsell__list {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 72%;
+    gap: 14px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    margin-inline: -16px;
+    padding-inline: 16px;
+    scroll-padding-inline: 16px;
+  }
+  .proto-xsell--cards .proto-xsell__item {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 14px;
+    scroll-snap-align: start;
+    padding-block-end: 4px;
+  }
+  .proto-xsell--cards .proto-xsell__media { aspect-ratio: 1; border-radius: 20px; }
+  .proto-xsell--cards .proto-xsell__media img { object-fit: cover; }
+  .proto-xsell--cards .proto-xsell__body { display: grid; gap: 6px; align-content: start; text-align: center; }
+  .proto-xsell--cards .proto-xsell__name { font-size: 1.375rem; }
+  .proto-xsell--cards .proto-xsell__benefit { font-size: 0.875rem; }
+  .proto-xsell--cards .proto-xsell__price { justify-content: center; }
+  .proto-xsell--cards .proto-xsell__add { width: 100%; }
+  .proto-xsell--cards .proto-xsell__shade-list { justify-content: center; }
+  .proto-xsell--cards .proto-xsell__shades legend { width: 100%; text-align: center; }
+  .proto-xsell--cards .proto-xsell__item[data-open] .proto-xsell__action { display: none; }
+  .proto-xsell--cards .proto-xsell__shade { flex: 1 1 100%; justify-content: center; }
+
+  @media screen and (min-width: 750px) {
+    .proto-xsell-section { padding-block: 64px; }
+    .proto-xsell--cards .proto-xsell__list { grid-auto-columns: 42%; }
+  }
+
+  @media screen and (min-width: 990px) {
+    .proto-xsell--cards { gap: 36px; }
+    .proto-xsell--cards .proto-xsell__list {
+      grid-auto-flow: row;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 28px;
+      overflow: visible;
+      margin-inline: 0;
+      padding-inline: 0;
+    }
+  }
+
+  /* ---------- Switcher (prototype chrome) ---------- */
+  .proto-switch {
+    position: fixed;
+    inset-inline: 0;
+    top: 8px;
+    z-index: 10000;
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+    pointer-events: none;
+    font-family: system-ui, sans-serif;
+  }
+  .proto-switch__pill {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px;
+    border-radius: 999px;
+    background: #111;
+    color: #fff;
+    box-shadow: 0 6px 24px rgb(0 0 0 / 0.3);
+    pointer-events: auto;
+  }
+  .proto-switch__pill button {
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 50%;
+    background: #333;
+    color: #fff;
+    cursor: pointer;
+  }
+  .proto-switch__label { padding-inline: 10px; font-size: 13px; font-weight: 600; white-space: nowrap; }
+  .proto-switch__note {
+    max-width: min(92vw, 420px);
+    margin: 0;
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: rgb(17 17 17 / 0.85);
+    color: #eee;
+    font-size: 11px;
+    line-height: 1.4;
+    text-align: center;
+  }
+</style>
+
+<script type="module">
+  import { CartLinesUpdateEvent } from '@shopify/events';
+
+  const params = new URLSearchParams(location.search);
+  if (params.has('xsell')) {
+    const variants = [
+      { key: 'A', name: 'Buy box rows', note: 'Compact rows under add to cart and the trust badges. Hero button does not move.' },
+      { key: 'B', name: 'Section after reviews', note: 'Cards right after the reviews. Swipe with a peek on mobile, 3 columns from 990px.' },
+      { key: 'C', name: 'Section before FAQ', note: 'Same cards, low on the page: after the guarantee, before the FAQ.' },
+    ];
+    const tpl = document.getElementById('proto-xsell-items');
+    let mounted = null;
+
+    const head = (cards) => cards
+      ? `<div class="proto-xsell__head"><p class="proto-xsell__eyebrow">Pairs with your stick</p><h2 class="proto-xsell__title">Complete your routine</h2><p class="proto-xsell__sub">The finishing touches our customers add most.</p></div>`
+      : `<h2 class="proto-xsell__title">Complete your routine</h2><p class="proto-xsell__sub">Add with one tap. Ships with your order.</p>`;
+
+    function build(cards) {
+      const el = document.createElement(cards ? 'section' : 'div');
+      el.className = `proto-xsell ${cards ? 'proto-xsell--cards' : 'proto-xsell--rows'}`;
+      el.setAttribute('aria-label', 'Complete your routine');
+      el.innerHTML = head(cards) + '<div class="proto-xsell__list"></div>';
+      el.querySelector('.proto-xsell__list').append(tpl.content.cloneNode(true));
+      return el;
+    }
+
+    function mount(key) {
+      mounted?.remove();
+      mounted = null;
+      if (key === 'A') {
+        const badges = document.querySelector('.landing-trust-badges');
+        if (!badges) return console.warn('[xsell] trust badges not found');
+        mounted = build(false);
+        badges.after(mounted);
+        return;
+      }
+      const wrap = document.createElement('div');
+      wrap.className = 'shopify-section proto-xsell-section';
+      wrap.append(build(true));
+      const sections = [...document.querySelectorAll('main .shopify-section')];
+      const byId = (suffix) => sections.find((s) => s.id.endsWith(`__${suffix}`));
+      if (key === 'B') {
+        const anchor = byId('reviews');
+        anchor ? anchor.after(wrap) : console.warn('[xsell] reviews section not found');
+      } else {
+        const anchor = byId('faq');
+        anchor ? anchor.before(wrap) : console.warn('[xsell] faq section not found');
+      }
+      mounted = wrap;
+    }
+
+    async function add(item, variantId, button) {
+      button.setAttribute('aria-busy', 'true');
+      const deferred = CartLinesUpdateEvent.createPromise();
+      // 'update' instead of 'add' so the drawer does not auto-open (prototype shortcut).
+      document.dispatchEvent(new CartLinesUpdateEvent({
+        action: 'update',
+        context: 'product',
+        lines: [{ merchandiseId: String(variantId), quantity: 1 }],
+        promise: deferred.promise,
+      }));
+      try {
+        const sectionIds = [...document.querySelectorAll('cart-items-component')].map((c) => c.dataset.sectionId).filter(Boolean);
+        const res = await fetch(Theme.routes.cart_add_url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({
+            items: [{ id: Number(variantId), quantity: 1, properties: { _cross_sell: 'landing-01' } }],
+            sections: sectionIds.join(','),
+          }),
+        });
+        const json = await res.json();
+        if (json.status) throw new Error(json.description || json.message);
+        const cart = await (await fetch(`${Theme.routes.cart_url}.js`)).json();
+        deferred.resolve({
+          cart: CartLinesUpdateEvent.createCartFromAjaxResponse(cart),
+          detail: { items: cart.items, sections: json.sections, didError: false, source: 'proto-xsell' },
+        });
+        item.dataset.added = '';
+        delete item.dataset.open;
+        const shades = item.querySelector('.proto-xsell__shades');
+        if (shades) shades.hidden = true;
+        item.querySelector('.proto-xsell__add-label').textContent = 'Added ✓';
+      } catch (err) {
+        deferred.reject(err);
+        console.warn('[xsell] add failed', err);
+      } finally {
+        button.removeAttribute('aria-busy');
+      }
+    }
+
+    document.addEventListener('click', (e) => {
+      const target = e.target instanceof Element ? e.target : null;
+      const item = target?.closest('.proto-xsell__item');
+      if (!item) return;
+      const addBtn = target.closest('[data-add]');
+      const shadeBtn = target.closest('[data-shade]');
+      if (addBtn) {
+        if (item.dataset.multi === 'true' && !('added' in item.dataset)) {
+          const shades = item.querySelector('.proto-xsell__shades');
+          const open = shades.hidden;
+          shades.hidden = !open;
+          open ? (item.dataset.open = '') : delete item.dataset.open;
+          addBtn.setAttribute('aria-expanded', String(open));
+          if (open) shades.querySelector('button:not([disabled])')?.focus();
+          return;
+        }
+        add(item, item.dataset.variantId, addBtn);
+      } else if (shadeBtn) {
+        add(item, shadeBtn.dataset.shade, shadeBtn);
+      }
+    });
+
+    const keyOf = (v) => (variants.some((x) => x.key === v) ? v : 'A');
+    let current = keyOf((params.get('xsell') || '').toUpperCase());
+
+    const ui = document.createElement('div');
+    ui.className = 'proto-switch';
+    ui.innerHTML = `
+      <div class="proto-switch__pill">
+        <button type="button" aria-label="Previous variant">&larr;</button>
+        <span class="proto-switch__label" aria-live="polite"></span>
+        <button type="button" aria-label="Next variant">&rarr;</button>
+        <button type="button" aria-label="Jump to cross-sell" title="Jump to it">↓</button>
+      </div>
+      <p class="proto-switch__note"></p>`;
+    document.body.append(ui);
+    const label = ui.querySelector('.proto-switch__label');
+    const note = ui.querySelector('.proto-switch__note');
+    const [prev, next, jump] = ui.querySelectorAll('button');
+
+    function apply(v) {
+      current = v;
+      mount(v);
+      const meta = variants.find((x) => x.key === v);
+      label.textContent = `${v} · ${meta.name}`;
+      note.textContent = meta.note;
+      const url = new URL(location.href);
+      url.searchParams.set('xsell', v);
+      history.replaceState(null, '', url);
+    }
+    const step = (dir) => {
+      const i = variants.findIndex((x) => x.key === current);
+      apply(variants[(i + dir + variants.length) % variants.length].key);
+    };
+    prev.addEventListener('click', () => step(-1));
+    next.addEventListener('click', () => step(1));
+    jump.addEventListener('click', () => mounted?.scrollIntoView({ behavior: 'smooth', block: 'center' }));
+    document.addEventListener('keydown', (e) => {
+      if (e.target.closest?.('input, textarea, select, [contenteditable]')) return;
+      if (e.key === 'ArrowLeft') step(-1);
+      if (e.key === 'ArrowRight') step(1);
+    });
+
+    apply(current);
+  }
+</script>
