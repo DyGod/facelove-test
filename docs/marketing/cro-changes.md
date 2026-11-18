@@ -2,6 +2,32 @@
 
 Newest first. Each entry says which page changed, what we did, and why.
 
+## 2026-11-18. A more premium look for the landing page
+
+Page: product template `product.landing-01`, plus one store-wide font setting.
+
+We made five small changes. None of them adds a step to the purchase or moves the buy box. The reasoning for each is in [H3 to H7](test-hypotheses.md#h3-serif-headings-in-sentence-case).
+
+1. Headings use a serif font. The heading font in theme settings changed from Montserrat Bold to Cormorant Medium. The product title and every section heading on the page are larger and in normal capitalisation. Body text stays Montserrat. This setting is store-wide, so headings on other pages change too. [H3](test-hypotheses.md#h3-serif-headings-in-sentence-case)
+2. The buy box text is lighter. The bundle names and prices went from bold to semibold. The benefit pills and the gift lines went from bold to medium. The "Black Friday sale" line is thinner with wider letter spacing. The sale bar and the add to cart button are now deep plum (#3B2A4A) instead of lilac and black. The button text reads "Add to cart" in normal capitalisation, and the button has fully rounded ends. [H4](test-hypotheses.md#h4-a-calmer-buy-box)
+3. Trust badges sit under the add to cart button. Three short lines with gold line icons say "30-day money-back guarantee", "Free shipping on every order" and "Secure, encrypted checkout". Below them is a row of payment icons for PayPal, American Express, Apple Pay, Google Pay, Maestro, Mastercard, Visa and Shop Pay. The bordered guarantee box that sat in the same spot is turned off, because the first badge says the same thing. [H5](test-hypotheses.md#h5-trust-badges-under-the-button)
+4. Reviews come second. The "Loved by thousands of women" section moved from fifth place to right after the "As seen on" logos. The logo strip lost its grey background and now has a thin line above and below. [H6](test-hypotheses.md#h6-reviews-before-claims)
+5. A new section names four ingredients. "Skincare first, then coverage" sits after the five reasons and before the guarantee. It shows squalane, jojoba seed oil, shea butter and aloe vera, each with one line on what it does. All four are on the full ingredient list in the FAQ. [H7](test-hypotheses.md#h7-ingredient-spotlight)
+
+The three "Shop now" buttons in the comparison, five reasons and guarantee sections are now outlined instead of filled, so the only filled button on the page is add to cart.
+
+Before the real store launches, check the payment icons. They come from a list typed into the Trust badges block, not from the store's checkout settings. Every icon must be a method the real store accepts. Once the real store has its payment methods turned on, set the block's "Show" option to "Methods enabled in your store" and the icons will follow checkout automatically.
+
+How to change things in the theme editor:
+
+- The heading font is under Theme settings, Typography, Headings.
+- The badge text, icons and payment list are in the Trust badges block inside the product section.
+- The ingredients are blocks inside the Ingredient spotlight section. Each one has a number label, a name and a line of text.
+- The outlined buttons use a new "Button style" setting on each of the three sections.
+- The logo lines use a new "Show lines above and below" setting on the logo strip.
+
+What to watch over the next two weeks: add to cart rate and conversion rate on this page, and how far down the page shoppers scroll, compared with the two weeks before.
+
 ## 2026-11-18. Star rating links to the reviews
 
 Page: product template `product.landing-01`.

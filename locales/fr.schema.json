@@ -32,7 +32,10 @@
       "free_gift": "Free gifts",
       "product_title": "Landing product title",
       "rating": "Star rating",
-      "sale_timer": "Sale countdown"
+      "sale_timer": "Sale countdown",
+      "trust_badges": "Badges de confiance",
+      "ingredients": "Ingrédients phares",
+      "ingredient": "Ingrédient"
     },
     "settings": {
       "table_position": "Position du tableau",
@@ -104,12 +107,25 @@
       "show_offer_price": "Show price and arrow in button",
       "timer_label": "Countdown label",
       "timer_text_color": "Countdown text color",
-      "qualifying_variants": "Qualifying variants"
+      "qualifying_variants": "Qualifying variants",
+      "badge_icon_1": "Icône 1",
+      "badge_icon_2": "Icône 2",
+      "badge_icon_3": "Icône 3",
+      "badge_text_1": "Texte 1",
+      "badge_text_2": "Texte 2",
+      "badge_text_3": "Texte 3",
+      "payment_source": "Afficher",
+      "payment_types": "Moyens de paiement",
+      "eyebrow": "Surtitre",
+      "footnote": "Note de bas",
+      "ingredient_name": "Nom de l'ingrédient",
+      "show_dividers": "Afficher des lignes en haut et en bas"
     },
     "content": {
       "comparison_table": "Tableau comparatif",
       "bundle_cards": "Bundle cards",
-      "benefit_icons": "Benefit icons"
+      "benefit_icons": "Benefit icons",
+      "payment_icons": "Icônes de paiement"
     },
     "info": {
       "compare_labels": "Laisser vide pour utiliser Avant / Après.",
@@ -131,7 +147,8 @@
       "benefit_icons": "Optional. Icons match benefit lines in order. Lines without an icon show a check mark.",
       "ends_at": "Format YYYY-MM-DD HH:MM in your store's time zone. The block hides after this time. Leave empty to show only the heading.",
       "show_offer_price": "Replaces the cart icon with the variant's compare-at and sale price.",
-      "qualifying_variants": "Variant names, separated by commas, that get the gifts (for example: 2 Sticks). Leave empty for every variant. Match this to your automatic discount."
+      "qualifying_variants": "Variant names, separated by commas, that get the gifts (for example: 2 Sticks). Leave empty for every variant. Match this to your automatic discount.",
+      "payment_types": "Séparés par des virgules. Utilisez les noms Shopify : visa, master, american_express, paypal, apple_pay, google_pay, maestro, shopify_pay."
     },
     "options": {
       "badge_all": "Every card on sale",
@@ -146,7 +163,12 @@
       "one_column": "One column",
       "two_columns": "Two columns",
       "two_thirds": "Two thirds",
-      "before_after": "Before / after"
+      "before_after": "Before / after",
+      "shield_check": "Bouclier coché",
+      "truck": "Camion",
+      "lock": "Cadenas",
+      "payment_store": "Moyens activés dans votre boutique",
+      "payment_list": "Moyens que vous choisissez"
     }
   },
   "names": {

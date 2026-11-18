@@ -216,9 +216,9 @@
                   "static": true,
                   "settings": {
                     "style_class": "button-custom",
-                    "custom_button_background": "#000000",
+                    "custom_button_background": "#3B2A4A",
                     "custom_button_text": "#FFFFFF",
-                    "custom_button_border": "#000000",
+                    "custom_button_border": "#3B2A4A",
                     "show_offer_price": true
                   },
                   "blocks": {}
@@ -239,7 +239,8 @@
                 "icon": "shield",
                 "icon_color": "#B69FD1",
                 "text": "<p>Every order comes with our <strong>30-Day Guarantee</strong>. Try it for 30 days — if it doesn't earn a spot in your routine, return it hassle-free for a full refund.</p>"
-              }
+              },
+              "disabled": true
             },
             "text_aEtTtq": {
               "type": "text",
@@ -273,12 +274,26 @@
                 "heading": "Black Friday sale - while supplies last",
                 "timer_label": "Price increases in",
                 "ends_at": "2026-12-01 00:00",
-                "accent_color": "#B69FD1",
+                "accent_color": "#3B2A4A",
                 "text_color": "#FFFFFF",
                 "padding-block-start": 0,
                 "padding-block-end": 0
               },
               "blocks": {}
+            },
+            "trust_badges": {
+              "type": "landing-trust-badges",
+              "settings": {
+                "icon_color": "#B8976A",
+                "icon_1": "shield_check",
+                "text_1": "30-day money-back guarantee",
+                "icon_2": "truck",
+                "text_2": "Free shipping on every order",
+                "icon_3": "lock",
+                "text_3": "Secure, encrypted checkout",
+                "payment_source": "list",
+                "payment_types": "paypal, american_express, apple_pay, google_pay, maestro, master, visa, shopify_pay"
+              }
             }
           },
           "block_order": [
@@ -287,6 +302,7 @@
             "sale_timer",
             "variant_picker_R3rGDr",
             "buy_buttons_eYQEYi",
+            "trust_badges",
             "guarantee",
             "text_aEtTtq"
           ]
@@ -314,9 +330,10 @@
         "label": "As seen on",
         "note": "Sponsored content",
         "logo_height": 20,
-        "background_color": "#F6F6F6",
+        "background_color": "",
         "padding-block-start": 16,
-        "padding-block-end": 20
+        "padding-block-end": 20,
+        "show_dividers": true
       },
       "blocks": {
         "logo_1": {
@@ -432,7 +449,8 @@
         "icon_color": "#7C6A96",
         "background_color": "",
         "padding-block-start": 40,
-        "padding-block-end": 40
+        "padding-block-end": 40,
+        "button_style": "button-secondary"
       }
     },
     "features": {
@@ -444,7 +462,8 @@
         "button_link": "",
         "accent_color": "#9B7FC0",
         "padding-block-start": 40,
-        "padding-block-end": 40
+        "padding-block-end": 40,
+        "button_style": "button-secondary"
       },
       "blocks": {
         "feature_1": {
@@ -580,7 +599,8 @@
         "button_label": "Shop now",
         "button_link": "",
         "padding-block-start": 40,
-        "padding-block-end": 40
+        "padding-block-end": 40,
+        "button_style": "button-secondary"
       }
     },
     "faq": {
@@ -715,14 +735,69 @@
         "point_2",
         "point_3"
       ]
+    },
+    "ingredients": {
+      "type": "landing-ingredients",
+      "settings": {
+        "eyebrow": "The formula",
+        "heading": "Skincare first, then coverage",
+        "text": "<p>Every stick is made with nourishing oils and butters chosen for mature, sensitive skin. It cares for your skin while it evens your tone.</p>",
+        "footnote": "Full ingredient list in the FAQ below.",
+        "accent_color": "#B8976A",
+        "card_background": "#FFFFFF",
+        "background_color": "#F7F3EE",
+        "padding-block-start": 48,
+        "padding-block-end": 48
+      },
+      "blocks": {
+        "ingredient_1": {
+          "type": "ingredient",
+          "settings": {
+            "label": "i.",
+            "name": "Squalane",
+            "text": "<p>Lightweight hydration that keeps the finish supple, never tight.</p>"
+          }
+        },
+        "ingredient_2": {
+          "type": "ingredient",
+          "settings": {
+            "label": "ii.",
+            "name": "Jojoba seed oil",
+            "text": "<p>Softens dry patches so the colour glides on instead of clinging.</p>"
+          }
+        },
+        "ingredient_3": {
+          "type": "ingredient",
+          "settings": {
+            "label": "iii.",
+            "name": "Shea butter",
+            "text": "<p>Rich nourishment that helps skin feel comfortable all day.</p>"
+          }
+        },
+        "ingredient_4": {
+          "type": "ingredient",
+          "settings": {
+            "label": "iv.",
+            "name": "Aloe vera",
+            "text": "<p>Soothes skin that reacts easily to ordinary foundations.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "ingredient_1",
+        "ingredient_2",
+        "ingredient_3",
+        "ingredient_4"
+      ]
     }
   },
   "order": [
     "main",
     "logos",
+    "reviews",
     "comparison",
     "features",
-    "reviews",
+    "ingredients",
     "guarantee",
     "faq",
     "trust"

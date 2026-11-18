@@ -51,7 +51,7 @@
         <div class="landing-image-text__text rte">{{ section.settings.text }}</div>
       {%- endif -%}
       {%- if section.settings.button_label != blank -%}
-        <a class="button landing-image-text__button" href="{{ button_link }}">
+        <a class="{{ section.settings.button_style }} landing-image-text__button" href="{{ button_link }}">
           {{- section.settings.button_label | escape -}}
         </a>
       {%- endif -%}
@@ -95,8 +95,8 @@
 
   .landing-image-text__heading {
     margin: 0;
-    font-size: clamp(1.75rem, 1.4rem + 1.6vw, 2.5rem);
-    line-height: 1.15;
+    font-size: clamp(2rem, 1.6rem + 1.8vw, 3rem);
+    line-height: 1.08;
     overflow-wrap: break-word;
     text-wrap: balance;
   }
@@ -204,6 +204,16 @@
       "id": "button_link",
       "label": "t:landing.settings.button_link",
       "info": "t:landing.info.button_link"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "t:settings.button_style",
+      "options": [
+        { "value": "button", "label": "t:options.primary" },
+        { "value": "button-secondary", "label": "t:options.secondary" }
+      ],
+      "default": "button"
     },
     {
       "type": "color",

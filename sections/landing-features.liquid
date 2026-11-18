@@ -199,7 +199,7 @@
               <div class="landing-features__text rte">{{ block.settings.text }}</div>
             {%- endif -%}
             {%- if section.settings.button_label != blank -%}
-              <a class="button landing-features__button" href="{{ button_link }}">
+              <a class="{{ section.settings.button_style }} landing-features__button" href="{{ button_link }}">
                 {{- section.settings.button_label | escape -}}
               </a>
             {%- endif -%}
@@ -228,8 +228,8 @@
 
   .landing-features__heading {
     margin: 0;
-    font-size: clamp(1.5rem, 1.2rem + 1.4vw, 2.25rem);
-    line-height: 1.2;
+    font-size: clamp(1.875rem, 1.5rem + 1.6vw, 2.75rem);
+    line-height: 1.1;
     text-wrap: balance;
   }
 
@@ -265,6 +265,12 @@
     --color-primary-button-hover-background: rgb(var(--color-foreground-rgb) / var(--opacity-85));
     --color-primary-button-hover-text: var(--color-background);
     --color-primary-button-hover-border: rgb(var(--color-foreground-rgb) / var(--opacity-85));
+    --color-secondary-button-background: transparent;
+    --color-secondary-button-text: var(--color-foreground);
+    --color-secondary-button-border: var(--color-foreground);
+    --color-secondary-button-hover-background: var(--color-foreground);
+    --color-secondary-button-hover-text: var(--color-background);
+    --color-secondary-button-hover-border: var(--color-foreground);
   }
 
   .landing-features__card--dark {
@@ -564,6 +570,16 @@
       "id": "button_link",
       "label": "t:landing.settings.button_link",
       "info": "t:landing.info.button_link"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "t:settings.button_style",
+      "options": [
+        { "value": "button", "label": "t:options.primary" },
+        { "value": "button-secondary", "label": "t:options.secondary" }
+      ],
+      "default": "button"
     },
     {
       "type": "color",

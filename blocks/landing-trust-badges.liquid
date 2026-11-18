@@ -1,0 +1,224 @@
+{%- doc -%}
+  Renders up to three short reassurance badges with line icons, then a row of payment
+  icons, for placing directly under the add to cart button.
+
+  @example
+  {% content_for 'block', type: 'landing-trust-badges', id: 'trust_badges' %}
+{%- enddoc -%}
+
+{%- liquid
+  assign payment_types = ''
+  case block.settings.payment_source
+    when 'store'
+      assign payment_types = shop.enabled_payment_types
+    when 'list'
+      assign payment_types = block.settings.payment_types | remove: ' ' | split: ','
+  endcase
+-%}
+
+<div
+  class="landing-trust-badges"
+  style="--landing-trust-badges-icon: {{ block.settings.icon_color }};"
+  {{ block.shopify_attributes }}
+>
+  <ul class="landing-trust-badges__list" role="list">
+    {%- for i in (1..3) -%}
+      {%- liquid
+        assign text_key = 'text_' | append: i
+        assign icon_key = 'icon_' | append: i
+        assign text = block.settings[text_key]
+        assign icon = block.settings[icon_key]
+      -%}
+      {%- if text != blank -%}
+        <li class="landing-trust-badges__item">
+          {%- if icon != 'none' -%}
+            {%- render 'landing-icon', icon: icon, class: 'landing-trust-badges__icon' -%}
+          {%- endif -%}
+          <span>{{ text | escape }}</span>
+        </li>
+      {%- endif -%}
+    {%- endfor -%}
+  </ul>
+
+  {%- if payment_types.size > 0 -%}
+    <div class="landing-trust-badges__payments">
+      <span class="visually-hidden">{{ 'blocks.payment_methods' | t }}</span>
+      <ul class="landing-trust-badges__payment-list" role="list">
+        {%- for type in payment_types -%}
+          {%- if type != blank -%}
+            <li>{{ type | payment_type_svg_tag: class: 'landing-trust-badges__payment' }}</li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    </div>
+  {%- endif -%}
+</div>
+
+{% stylesheet %}
+  .landing-trust-badges {
+    display: grid;
+    gap: var(--gap-sm);
+    width: 100%;
+    min-width: 0;
+  }
+
+  .landing-trust-badges__list {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    gap: var(--gap-xs);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .landing-trust-badges__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--gap-2xs);
+    min-width: 0;
+    font-size: 0.6875rem;
+    line-height: 1.3;
+    text-align: center;
+    color: var(--color-foreground);
+    overflow-wrap: break-word;
+  }
+
+  .landing-trust-badges__icon {
+    flex: none;
+    width: 20px;
+    height: 20px;
+    color: var(--landing-trust-badges-icon);
+    stroke-width: 1.5;
+  }
+
+  .landing-trust-badges__payment-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--gap-2xs);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .landing-trust-badges__payment {
+    display: block;
+    width: 34px;
+    height: auto;
+  }
+
+  @media screen and (min-width: 750px) {
+    .landing-trust-badges__item {
+      font-size: 0.75rem;
+    }
+
+    .landing-trust-badges__payment {
+      width: 38px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:landing.names.trust_badges",
+  "tag": null,
+  "settings": [
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "t:landing.settings.icon_color",
+      "default": "#B8976A"
+    },
+    {
+      "type": "select",
+      "id": "icon_1",
+      "label": "t:landing.settings.badge_icon_1",
+      "options": [
+        { "value": "none", "label": "t:options.none" },
+        { "value": "shield_check", "label": "t:landing.options.shield_check" },
+        { "value": "shield", "label": "t:landing.options.shield" },
+        { "value": "truck", "label": "t:landing.options.truck" },
+        { "value": "lock", "label": "t:landing.options.lock" },
+        { "value": "check", "label": "t:landing.options.glyph_check" }
+      ],
+      "default": "shield_check"
+    },
+    {
+      "type": "text",
+      "id": "text_1",
+      "label": "t:landing.settings.badge_text_1",
+      "default": "30-day money-back guarantee"
+    },
+    {
+      "type": "select",
+      "id": "icon_2",
+      "label": "t:landing.settings.badge_icon_2",
+      "options": [
+        { "value": "none", "label": "t:options.none" },
+        { "value": "shield_check", "label": "t:landing.options.shield_check" },
+        { "value": "shield", "label": "t:landing.options.shield" },
+        { "value": "truck", "label": "t:landing.options.truck" },
+        { "value": "lock", "label": "t:landing.options.lock" },
+        { "value": "check", "label": "t:landing.options.glyph_check" }
+      ],
+      "default": "truck"
+    },
+    {
+      "type": "text",
+      "id": "text_2",
+      "label": "t:landing.settings.badge_text_2",
+      "default": "Free shipping on every order"
+    },
+    {
+      "type": "select",
+      "id": "icon_3",
+      "label": "t:landing.settings.badge_icon_3",
+      "options": [
+        { "value": "none", "label": "t:options.none" },
+        { "value": "shield_check", "label": "t:landing.options.shield_check" },
+        { "value": "shield", "label": "t:landing.options.shield" },
+        { "value": "truck", "label": "t:landing.options.truck" },
+        { "value": "lock", "label": "t:landing.options.lock" },
+        { "value": "check", "label": "t:landing.options.glyph_check" }
+      ],
+      "default": "lock"
+    },
+    {
+      "type": "text",
+      "id": "text_3",
+      "label": "t:landing.settings.badge_text_3",
+      "default": "Secure, encrypted checkout"
+    },
+    {
+      "type": "header",
+      "content": "t:landing.content.payment_icons"
+    },
+    {
+      "type": "select",
+      "id": "payment_source",
+      "label": "t:landing.settings.payment_source",
+      "options": [
+        { "value": "store", "label": "t:landing.options.payment_store" },
+        { "value": "list", "label": "t:landing.options.payment_list" },
+        { "value": "none", "label": "t:options.none" }
+      ],
+      "default": "store"
+    },
+    {
+      "type": "text",
+      "id": "payment_types",
+      "label": "t:landing.settings.payment_types",
+      "info": "t:landing.info.payment_types",
+      "default": "visa, master, american_express, paypal, apple_pay, google_pay, shopify_pay",
+      "visible_if": "{{ block.settings.payment_source == 'list' }}"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:landing.names.trust_badges"
+    }
+  ]
+}
+{% endschema %}
