@@ -11,7 +11,9 @@
   style="--landing-callout-icon: {{ block.settings.icon_color }};"
   {{ block.shopify_attributes }}
 >
-  {%- if block.settings.icon != 'none' -%}
+  {%- if block.settings.icon == 'shield' -%}
+    {%- render 'landing-icon', icon: 'shield', class: 'landing-callout__icon landing-callout__icon--stroke' -%}
+  {%- elsif block.settings.icon != 'none' -%}
     <svg class="landing-callout__icon" aria-hidden="true" focusable="false" viewBox="0 0 20 20">
       {%- render 'icon', icon: block.settings.icon -%}
     </svg>
@@ -31,6 +33,7 @@
     padding: var(--padding-md);
     border: 1px solid rgb(var(--color-foreground-rgb) / var(--opacity-10));
     border-radius: var(--style-border-radius-md);
+    background-color: rgb(var(--color-foreground-rgb) / var(--opacity-5));
   }
 
   .landing-callout__icon {
@@ -39,6 +42,10 @@
     height: 24px;
     color: var(--landing-callout-icon);
     fill: currentcolor;
+  }
+
+  .landing-callout__icon--stroke {
+    fill: none;
   }
 
   .landing-callout__text {
@@ -69,6 +76,7 @@
       "options": [
         { "value": "none", "label": "t:options.none" },
         { "value": "check_box", "label": "t:options.check_box" },
+        { "value": "shield", "label": "t:landing.options.shield" },
         { "value": "return", "label": "t:options.return" },
         { "value": "truck", "label": "t:options.truck" },
         { "value": "lock", "label": "t:options.lock" },

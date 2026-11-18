@@ -455,9 +455,14 @@
 
     .slideshow-control {
       border-radius: var(--thumbnail-radius, var(--media-radius));
-      width: clamp(44px, 7vw, var(--thumbnail-width));
+      width: var(--thumbnail-width-mobile, 44px);
       height: auto;
       aspect-ratio: var(--aspect-ratio);
+
+      /* Never shrinks below the mobile width unless the desktop width is smaller */
+      @media screen and (min-width: 750px) {
+        width: clamp(min(var(--thumbnail-width-mobile, 44px), var(--thumbnail-width)), 7vw, var(--thumbnail-width));
+      }
 
       img {
         height: 100%;

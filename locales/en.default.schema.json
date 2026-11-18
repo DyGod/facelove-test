@@ -255,6 +255,10 @@
   },
   "landing": {
     "names": {
+      "badge": "Status badge",
+      "social_proof": "Social proof",
+      "gift_unlocks": "Gift unlocks",
+      "sale_progress": "Sale progress",
       "benefit_pills": "Benefit pills",
       "callout": "Callout",
       "faq": "FAQ",
@@ -274,6 +278,22 @@
       "sale_timer": "Sale countdown"
     },
     "settings": {
+      "card_badge": "Savings badge",
+      "glyph_1": "Glyph for line 1",
+      "glyph_2": "Glyph for line 2",
+      "glyph_3": "Glyph for line 3",
+      "glyph_4": "Glyph for line 4",
+      "card_subtitles": "Card subtitles",
+      "card_compare_color": "Compare-at price color",
+      "card_gift_value": "Card with gifts",
+      "badge_color": "Verified badge color",
+      "avatar_1": "Avatar 1",
+      "avatar_2": "Avatar 2",
+      "avatar_3": "Avatar 3",
+      "shipping_label": "Free shipping label",
+      "gift_labels": "Gift labels",
+      "unlocked_color": "Unlocked label color",
+      "percent_sold": "Percent sold",
       "accent_color": "Accent color",
       "answer": "Answer",
       "benefits": "Benefits",
@@ -317,9 +337,16 @@
       "qualifying_variants": "Qualifying variants"
     },
     "content": {
+      "bundle_cards": "Bundle cards",
       "benefit_icons": "Benefit icons"
     },
     "info": {
+      "bundle_cards": "Card extras. For accent colors, set Selected style to Custom.",
+      "card_subtitles": "One line per option value, as Value | Subtitle (for example: 2 Sticks | Temporary Deal).",
+      "card_gift_value": "Option value whose card lists the gifts (for example: 2 Sticks). Match this to your automatic discount.",
+      "unlock_variants": "Variant names, separated by commas, that unlock the gifts (for example: 2 Sticks). Leave empty to always show them unlocked.",
+      "gift_labels": "One label per gift, in order. Empty lines use FREE plus the product title.",
+      "progress_ends_at": "Format YYYY-MM-DD HH:MM in your store's time zone. Leave empty to hide the countdown.",
       "benefits": "One benefit per line. The block also marks where landing page buttons scroll to.",
       "button_link": "Leave empty to scroll to the product's benefit pills and buy box.",
       "checklist": "Use a bulleted list to show check marks.",
@@ -332,6 +359,14 @@
       "qualifying_variants": "Variant names, separated by commas, that get the gifts (for example: 2 Sticks). Leave empty for every variant. Match this to your automatic discount."
     },
     "options": {
+      "badge_all": "Every card on sale",
+      "badge_gift_card": "Card with gifts only",
+      "glyph_check": "Check mark",
+      "glyph_sparkles": "Sparkles",
+      "glyph_face_glow": "Glowing face",
+      "glyph_arch": "Arch",
+      "glyph_no_blemish": "No blemishes",
+      "shield": "Shield",
       "half": "Half",
       "one_column": "One column",
       "two_columns": "Two columns",

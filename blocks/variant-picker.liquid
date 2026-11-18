@@ -113,7 +113,7 @@
         }
       ],
       "default": "default",
-      "visible_if": "{{ block.settings.variant_style == 'buttons' }}"
+      "visible_if": "{{ block.settings.variant_style == 'buttons' or block.settings.variant_style == 'cards' }}"
     },
     {
       "type": "color",
@@ -121,7 +121,7 @@
       "label": "t:settings.background",
       "default": "{{ settings.color_palette.foreground }}",
       "alpha": true,
-      "visible_if": "{{ block.settings.variant_style == 'buttons' and block.settings.selected_variant_style_class == 'custom' }}"
+      "visible_if": "{{ block.settings.variant_style != 'dropdowns' and block.settings.selected_variant_style_class == 'custom' }}"
     },
     {
       "type": "color",
@@ -129,7 +129,7 @@
       "label": "t:settings.text",
       "default": "{{ settings.color_palette.background }}",
       "alpha": true,
-      "visible_if": "{{ block.settings.variant_style == 'buttons' and block.settings.selected_variant_style_class == 'custom' }}"
+      "visible_if": "{{ block.settings.variant_style != 'dropdowns' and block.settings.selected_variant_style_class == 'custom' }}"
     },
     {
       "type": "color",
@@ -137,13 +137,78 @@
       "label": "t:settings.borders",
       "default": "{{ settings.color_palette.foreground }}",
       "alpha": true,
-      "visible_if": "{{ block.settings.variant_style == 'buttons' and block.settings.selected_variant_style_class == 'custom' }}"
+      "visible_if": "{{ block.settings.variant_style != 'dropdowns' and block.settings.selected_variant_style_class == 'custom' }}"
     },
     {
       "type": "text_alignment",
       "id": "alignment",
       "label": "t:settings.alignment",
       "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "t:landing.content.bundle_cards",
+      "info": "t:landing.info.bundle_cards"
+    },
+    {
+      "type": "textarea",
+      "id": "card_subtitles",
+      "label": "t:landing.settings.card_subtitles",
+      "info": "t:landing.info.card_subtitles",
+      "visible_if": "{{ block.settings.variant_style == 'cards' }}"
+    },
+    {
+      "type": "select",
+      "id": "card_badge",
+      "label": "t:landing.settings.card_badge",
+      "options": [
+        { "value": "all", "label": "t:landing.options.badge_all" },
+        { "value": "gift_card", "label": "t:landing.options.badge_gift_card" },
+        { "value": "none", "label": "t:options.none" }
+      ],
+      "default": "all",
+      "visible_if": "{{ block.settings.variant_style == 'cards' }}"
+    },
+    {
+      "type": "color",
+      "id": "card_compare_color",
+      "label": "t:landing.settings.card_compare_color",
+      "alpha": true,
+      "visible_if": "{{ block.settings.variant_style == 'cards' }}"
+    },
+    {
+      "type": "text",
+      "id": "card_gift_value",
+      "label": "t:landing.settings.card_gift_value",
+      "info": "t:landing.info.card_gift_value",
+      "visible_if": "{{ block.settings.variant_style == 'cards' }}"
+    },
+    {
+      "type": "product_list",
+      "id": "card_gifts",
+      "label": "t:landing.settings.gifts",
+      "limit": 3
+    },
+    {
+      "type": "checkbox",
+      "id": "card_gift_shipping",
+      "label": "t:landing.settings.show_free_shipping",
+      "default": false,
+      "visible_if": "{{ block.settings.variant_style == 'cards' }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "card_gift_shipping_image",
+      "label": "t:landing.settings.shipping_image",
+      "visible_if": "{{ block.settings.variant_style == 'cards' and block.settings.card_gift_shipping }}"
+    },
+    {
+      "type": "checkbox",
+      "id": "card_gift_auto_add",
+      "label": "t:landing.settings.auto_add_gifts",
+      "info": "t:landing.info.auto_add_gifts",
+      "default": true,
+      "visible_if": "{{ block.settings.variant_style == 'cards' }}"
     },
     {
       "type": "header",

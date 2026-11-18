@@ -367,6 +367,9 @@
     "separator": "до"
   },
   "landing": {
+    "gift_locked": "Заблокировано",
+    "gift_unlocked": "Разблокировано",
+    "percent_sold": "Продано {{ percent }}%",
     "free_gift_item": "+ БЕСПЛАТНО: {{ title }}",
     "free_shipping": "+ БЕСПЛАТНАЯ доставка",
     "rating_label": "Оценка {{ rating }} из 5",

@@ -1,0 +1,119 @@
+{%- doc -%}
+  Renders "+ FREE {title}" list rows for gift products, each with a 30px image and the struck
+  gift price, plus an optional free shipping row. Outputs `<li>` elements only; the caller owns
+  the list element and its colors. Rows use `--landing-gift-row-divider` for the line between
+  rows (transparent by default).
+
+  @param {product[]} gifts - Gift products to list
+  @param {boolean} [show_shipping] - Adds a "+ FREE Shipping" row
+  @param {image} [shipping_image] - Image for the shipping row; a box glyph shows when empty
+
+  @example
+  <ul class="landing-gift-rows" role="list">
+    {% render 'landing-gift-rows', gifts: block.settings.gifts, show_shipping: true %}
+  </ul>
+{%- enddoc -%}
+
+{%- for gift in gifts -%}
+  <li class="landing-gift-row">
+    <span class="landing-gift-row__media">
+      {%- if gift.featured_image != blank -%}
+        {{
+          gift.featured_image
+          | image_url: width: 120
+          | image_tag:
+            class: 'landing-gift-row__image',
+            width: 30,
+            height: 30,
+            widths: '60, 90, 120',
+            sizes: '30px',
+            loading: 'lazy',
+            alt: ''
+        }}
+      {%- else -%}
+        {%- render 'landing-icon', icon: 'gift', class: 'landing-gift-row__glyph' -%}
+      {%- endif -%}
+    </span>
+    <span class="landing-gift-row__text">{{ 'landing.free_gift_item' | t: title: gift.title }}</span>
+    {%- if gift.price > 0 -%}
+      <s class="landing-gift-row__price">
+        <span class="visually-hidden">{{ 'content.price_regular' | t }}</span>
+        {{- gift.price | money -}}
+      </s>
+    {%- endif -%}
+  </li>
+{%- endfor -%}
+
+{%- if show_shipping -%}
+  <li class="landing-gift-row">
+    <span class="landing-gift-row__media">
+      {%- if shipping_image != blank -%}
+        {{
+          shipping_image
+          | image_url: width: 120
+          | image_tag:
+            class: 'landing-gift-row__image',
+            width: 30,
+            height: 30,
+            widths: '60, 90, 120',
+            sizes: '30px',
+            loading: 'lazy',
+            alt: ''
+        }}
+      {%- else -%}
+        {%- render 'landing-icon', icon: 'box', class: 'landing-gift-row__glyph' -%}
+      {%- endif -%}
+    </span>
+    <span class="landing-gift-row__text">{{ 'landing.free_shipping' | t }}</span>
+  </li>
+{%- endif -%}
+
+{% stylesheet %}
+  .landing-gift-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    padding: 7px 20px 7px var(--padding-xs);
+  }
+
+  .landing-gift-row + .landing-gift-row {
+    border-block-start: 1px solid var(--landing-gift-row-divider, transparent);
+  }
+
+  .landing-gift-row__media {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    overflow: hidden;
+    border-radius: var(--style-border-radius-xs);
+    background-color: #ffffff;
+  }
+
+  .landing-gift-row__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .landing-gift-row__glyph {
+    width: 100%;
+    height: 100%;
+  }
+
+  .landing-gift-row__text {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    line-height: 1.4;
+    overflow-wrap: break-word;
+  }
+
+  .landing-gift-row__price {
+    flex: none;
+    font-size: 0.75rem;
+  }
+{% endstylesheet %}

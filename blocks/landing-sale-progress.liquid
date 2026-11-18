@@ -1,0 +1,215 @@
+{%- doc -%}
+  Renders a "selling fast" note: heading, short text, a stock progress bar filled to a
+  merchant-set percentage, the percent sold, and an optional countdown to a sale end time.
+  The countdown reuses `landing-countdown.js`; after the end time it reads 00:00:00.
+
+  @example
+  {% content_for 'block', type: 'landing-sale-progress', id: 'sale-progress' %}
+{%- enddoc -%}
+
+{%- liquid
+  assign now_ts = 'now' | date: '%s' | times: 1
+  assign end_ts = 0
+  if block.settings.ends_at != blank
+    assign end_ts = block.settings.ends_at | date: '%s' | times: 1
+  endif
+  assign remaining = end_ts | minus: now_ts | at_least: 0
+  assign r_days = remaining | divided_by: 86400
+  assign r_hours = remaining | modulo: 86400 | divided_by: 3600
+  assign r_minutes = remaining | modulo: 3600 | divided_by: 60
+  assign r_seconds = remaining | modulo: 60
+-%}
+
+<div
+  class="landing-sale-progress spacing-style"
+  style="
+    {% render 'spacing-style', settings: block.settings %}
+    --landing-progress-fill: {{ block.settings.accent_color }};
+    --landing-progress-timer: {{ block.settings.timer_color }};
+    --landing-progress-value: {{ block.settings.percent }}%;
+  "
+  {{ block.shopify_attributes }}
+>
+  {%- if block.settings.heading != blank -%}
+    <p class="landing-sale-progress__heading">{{ block.settings.heading | escape }}</p>
+  {%- endif -%}
+  {%- if block.settings.text != blank -%}
+    <p class="landing-sale-progress__text">{{ block.settings.text | escape }}</p>
+  {%- endif -%}
+
+  <div
+    class="landing-sale-progress__track"
+    role="progressbar"
+    aria-valuemin="0"
+    aria-valuemax="100"
+    aria-valuenow="{{ block.settings.percent }}"
+    aria-label="{{ 'landing.percent_sold' | t: percent: block.settings.percent }}"
+  >
+    <span class="landing-sale-progress__fill"></span>
+  </div>
+
+  <div class="landing-sale-progress__footer">
+    <span class="landing-sale-progress__sold">{{ 'landing.percent_sold' | t: percent: block.settings.percent }}</span>
+    {%- if end_ts > 0 -%}
+      <script src="{{ 'landing-countdown.js' | asset_url }}" type="module" fetchpriority="low"></script>
+      <landing-countdown
+        class="landing-sale-progress__timer"
+        data-end="{{ end_ts }}"
+      >
+        {%- if block.settings.timer_label != blank -%}
+          <span>{{ block.settings.timer_label | escape }}</span>
+        {%- endif -%}
+        <time ref="value" role="timer" aria-live="off">
+          {%- if r_days > 0 -%}{{ r_days | prepend: '0' | slice: -2, 2 }}:{%- endif -%}
+          {{- r_hours | prepend: '0' | slice: -2, 2 }}:{{ r_minutes | prepend: '0' | slice: -2, 2 }}:{{ r_seconds | prepend: '0' | slice: -2, 2 -}}
+        </time>
+      </landing-countdown>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .landing-sale-progress {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .landing-sale-progress__heading {
+    margin: 0 0 4px;
+    font-size: 0.875rem;
+    font-weight: 700;
+    line-height: 1.4;
+    color: var(--color-foreground);
+  }
+
+  .landing-sale-progress__text {
+    margin: 0 0 8px;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: var(--color-foreground-muted);
+  }
+
+  .landing-sale-progress__track {
+    height: 10px;
+    overflow: hidden;
+    border-radius: 12px;
+    background-color: rgb(var(--color-foreground-rgb) / var(--opacity-10));
+  }
+
+  .landing-sale-progress__fill {
+    display: block;
+    width: var(--landing-progress-value);
+    height: 100%;
+    border-radius: inherit;
+    background-color: var(--landing-progress-fill);
+  }
+
+  .landing-sale-progress__footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--gap-2xs) var(--gap-sm);
+    margin-block-start: 6px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1.55;
+  }
+
+  .landing-sale-progress__sold {
+    color: var(--color-foreground);
+  }
+
+  .landing-sale-progress__timer {
+    display: inline-flex;
+    gap: 0.3em;
+    color: var(--landing-progress-timer);
+    font-variant-numeric: tabular-nums;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:landing.names.sale_progress",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:settings.heading",
+      "default": "Black Friday Sale - Selling fast"
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": "t:settings.text",
+      "default": "Due to high demand, limited quantities available"
+    },
+    {
+      "type": "range",
+      "id": "percent",
+      "label": "t:landing.settings.percent_sold",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 87
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "t:landing.settings.accent_color",
+      "default": "#B69FD1"
+    },
+    {
+      "type": "text",
+      "id": "ends_at",
+      "label": "t:landing.settings.ends_at",
+      "info": "t:landing.info.progress_ends_at"
+    },
+    {
+      "type": "text",
+      "id": "timer_label",
+      "label": "t:landing.settings.timer_label",
+      "default": "Ends in"
+    },
+    {
+      "type": "color",
+      "id": "timer_color",
+      "label": "t:landing.settings.timer_text_color",
+      "default": "#7753A2"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:landing.names.sale_progress",
+      "category": "t:categories.product"
+    }
+  ]
+}
+{% endschema %}

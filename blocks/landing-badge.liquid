@@ -1,0 +1,105 @@
+{%- doc -%}
+  Renders a short outlined status badge (for example "Hot product | Low stock") for landing buy boxes.
+
+  @example
+  {% content_for 'block', type: 'landing-badge', id: 'badge' %}
+{%- enddoc -%}
+
+{%- if block.settings.text != blank -%}
+  <div
+    class="landing-badge spacing-style landing-badge--{{ block.settings.alignment }}"
+    style="{% render 'spacing-style', settings: block.settings %} --landing-badge-color: {{ block.settings.color }};"
+    {{ block.shopify_attributes }}
+  >
+    <p class="landing-badge__text">{{ block.settings.text | escape }}</p>
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .landing-badge {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .landing-badge--left {
+    justify-content: flex-start;
+  }
+
+  .landing-badge--right {
+    justify-content: flex-end;
+  }
+
+  .landing-badge__text {
+    max-width: 100%;
+    margin: 0;
+    padding: 4px 10px;
+    border: 2px solid var(--landing-badge-color);
+    color: var(--landing-badge-color);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: 0.02em;
+    text-align: center;
+    text-transform: uppercase;
+    overflow-wrap: break-word;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:landing.names.badge",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "t:settings.text",
+      "default": "Hot product | Low stock"
+    },
+    {
+      "type": "color",
+      "id": "color",
+      "label": "t:settings.color",
+      "default": "#DC2626"
+    },
+    {
+      "type": "text_alignment",
+      "id": "alignment",
+      "label": "t:settings.alignment",
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:landing.names.badge",
+      "category": "t:categories.product"
+    }
+  ]
+}
+{% endschema %}

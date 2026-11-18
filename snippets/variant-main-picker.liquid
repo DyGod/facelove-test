@@ -12,16 +12,35 @@
 {% liquid
   # Custom styling applies to:
   #   - dropdowns + buttons when variant_style_class == 'custom' (unselected colors)
-  #   - buttons only when selected_variant_style_class == 'custom' (selected colors)
+  #   - buttons and cards when selected_variant_style_class == 'custom' (selected colors)
   # The 'buttons' label is kept for backwards-compat of the class name.
   assign has_custom_variant_buttons = false
+  assign has_custom_selected_cards = false
   if block_settings.variant_style_class == 'custom'
     assign has_custom_variant_buttons = true
   endif
-  if block_settings.variant_style == 'buttons' and block_settings.selected_variant_style_class == 'custom'
-    assign has_custom_variant_buttons = true
+  if block_settings.variant_style == 'buttons' or block_settings.variant_style == 'cards'
+    if block_settings.selected_variant_style_class == 'custom'
+      assign has_custom_variant_buttons = true
+      if block_settings.variant_style == 'cards'
+        assign has_custom_selected_cards = true
+      endif
+    endif
   endif
   assign fieldset_index = 0
+
+  # Bundle cards (cards style only): per-value subtitles ("Value | Subtitle" lines) and gift rows
+  # inside the card whose value matches card_gift_value. Gift inputs render outside the fieldsets
+  # (variant-picker.js indexes every input inside them) and only while that value is selected.
+  assign card_subtitle_lines = block_settings.card_subtitles | newline_to_br | split: '<br />'
+  assign card_gift_value = block_settings.card_gift_value | strip | downcase
+  assign card_has_gifts = false
+  if block_settings.variant_style == 'cards' and card_gift_value != blank
+    if block_settings.card_gifts.count > 0 or block_settings.card_gift_shipping
+      assign card_has_gifts = true
+    endif
+  endif
+  assign card_gift_selected = false
 %}
 
 {% unless product_resource.has_only_default_variant %}
@@ -29,9 +48,12 @@
     {% render 'variant-button-custom-styles', block_settings: block_settings, block_id: block.id %}
   {% endif %}
   <variant-picker
-    class="variant-picker spacing-style variant-picker--{{ block_settings.alignment }}{% if has_custom_variant_buttons %} variant-picker--custom-{{ block.id }}{% endif %}"
+    class="variant-picker spacing-style variant-picker--{{ block_settings.alignment }}{% if has_custom_variant_buttons %} variant-picker--custom-{{ block.id }}{% endif %}{% if has_custom_selected_cards %} variant-picker--cards-custom{% endif %}"
     style="
       {% render 'spacing-style', settings: block_settings %}
+      {% if block_settings.card_compare_color != blank %}
+        --variant-card-compare-color: {{ block_settings.card_compare_color }};
+      {% endif %}
        {% if block_settings.option_label_text_color != blank %}
         --variant-option-label-color: rgba({{ block_settings.option_label_text_color.rgba }});
         --variant-option-label-color-subdued: rgba({{ block_settings.option_label_text_color.rgb }} / var(--opacity-subdued-text));
@@ -107,6 +129,29 @@
                   assign card_savings = card_variant.compare_at_price | minus: card_variant.price
                 endif
               -%}
+              {%- liquid
+                assign card_subtitle = ''
+                assign card_value_key = product_option_value | strip | downcase
+                for subtitle_line in card_subtitle_lines
+                  assign subtitle_parts = subtitle_line | split: '|'
+                  assign subtitle_key = subtitle_parts.first | strip | downcase
+                  if subtitle_parts.size > 1 and subtitle_key == card_value_key
+                    assign card_subtitle = subtitle_parts | slice: 1, 10 | join: '|' | strip
+                    break
+                  endif
+                endfor
+
+                assign card_shows_gifts = false
+                if card_has_gifts and card_value_key == card_gift_value
+                  assign card_shows_gifts = true
+                  if product_option_value.selected
+                    assign card_gift_selected = true
+                  endif
+                endif
+              -%}
+              {%- if card_shows_gifts -%}
+                <div class="variant-option__card-group">
+              {%- endif -%}
               <label class="variant-option__card">
                 <input
                   type="radio"
@@ -136,11 +181,22 @@
                 >
                 <span class="variant-option__card-main">
                   <span class="variant-option__card-title">{{ product_option_value | escape }}</span>
-                  {%- if card_on_sale -%}
+                  {%- liquid
+                    assign card_shows_badge = card_on_sale
+                    if block_settings.card_badge == 'none'
+                      assign card_shows_badge = false
+                    elsif block_settings.card_badge == 'gift_card' and card_shows_gifts == false
+                      assign card_shows_badge = false
+                    endif
+                  -%}
+                  {%- if card_shows_badge -%}
                     {%- capture card_savings_html -%}{% render 'format-price', price: card_savings %}{%- endcapture -%}
                     <span class="variant-option__card-badge">
                       {{- 'content.save_amount_html' | t: amount: card_savings_html -}}
                     </span>
+                  {%- endif -%}
+                  {%- if card_subtitle != blank -%}
+                    <span class="variant-option__card-subtitle">{{ card_subtitle | escape }}</span>
                   {%- endif -%}
                   {%- if product_option_value.available == false -%}
                     <span class="variant-option__card-note">{{ 'products.product.sold_out' | t }}</span>
@@ -161,6 +217,16 @@
                   </span>
                 {%- endif -%}
               </label>
+              {%- if card_shows_gifts -%}
+                  <ul class="variant-option__card-gifts" role="list">
+                    {%- render 'landing-gift-rows',
+                      gifts: block_settings.card_gifts,
+                      show_shipping: block_settings.card_gift_shipping,
+                      shipping_image: block_settings.card_gift_shipping_image
+                    -%}
+                  </ul>
+                </div>
+              {%- endif -%}
             {%- endfor -%}
           </fieldset>
           {%- assign fieldset_index = fieldset_index | plus: 1 -%}
@@ -319,6 +385,15 @@
         {{ product_resource.selected_or_first_available_variant | json }}
       </script>
     </form>
+    {%- if card_gift_selected and block_settings.card_gift_auto_add -%}
+      {%- assign card_gift_form_id = 'BuyButtons-ProductForm-' | append: section.id -%}
+      {%- for gift in block_settings.card_gifts -%}
+        {%- assign gift_variant = gift.selected_or_first_available_variant -%}
+        {%- if gift_variant.available -%}
+          <input type="hidden" name="free_gift_id" value="{{ gift_variant.id }}" form="{{ card_gift_form_id }}">
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endif -%}
   </variant-picker>
 {% endunless %}
 

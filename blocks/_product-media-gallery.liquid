@@ -173,11 +173,22 @@
       "id": "thumbnail_width",
       "label": "t:settings.width_desktop",
       "min": 44,
-      "max": 72,
+      "max": 100,
       "step": 1,
       "unit": "px",
       "default": 64,
       "visible_if": "{{ block.settings.slideshow_controls_style == 'thumbnails' }}"
+    },
+    {
+      "type": "range",
+      "id": "thumbnail_width_mobile",
+      "label": "t:settings.width_mobile",
+      "min": 44,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 44,
+      "visible_if": "{{ block.settings.slideshow_controls_style == 'thumbnails' or block.settings.slideshow_mobile_controls_style == 'thumbnails' }}"
     },
     {
       "type": "range",

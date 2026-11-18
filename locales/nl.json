@@ -353,6 +353,9 @@
     "separator": "tot"
   },
   "landing": {
+    "gift_locked": "Vergrendeld",
+    "gift_unlocked": "Ontgrendeld",
+    "percent_sold": "{{ percent }}% verkocht",
     "free_gift_item": "+ GRATIS {{ title }}",
     "free_shipping": "+ GRATIS verzending",
     "rating_label": "Beoordeeld met {{ rating }} van 5",

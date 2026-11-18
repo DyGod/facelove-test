@@ -15,8 +15,10 @@
   endif
 
   assign selected_custom = false
-  if block_settings.variant_style == 'buttons' and block_settings.selected_variant_style_class == 'custom'
-    assign selected_custom = true
+  if block_settings.selected_variant_style_class == 'custom'
+    if block_settings.variant_style == 'buttons' or block_settings.variant_style == 'cards'
+      assign selected_custom = true
+    endif
   endif
 %}
 

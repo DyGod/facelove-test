@@ -1,7 +1,7 @@
 {%- doc -%}
   Renders a two-column grid of short benefit pills from a list of lines, one benefit per line.
-  Each line can show its own icon image (icon_1 to icon_4, matched by line order); lines
-  without an image fall back to a check mark in the icon color.
+  Each line shows an SVG glyph in the icon color (glyph_1 to glyph_4, matched by line order),
+  or an uploaded icon image (icon_1 to icon_4) when one is set. Lines past the fourth show a check mark.
   The wrapper carries the `landing-buy` anchor so landing page buttons can scroll to the buy box.
 
   @example
@@ -27,6 +27,8 @@
           {%- liquid
             assign icon_key = 'icon_' | append: forloop.index
             assign icon_image = block.settings[icon_key]
+            assign glyph_key = 'glyph_' | append: forloop.index
+            assign glyph = block.settings[glyph_key] | default: 'check'
           -%}
           <li class="landing-benefits__item">
             {%- if icon_image != blank -%}
@@ -43,9 +45,7 @@
                   alt: ''
               }}
             {%- else -%}
-              <svg class="landing-benefits__icon" aria-hidden="true" focusable="false" viewBox="0 0 16 16">
-                <path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
+              {%- render 'landing-icon', icon: glyph, class: 'landing-benefits__icon' -%}
             {%- endif -%}
             <span>{{ benefit_text | escape }}</span>
           </li>
@@ -137,6 +137,58 @@
       "type": "header",
       "content": "t:landing.content.benefit_icons",
       "info": "t:landing.info.benefit_icons"
+    },
+    {
+      "type": "select",
+      "id": "glyph_1",
+      "label": "t:landing.settings.glyph_1",
+      "options": [
+        { "value": "check", "label": "t:landing.options.glyph_check" },
+        { "value": "sparkles", "label": "t:landing.options.glyph_sparkles" },
+        { "value": "face_glow", "label": "t:landing.options.glyph_face_glow" },
+        { "value": "arch", "label": "t:landing.options.glyph_arch" },
+        { "value": "no_blemish", "label": "t:landing.options.glyph_no_blemish" }
+      ],
+      "default": "check"
+    },
+    {
+      "type": "select",
+      "id": "glyph_2",
+      "label": "t:landing.settings.glyph_2",
+      "options": [
+        { "value": "check", "label": "t:landing.options.glyph_check" },
+        { "value": "sparkles", "label": "t:landing.options.glyph_sparkles" },
+        { "value": "face_glow", "label": "t:landing.options.glyph_face_glow" },
+        { "value": "arch", "label": "t:landing.options.glyph_arch" },
+        { "value": "no_blemish", "label": "t:landing.options.glyph_no_blemish" }
+      ],
+      "default": "check"
+    },
+    {
+      "type": "select",
+      "id": "glyph_3",
+      "label": "t:landing.settings.glyph_3",
+      "options": [
+        { "value": "check", "label": "t:landing.options.glyph_check" },
+        { "value": "sparkles", "label": "t:landing.options.glyph_sparkles" },
+        { "value": "face_glow", "label": "t:landing.options.glyph_face_glow" },
+        { "value": "arch", "label": "t:landing.options.glyph_arch" },
+        { "value": "no_blemish", "label": "t:landing.options.glyph_no_blemish" }
+      ],
+      "default": "check"
+    },
+    {
+      "type": "select",
+      "id": "glyph_4",
+      "label": "t:landing.settings.glyph_4",
+      "options": [
+        { "value": "check", "label": "t:landing.options.glyph_check" },
+        { "value": "sparkles", "label": "t:landing.options.glyph_sparkles" },
+        { "value": "face_glow", "label": "t:landing.options.glyph_face_glow" },
+        { "value": "arch", "label": "t:landing.options.glyph_arch" },
+        { "value": "no_blemish", "label": "t:landing.options.glyph_no_blemish" }
+      ],
+      "default": "check"
     },
     {
       "type": "image_picker",

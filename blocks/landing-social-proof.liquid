@@ -1,0 +1,184 @@
+{%- doc -%}
+  Renders a social proof line: up to three overlapping customer avatars, a customer name
+  with a verified badge, and short rich text such as "and <strong>1M+</strong> others purchased".
+  Avatars render only when images are set.
+
+  @example
+  {% content_for 'block', type: 'landing-social-proof', id: 'social-proof' %}
+{%- enddoc -%}
+
+{%- liquid
+  assign has_avatars = false
+  if block.settings.avatar_1 != blank or block.settings.avatar_2 != blank or block.settings.avatar_3 != blank
+    assign has_avatars = true
+  endif
+-%}
+
+{%- if block.settings.name != blank or block.settings.text != blank -%}
+  <div
+    class="landing-social-proof spacing-style"
+    style="{% render 'spacing-style', settings: block.settings %} --landing-social-proof-badge: {{ block.settings.badge_color }};"
+    {{ block.shopify_attributes }}
+  >
+    {%- if has_avatars -%}
+      <span class="landing-social-proof__avatars">
+        {%- for i in (1..3) -%}
+          {%- assign avatar_key = 'avatar_' | append: i -%}
+          {%- assign avatar = block.settings[avatar_key] -%}
+          {%- if avatar != blank -%}
+            <span class="landing-social-proof__avatar">
+              {{
+                avatar
+                | image_url: width: 96
+                | image_tag:
+                  class: 'landing-social-proof__image',
+                  width: 28,
+                  height: 28,
+                  widths: '56, 84, 96',
+                  sizes: '28px',
+                  loading: 'lazy',
+                  alt: ''
+              }}
+            </span>
+          {%- endif -%}
+        {%- endfor -%}
+      </span>
+    {%- endif -%}
+    <p class="landing-social-proof__text">
+      {%- if block.settings.name != blank -%}
+        <span class="landing-social-proof__name">{{ block.settings.name | escape }}</span>
+        {%- render 'landing-icon', icon: 'verified', class: 'landing-social-proof__badge' -%}
+        {{- ' ' -}}
+      {%- endif -%}
+      {{- block.settings.text -}}
+    </p>
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+  .landing-social-proof {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-sm);
+    width: 100%;
+    min-width: 0;
+  }
+
+  .landing-social-proof__avatars {
+    display: flex;
+    flex: none;
+    padding-inline-start: 8px;
+  }
+
+  .landing-social-proof__avatar {
+    width: 32px;
+    height: 32px;
+    margin-inline-start: -8px;
+    overflow: hidden;
+    border: 2px solid var(--color-background);
+    border-radius: 50%;
+    background-color: rgb(var(--color-foreground-rgb) / var(--opacity-10));
+  }
+
+  .landing-social-proof__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .landing-social-proof__text {
+    min-width: 0;
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    color: var(--color-foreground-muted);
+  }
+
+  .landing-social-proof__text strong,
+  .landing-social-proof__name {
+    font-weight: 700;
+    color: var(--color-foreground);
+  }
+
+  .landing-social-proof__badge {
+    display: inline-block;
+    width: 17px;
+    height: 17px;
+    margin-inline: 4px 2px;
+    vertical-align: -3px;
+    color: var(--landing-social-proof-badge);
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:landing.names.social_proof",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "name",
+      "label": "t:landing.settings.customer_name",
+      "default": "Freya"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "text",
+      "label": "t:settings.text",
+      "default": "and <strong>1M+</strong> others purchased"
+    },
+    {
+      "type": "color",
+      "id": "badge_color",
+      "label": "t:landing.settings.badge_color",
+      "default": "#3B82F6"
+    },
+    {
+      "type": "image_picker",
+      "id": "avatar_1",
+      "label": "t:landing.settings.avatar_1"
+    },
+    {
+      "type": "image_picker",
+      "id": "avatar_2",
+      "label": "t:landing.settings.avatar_2"
+    },
+    {
+      "type": "image_picker",
+      "id": "avatar_3",
+      "label": "t:landing.settings.avatar_3"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:landing.names.social_proof",
+      "category": "t:categories.product"
+    }
+  ]
+}
+{% endschema %}

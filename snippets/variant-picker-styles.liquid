@@ -622,11 +622,127 @@
 
   .variant-option__card-compare {
     font-size: 0.8em;
-    color: var(--color-foreground-muted);
+    color: var(--variant-card-compare-color, var(--color-foreground-muted));
+  }
+
+  .variant-option__card-subtitle {
+    flex-basis: 100%;
+    font-size: 0.6875rem;
+    line-height: 1.35;
+    color: rgb(var(--color-variant-text-rgb, var(--color-foreground-rgb)) / var(--opacity-70));
+  }
+
+  /* Card with gift rows: the group carries the card frame, the label sits flush inside it */
+  .variant-option__card-group {
+    display: grid;
+    min-width: 0;
+    overflow: hidden;
+    border: var(--variant-picker-button-border-width, 1px) solid var(--color-variant-border);
+    border-radius: var(--style-border-radius-md);
+    background-color: var(--color-variant-background);
+    color: var(--color-variant-text);
+    transition: border-color var(--animation-speed-fast) var(--animation-easing),
+      box-shadow var(--animation-speed-fast) var(--animation-easing);
+  }
+
+  .variant-option__card-group:has(:checked) {
+    border-color: var(--color-selected-variant-border);
+    box-shadow: 0 0 0 1px var(--color-selected-variant-border);
+  }
+
+  .variant-option__card-group > .variant-option__card,
+  .variant-option__card-group > .variant-option__card:has(:checked) {
+    border: 0;
+    border-radius: 0;
+    background-color: transparent;
+    box-shadow: none;
+  }
+
+  .variant-option__card-gifts {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Custom selected colors on cards: tinted inactive cards, accent frame, filled radio and badge */
+  .variant-picker--cards-custom {
+    .variant-option--cards legend {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
+    .variant-option__card,
+    .variant-option__card-group {
+      border-radius: var(--style-border-radius-sm);
+    }
+
+    .variant-option__card {
+      gap: var(--gap-md);
+      min-height: 64px;
+      padding: 10px 20px;
+    }
+
+    .variant-option__card:has(:checked),
+    .variant-option__card-group:has(:checked) {
+      background-color: var(--color-selected-variant-background);
+      color: var(--color-selected-variant-text);
+    }
+
+    .variant-option__card-input {
+      appearance: none;
+      flex: none;
+      border: 3px solid var(--color-selected-variant-background);
+      border-radius: 50%;
+      background-color: var(--color-selected-variant-background);
+      box-shadow: 0 0 0 2px var(--color-variant-border);
+      cursor: pointer;
+    }
+
+    .variant-option__card-input:checked {
+      background-color: var(--color-selected-variant-border);
+      box-shadow: 0 0 0 2px var(--color-selected-variant-border);
+    }
+
+    .variant-option__card-input::after {
+      content: none;
+    }
+
+    .variant-option__card-title,
+    .variant-option__card-amount {
+      font-size: 1.0625rem;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .variant-option__card-badge {
+      padding: 4px 8px;
+      border-radius: var(--style-border-radius-sm);
+      background-color: var(--color-selected-variant-border);
+      color: var(--color-variant-text);
+      font-size: 0.625rem;
+      line-height: 1.4;
+      text-transform: uppercase;
+    }
+
+    .variant-option__card-compare {
+      font-size: 0.6875rem;
+    }
+
+    .variant-option__card-group:has(:checked) .variant-option__card-gifts {
+      --landing-gift-row-divider: var(--color-selected-variant-background);
+
+      background-color: var(--color-selected-variant-border);
+      color: var(--color-selected-variant-background);
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .variant-option__card {
+    .variant-option__card,
+    .variant-option__card-group {
       transition: none;
     }
   }

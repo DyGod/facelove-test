@@ -1,0 +1,292 @@
+{%- doc -%}
+  Renders a row of gift tiles (free shipping plus gift products) that show as locked, greyed out
+  with a lock badge, until a qualifying variant is selected. The component re-renders on
+  variant change through `landing-free-gift.js`.
+
+  @example
+  {% content_for 'block', type: 'landing-gift-unlocks', id: 'gift-unlocks' %}
+{%- enddoc -%}
+
+{%- liquid
+  assign product = closest.product
+  assign selected_variant = product.selected_or_first_available_variant
+
+  assign unlocked = true
+  if block.settings.qualifying_variants != blank
+    assign unlocked = false
+    assign current = selected_variant.title | strip | downcase
+    assign qualifying_titles = block.settings.qualifying_variants | split: ','
+    for qualifying_title in qualifying_titles
+      assign wanted = qualifying_title | strip | downcase
+      if wanted != blank and wanted == current
+        assign unlocked = true
+        break
+      endif
+    endfor
+  endif
+
+  assign gift_labels = block.settings.gift_labels | newline_to_br | split: '<br />'
+  assign state_label = 'landing.gift_locked' | t
+  if unlocked
+    assign state_label = 'landing.gift_unlocked' | t
+  endif
+-%}
+
+{%- if block.settings.show_shipping or block.settings.gifts.count > 0 -%}
+  <script src="{{ 'landing-free-gift.js' | asset_url }}" type="module" fetchpriority="low"></script>
+  <landing-gift-unlocks
+    class="landing-gift-unlocks spacing-style"
+    style="{% render 'spacing-style', settings: block.settings %} --landing-gift-unlocked: {{ block.settings.unlocked_color }};"
+    data-block-id="{{ block.id }}"
+    data-product-id="{{ product.id }}"
+    {{ block.shopify_attributes }}
+  >
+    <ul class="landing-gift-unlocks__row{% if unlocked %} landing-gift-unlocks__row--unlocked{% endif %}" role="list">
+      {%- if block.settings.show_shipping -%}
+        <li class="landing-gift-unlocks__tile">
+          <span class="landing-gift-unlocks__media">
+            {%- if block.settings.shipping_image != blank -%}
+              {{
+                block.settings.shipping_image
+                | image_url: width: 168
+                | image_tag:
+                  class: 'landing-gift-unlocks__image',
+                  width: 56,
+                  height: 56,
+                  widths: '112, 168',
+                  sizes: '56px',
+                  loading: 'lazy',
+                  alt: ''
+              }}
+            {%- else -%}
+              {%- render 'landing-icon', icon: 'box', class: 'landing-gift-unlocks__image' -%}
+            {%- endif -%}
+            {%- unless unlocked -%}
+              <span class="landing-gift-unlocks__lock">
+                {%- render 'landing-icon', icon: 'lock', class: 'landing-gift-unlocks__lock-icon' -%}
+              </span>
+            {%- endunless -%}
+          </span>
+          <span class="landing-gift-unlocks__label">
+            {{- block.settings.shipping_label | escape -}}
+            <span class="visually-hidden"> ({{ state_label }})</span>
+          </span>
+        </li>
+      {%- endif -%}
+
+      {%- for gift in block.settings.gifts -%}
+        {%- liquid
+          assign gift_label = gift_labels[forloop.index0] | strip
+          if gift_label == blank
+            assign gift_label = 'landing.free_gift_item' | t: title: gift.title | remove_first: '+ '
+          endif
+        -%}
+        <li class="landing-gift-unlocks__tile">
+          <span class="landing-gift-unlocks__media">
+            {%- if gift.featured_image != blank -%}
+              {{
+                gift.featured_image
+                | image_url: width: 168
+                | image_tag:
+                  class: 'landing-gift-unlocks__image',
+                  width: 56,
+                  height: 56,
+                  widths: '112, 168',
+                  sizes: '56px',
+                  loading: 'lazy',
+                  alt: ''
+              }}
+            {%- else -%}
+              {%- render 'landing-icon', icon: 'gift', class: 'landing-gift-unlocks__image' -%}
+            {%- endif -%}
+            {%- unless unlocked -%}
+              <span class="landing-gift-unlocks__lock">
+                {%- render 'landing-icon', icon: 'lock', class: 'landing-gift-unlocks__lock-icon' -%}
+              </span>
+            {%- endunless -%}
+          </span>
+          <span class="landing-gift-unlocks__label">
+            {{- gift_label | escape -}}
+            <span class="visually-hidden"> ({{ state_label }})</span>
+          </span>
+        </li>
+      {%- endfor -%}
+    </ul>
+  </landing-gift-unlocks>
+{%- endif -%}
+
+{% stylesheet %}
+  .landing-gift-unlocks {
+    display: block;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .landing-gift-unlocks__row {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .landing-gift-unlocks__tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 0 1 88px;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .landing-gift-unlocks__media {
+    position: relative;
+    width: 56px;
+    height: 56px;
+  }
+
+  .landing-gift-unlocks__image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: grayscale(1);
+    opacity: var(--opacity-50);
+    transition: filter var(--animation-speed) var(--animation-easing),
+      opacity var(--animation-speed) var(--animation-easing);
+  }
+
+  .landing-gift-unlocks__lock {
+    position: absolute;
+    inset-block-end: -4px;
+    inset-inline-end: -4px;
+    display: grid;
+    place-items: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #374151;
+    color: #ffffff;
+  }
+
+  .landing-gift-unlocks__lock-icon {
+    width: 11px;
+    height: 11px;
+  }
+
+  .landing-gift-unlocks__label {
+    font-size: 0.625rem;
+    font-weight: 700;
+    line-height: 1.25;
+    text-align: center;
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-40));
+    overflow-wrap: break-word;
+  }
+
+  .landing-gift-unlocks__row--unlocked {
+    .landing-gift-unlocks__image {
+      filter: none;
+      opacity: 1;
+    }
+
+    .landing-gift-unlocks__label {
+      color: var(--landing-gift-unlocked);
+    }
+  }
+
+  @media screen and (min-width: 750px) {
+    .landing-gift-unlocks__label {
+      font-size: 0.6875rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .landing-gift-unlocks__image {
+      transition: none;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:landing.names.gift_unlocks",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "qualifying_variants",
+      "label": "t:landing.settings.qualifying_variants",
+      "info": "t:landing.info.unlock_variants"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_shipping",
+      "label": "t:landing.settings.show_free_shipping",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "shipping_label",
+      "label": "t:landing.settings.shipping_label",
+      "default": "FREE Shipping",
+      "visible_if": "{{ block.settings.show_shipping }}"
+    },
+    {
+      "type": "image_picker",
+      "id": "shipping_image",
+      "label": "t:landing.settings.shipping_image",
+      "visible_if": "{{ block.settings.show_shipping }}"
+    },
+    {
+      "type": "product_list",
+      "id": "gifts",
+      "label": "t:landing.settings.gifts",
+      "limit": 3
+    },
+    {
+      "type": "textarea",
+      "id": "gift_labels",
+      "label": "t:landing.settings.gift_labels",
+      "info": "t:landing.info.gift_labels"
+    },
+    {
+      "type": "color",
+      "id": "unlocked_color",
+      "label": "t:landing.settings.unlocked_color",
+      "default": "#15803D"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:landing.names.gift_unlocks",
+      "category": "t:categories.product"
+    }
+  ]
+}
+{% endschema %}

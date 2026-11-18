@@ -12,13 +12,13 @@
             "image_gap": 4,
             "large_first_image": false,
             "slideshow_controls_style": "thumbnails",
-            "slideshow_mobile_controls_style": "dots",
+            "slideshow_mobile_controls_style": "thumbnails",
             "thumbnail_position": "bottom",
-            "thumbnail_width": 44,
-            "thumbnail_radius": 0,
-            "aspect_ratio": "adapt",
+            "thumbnail_width": 90,
+            "thumbnail_radius": 5,
+            "aspect_ratio": "1",
             "constrain_to_viewport": false,
-            "media_fit": "contain",
+            "media_fit": "cover",
             "media_radius": 8,
             "extend_media": false,
             "zoom": true,
@@ -27,7 +27,8 @@
             "padding-block-start": 0,
             "padding-block-end": 0,
             "padding-inline-start": 0,
-            "padding-inline-end": 0
+            "padding-inline-end": 0,
+            "thumbnail_width_mobile": 90
           },
           "blocks": {}
         },
@@ -97,28 +98,6 @@
                 "padding-inline-end": 0
               },
               "blocks": {
-                "price_tVjtKg": {
-                  "type": "price",
-                  "settings": {
-                    "show_sale_price_first": true,
-                    "show_installments": false,
-                    "show_tax_info": false,
-                    "type_preset": "paragraph",
-                    "width": "100%",
-                    "alignment": "left",
-                    "font": "var(--font-body--family)",
-                    "font_size": "1rem",
-                    "line_height": "normal",
-                    "letter_spacing": "normal",
-                    "case": "none",
-                    "text_color": "",
-                    "padding-block-start": 4,
-                    "padding-block-end": 0,
-                    "padding-inline-start": 0,
-                    "padding-inline-end": 0
-                  },
-                  "blocks": {}
-                },
                 "landing_title": {
                   "type": "landing-title",
                   "settings": {
@@ -138,21 +117,48 @@
                     "padding-block-end": 0
                   },
                   "blocks": {}
+                },
+                "landing_badge": {
+                  "type": "landing-badge",
+                  "settings": {
+                    "text": "Hot product | Low stock",
+                    "color": "#DC2626",
+                    "alignment": "center",
+                    "padding-block-start": 0,
+                    "padding-block-end": 0
+                  },
+                  "blocks": {}
+                },
+                "landing_social_proof": {
+                  "type": "landing-social-proof",
+                  "settings": {
+                    "name": "Freya",
+                    "text": "and <strong>1M+</strong> others purchased",
+                    "badge_color": "#3B82F6",
+                    "padding-block-start": 0,
+                    "padding-block-end": 0
+                  },
+                  "blocks": {}
                 }
               },
               "block_order": [
+                "landing_badge",
+                "landing_social_proof",
                 "landing_title",
-                "landing_rating",
-                "price_tVjtKg"
+                "landing_rating"
               ]
             },
             "benefits": {
               "type": "landing-benefits",
               "settings": {
-                "benefits": "Adapts to your skin tone\nHides imperfections\nNatural look for 24+ hours\nLightweight & breathable",
-                "icon_color": "#9B7FC0",
+                "benefits": "Adapts to your skin tone\nHides imperfections\nNatural look for 24+ hours\nLightweight & Breathable",
+                "icon_color": "#B69FD1",
                 "padding-block-start": 0,
-                "padding-block-end": 0
+                "padding-block-end": 0,
+                "glyph_1": "sparkles",
+                "glyph_2": "face_glow",
+                "glyph_3": "arch",
+                "glyph_4": "no_blemish"
               }
             },
             "variant_picker_R3rGDr": {
@@ -161,19 +167,29 @@
                 "variant_style": "cards",
                 "show_swatches": false,
                 "option_label_text_color": "",
-                "variant_style_class": "default",
-                "custom_variant_background": "{{ settings.color_palette.background }}",
-                "custom_variant_text": "{{ settings.color_palette.foreground }}",
-                "custom_variant_border": "{{ settings.color_palette.foreground }}",
-                "selected_variant_style_class": "default",
-                "custom_selected_variant_background": "{{ settings.color_palette.foreground }}",
-                "custom_selected_variant_text": "{{ settings.color_palette.background }}",
-                "custom_selected_variant_border": "{{ settings.color_palette.foreground }}",
+                "variant_style_class": "custom",
+                "custom_variant_background": "#EDEDED",
+                "custom_variant_text": "#000000",
+                "custom_variant_border": "#B69FD14D",
+                "selected_variant_style_class": "custom",
+                "custom_selected_variant_background": "#FFFFFF",
+                "custom_selected_variant_text": "#000000",
+                "custom_selected_variant_border": "#B69FD1",
                 "alignment": "left",
                 "padding-block-start": 0,
                 "padding-block-end": 0,
                 "padding-inline-start": 0,
-                "padding-inline-end": 0
+                "padding-inline-end": 0,
+                "card_subtitles": "1 Stick | Regular Price\n2 Sticks | Temporary Deal",
+                "card_compare_color": "#FF1111",
+                "card_gift_value": "2 Sticks",
+                "card_gifts": [
+                  "dream-skin-primer",
+                  "mystery-gift"
+                ],
+                "card_gift_shipping": true,
+                "card_gift_auto_add": true,
+                "card_badge": "gift_card"
               },
               "blocks": {}
             },
@@ -234,7 +250,8 @@
                   "type": "accelerated-checkout",
                   "static": true,
                   "settings": {},
-                  "blocks": {}
+                  "blocks": {},
+                  "disabled": true
                 }
               },
               "block_order": []
@@ -242,7 +259,7 @@
             "subscription_note": {
               "type": "text",
               "settings": {
-                "text": "<p>This is <strong>not</strong> a subscription.</p>",
+                "text": "<p><strong>This is NOT a subscription.</strong></p>",
                 "width": "100%",
                 "max_width": "normal",
                 "alignment": "center",
@@ -267,35 +284,10 @@
             "guarantee": {
               "type": "landing-callout",
               "settings": {
-                "icon": "check_box",
-                "icon_color": "#9B7FC0",
+                "icon": "shield",
+                "icon_color": "#B69FD1",
                 "text": "<p>Every order comes with our <strong>30-Day Guarantee</strong>. Try it for 30 days — if it doesn't earn a spot in your routine, return it hassle-free for a full refund.</p>"
               }
-            },
-            "testimonial": {
-              "type": "text",
-              "settings": {
-                "text": "<p><em>“Wore it all weekend — lake trip Saturday, backyard party Sunday, still looked flawless Monday. This foundation doesn't quit.”</em></p><p><strong>Nicole, 36</strong> · Verified buyer</p>",
-                "width": "100%",
-                "max_width": "normal",
-                "alignment": "center",
-                "type_preset": "custom",
-                "font": "var(--font-body--family)",
-                "font_size": "0.875rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "text_color": "",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
             },
             "text_aEtTtq": {
               "type": "text",
@@ -336,17 +328,33 @@
               },
               "blocks": {}
             },
-            "free_gift": {
-              "type": "landing-free-gift",
+            "gift_unlocks": {
+              "type": "landing-gift-unlocks",
               "settings": {
-                "heading": "",
-                "gifts": [
-                  "dream-skin-primer",
-                  "mystery-gift"
-                ],
                 "qualifying_variants": "2 Sticks",
-                "auto_add": true,
                 "show_shipping": true,
+                "shipping_label": "FREE Shipping",
+                "gifts": [
+                  "mystery-gift",
+                  "dream-skin-primer"
+                ],
+                "gift_labels": "FREE Mystery Gift\nFree Primer",
+                "unlocked_color": "#15803D",
+                "padding-block-start": 0,
+                "padding-block-end": 0
+              },
+              "blocks": {}
+            },
+            "sale_progress": {
+              "type": "landing-sale-progress",
+              "settings": {
+                "heading": "Black Friday Sale - Selling fast",
+                "text": "Due to high demand, limited quantities available",
+                "percent": 87,
+                "accent_color": "#B69FD1",
+                "ends_at": "2026-12-01 00:00",
+                "timer_label": "Ends in",
+                "timer_color": "#7753A2",
                 "padding-block-start": 0,
                 "padding-block-end": 0
               },
@@ -358,11 +366,11 @@
             "benefits",
             "sale_timer",
             "variant_picker_R3rGDr",
-            "free_gift",
             "buy_buttons_eYQEYi",
             "subscription_note",
             "guarantee",
-            "testimonial",
+            "gift_unlocks",
+            "sale_progress",
             "text_aEtTtq"
           ]
         }
@@ -378,7 +386,10 @@
         "background_color": "{{ settings.color_palette.background }}",
         "padding-block-start": 0,
         "padding-block-end": 0
-      }
+      },
+      "custom_css": [
+        "@media screen and (min-width: 750px) {.product-information__grid.product-information--media-left:not(.product-information__grid--half) {grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);}}"
+      ]
     },
     "logos": {
       "type": "landing-logos",

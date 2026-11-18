@@ -336,6 +336,9 @@
     }
   },
   "landing": {
+    "gift_locked": "Verrouillé",
+    "gift_unlocked": "Débloqué",
+    "percent_sold": "{{ percent }} % vendus",
     "free_gift_item": "+ {{ title }} OFFERT",
     "free_shipping": "+ Livraison OFFERTE",
     "rating_label": "Noté {{ rating }} sur 5",

@@ -3,8 +3,9 @@ import { Component } from '@theme/component';
 import { StandardEvents, ProductSelectEvent } from '@shopify/events';
 
 /**
- * Re-renders the landing free gift rows from the section HTML fetched for a new variant,
- * so gift rows and their hidden `free_gift_id` inputs follow the qualifying variant rule.
+ * Re-renders variant-dependent landing gift content (free gift rows and their hidden
+ * `free_gift_id` inputs, gift unlock tiles) from the section HTML fetched for a new variant.
+ * Matches its counterpart in that HTML by tag name and `data-block-id`.
  */
 class LandingFreeGift extends Component {
   /** @type {AbortController | undefined} */
@@ -36,7 +37,7 @@ class LandingFreeGift extends Component {
         if (!detail?.html) return;
         if (!detail.newProduct && detail.productId && detail.productId !== this.dataset.productId) return;
 
-        const next = detail.html.querySelector(`landing-free-gift[data-block-id="${this.dataset.blockId}"]`);
+        const next = detail.html.querySelector(`${this.localName}[data-block-id="${this.dataset.blockId}"]`);
         if (!next) return;
 
         morph(this, next.cloneNode(true), { childrenOnly: true });
@@ -49,4 +50,8 @@ class LandingFreeGift extends Component {
 
 if (!customElements.get('landing-free-gift')) {
   customElements.define('landing-free-gift', LandingFreeGift);
+}
+
+if (!customElements.get('landing-gift-unlocks')) {
+  customElements.define('landing-gift-unlocks', class LandingGiftUnlocks extends LandingFreeGift {});
 }
