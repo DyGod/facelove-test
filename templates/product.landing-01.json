@@ -364,16 +364,73 @@
       ]
     },
     "comparison": {
-      "type": "landing-image-text",
+      "type": "landing-comparison",
+      "blocks": {
+        "row_1": {
+          "type": "row",
+          "settings": {
+            "ours": "Adjusts to your individual skin tone",
+            "theirs": "Settles into fine lines & pores"
+          }
+        },
+        "row_2": {
+          "type": "row",
+          "settings": {
+            "ours": "Natural, smooth finish, never cakey",
+            "theirs": "Looks cakey, heavy or mask-like"
+          }
+        },
+        "row_3": {
+          "type": "row",
+          "settings": {
+            "ours": "Hydrates & nourishes skin",
+            "theirs": "Wrong shade, too orange or too light"
+          }
+        },
+        "row_4": {
+          "type": "row",
+          "settings": {
+            "ours": "Ideal for mature & sensitive skin",
+            "theirs": "Dries out or irritates skin"
+          }
+        },
+        "row_5": {
+          "type": "row",
+          "settings": {
+            "ours": "Covers redness & spots",
+            "theirs": "Doesn't last all day"
+          }
+        },
+        "row_6": {
+          "type": "row",
+          "settings": {
+            "ours": "Lasts all day",
+            "theirs": "Multiple shades needed"
+          }
+        }
+      },
+      "block_order": [
+        "row_1",
+        "row_2",
+        "row_3",
+        "row_4",
+        "row_5",
+        "row_6"
+      ],
       "settings": {
-        "image": "shopify://shop_images/landing-ChatGPT_Image_May_14_2026_08_05_41_PM.png",
-        "image_position": "right",
-        "image_width": "large",
         "heading": "Why more than 50,000 women over 40 love it",
         "text": "<p>Switch to the only foundation truly made for mature skin.</p>",
         "text_alignment": "center",
         "button_label": "Shop now",
         "button_link": "",
+        "table_position": "right",
+        "ours_image": "shopify://shop_images/landing-comparison-facelove.png",
+        "theirs_image": "shopify://shop_images/landing-comparison-other-brands.png",
+        "ours_label": "Facelove",
+        "theirs_label": "Other brands",
+        "highlight_color": "#F1EDF5",
+        "icon_color": "#7C6A96",
+        "background_color": "",
         "padding-block-start": 40,
         "padding-block-end": 40
       }

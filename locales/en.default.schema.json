@@ -255,6 +255,8 @@
   },
   "landing": {
     "names": {
+      "comparison_table": "Comparison table",
+      "comparison_row": "Row",
       "badge": "Status badge",
       "social_proof": "Social proof",
       "gift_unlocks": "Gift unlocks",
@@ -278,6 +280,14 @@
       "sale_timer": "Sale countdown"
     },
     "settings": {
+      "table_position": "Table position",
+      "ours_image": "Our brand image",
+      "theirs_image": "Other brands image",
+      "ours_label": "Our brand label",
+      "theirs_label": "Other brands label",
+      "highlight_color": "Our column background",
+      "ours_point": "Our point",
+      "theirs_point": "Their point",
       "card_badge": "Savings badge",
       "glyph_1": "Glyph for line 1",
       "glyph_2": "Glyph for line 2",
@@ -339,10 +349,12 @@
       "qualifying_variants": "Qualifying variants"
     },
     "content": {
+      "comparison_table": "Comparison table",
       "bundle_cards": "Bundle cards",
       "benefit_icons": "Benefit icons"
     },
     "info": {
+      "table_position": "Applies on desktop. On smaller screens the table sits below the text.",
       "bundle_cards": "Card extras. For accent colors, set Selected style to Custom.",
       "rating_link": "Makes the rating clickable. Use #reviews to jump to a reviews section on this page.",
       "anchor_id": "Links to # plus this ID jump to this section, for example #reviews.",

@@ -10,6 +10,8 @@
 {
   "landing": {
     "names": {
+      "comparison_table": "Tableau comparatif",
+      "comparison_row": "Ligne",
       "badge": "Status badge",
       "social_proof": "Social proof",
       "gift_unlocks": "Gift unlocks",
@@ -33,6 +35,14 @@
       "sale_timer": "Sale countdown"
     },
     "settings": {
+      "table_position": "Position du tableau",
+      "ours_image": "Image de notre marque",
+      "theirs_image": "Image des autres marques",
+      "ours_label": "Libellé de notre marque",
+      "theirs_label": "Libellé des autres marques",
+      "highlight_color": "Arrière-plan de notre colonne",
+      "ours_point": "Notre point",
+      "theirs_point": "Leur point",
       "card_badge": "Savings badge",
       "glyph_1": "Glyph for line 1",
       "glyph_2": "Glyph for line 2",
@@ -94,10 +104,12 @@
       "qualifying_variants": "Qualifying variants"
     },
     "content": {
+      "comparison_table": "Tableau comparatif",
       "bundle_cards": "Bundle cards",
       "benefit_icons": "Benefit icons"
     },
     "info": {
+      "table_position": "S'applique sur ordinateur. Sur les petits écrans, le tableau s'affiche sous le texte.",
       "bundle_cards": "Card extras. For accent colors, set Selected style to Custom.",
       "rating_link": "Makes the rating clickable. Use #reviews to jump to a reviews section on this page.",
       "anchor_id": "Links to # plus this ID jump to this section, for example #reviews.",

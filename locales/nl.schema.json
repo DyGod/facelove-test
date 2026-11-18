@@ -10,6 +10,8 @@
 {
   "landing": {
     "names": {
+      "comparison_table": "Vergelijkingstabel",
+      "comparison_row": "Rij",
       "badge": "Status badge",
       "social_proof": "Social proof",
       "gift_unlocks": "Gift unlocks",
@@ -33,6 +35,14 @@
       "sale_timer": "Sale countdown"
     },
     "settings": {
+      "table_position": "Positie van de tabel",
+      "ours_image": "Afbeelding van ons merk",
+      "theirs_image": "Afbeelding van andere merken",
+      "ours_label": "Label van ons merk",
+      "theirs_label": "Label van andere merken",
+      "highlight_color": "Achtergrond van onze kolom",
+      "ours_point": "Ons punt",
+      "theirs_point": "Hun punt",
       "card_badge": "Savings badge",
       "glyph_1": "Glyph for line 1",
       "glyph_2": "Glyph for line 2",
@@ -94,10 +104,12 @@
       "qualifying_variants": "Qualifying variants"
     },
     "content": {
+      "comparison_table": "Vergelijkingstabel",
       "bundle_cards": "Bundle cards",
       "benefit_icons": "Benefit icons"
     },
     "info": {
+      "table_position": "Geldt op desktop. Op kleinere schermen staat de tabel onder de tekst.",
       "bundle_cards": "Card extras. For accent colors, set Selected style to Custom.",
       "rating_link": "Makes the rating clickable. Use #reviews to jump to a reviews section on this page.",
       "anchor_id": "Links to # plus this ID jump to this section, for example #reviews.",

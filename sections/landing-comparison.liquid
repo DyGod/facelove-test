@@ -1,0 +1,573 @@
+{% comment %}
+  Section contract.
+  A two-column comparison table (our brand vs other brands) beside a heading, text and
+  call-to-action. Each Row block pairs one of our strengths with the matching competitor
+  weakness, so both columns stay aligned. Our column sits on a soft highlight card; the
+  other column has no background. Stacks intro, table, button on mobile; from desktop the
+  table takes two thirds of the row. The button scrolls to the buy box (#landing-buy) unless a link is set.
+  @example
+  <!-- Add "Comparison table" to a product landing template and add one Row block per point -->
+{% endcomment %}
+
+{% liquid
+  assign button_link = section.settings.button_link | default: '#landing-buy'
+  assign heading_id = 'LandingComparisonHeading-' | append: section.id
+  assign columns = 'ours,theirs' | split: ','
+%}
+
+{% render 'contrast-override', background_color: section.settings.background_color, section_id: section.id %}
+
+<div class="section-background color-custom-{{ section.id }}"></div>
+<div class="section section--page-width color-custom-{{ section.id }}">
+  <div
+    class="landing-comparison landing-comparison--table-{{ section.settings.table_position }} spacing-style"
+    style="
+      {% render 'spacing-style', settings: section.settings %}
+      --landing-comparison-highlight: {{ section.settings.highlight_color }};
+      --landing-comparison-icon: {{ section.settings.icon_color }};
+    "
+  >
+    {%- if section.settings.heading != blank or section.settings.text != blank -%}
+      <div class="landing-comparison__intro landing-comparison__intro--{{ section.settings.text_alignment }}">
+        {%- if section.settings.heading != blank -%}
+          <h2 id="{{ heading_id }}" class="landing-comparison__heading">{{ section.settings.heading }}</h2>
+        {%- endif -%}
+        {%- if section.settings.text != blank -%}
+          <div class="landing-comparison__text rte">{{ section.settings.text }}</div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="landing-comparison__table-wrap">
+        <table
+          class="landing-comparison__table"
+          {% if section.settings.heading != blank %}
+            aria-labelledby="{{ heading_id }}"
+          {% endif %}
+        >
+          <thead>
+            {%- if section.settings.ours_image != blank or section.settings.theirs_image != blank -%}
+              <tr class="landing-comparison__media-row">
+                {%- for column in columns -%}
+                  {%- liquid
+                    if column == 'ours'
+                      assign column_image = section.settings.ours_image
+                      assign column_label = section.settings.ours_label
+                    else
+                      assign column_image = section.settings.theirs_image
+                      assign column_label = section.settings.theirs_label
+                    endif
+                    assign column_alt = column_image.alt | default: column_label | escape
+                  -%}
+                  <td class="landing-comparison__media landing-comparison__cell--{{ column }}">
+                    {%- if column_image != blank -%}
+                      {{
+                        column_image
+                        | image_url: width: 860
+                        | image_tag:
+                          widths: '240, 360, 480, 640, 860',
+                          sizes: '(min-width: 990px) 340px, (min-width: 750px) 42vw, 45vw',
+                          loading: 'lazy',
+                          alt: column_alt,
+                          class: 'landing-comparison__image'
+                      }}
+                    {%- endif -%}
+                  </td>
+                {%- endfor -%}
+              </tr>
+            {%- endif -%}
+            <tr>
+              <th scope="col" class="landing-comparison__brand landing-comparison__cell--ours">
+                <span class="landing-comparison__brand-name">
+                  {{- section.settings.ours_label | escape -}}
+                </span>
+                <svg
+                  class="landing-comparison__sparkle"
+                  aria-hidden="true"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M12 2.5c.5 4.6 2.9 7 7.5 7.5-4.6.5-7 2.9-7.5 7.5-.5-4.6-2.9-7-7.5-7.5 4.6-.5 7-2.9 7.5-7.5Z" fill="currentColor"/>
+                  <path d="M19 15.5c.2 1.8 1.2 2.8 3 3-1.8.2-2.8 1.2-3 3-.2-1.8-1.2-2.8-3-3 1.8-.2 2.8-1.2 3-3Z" fill="currentColor" opacity=".6"/>
+                </svg>
+              </th>
+              <th scope="col" class="landing-comparison__brand landing-comparison__cell--theirs">
+                <span class="landing-comparison__brand-name">
+                  {{- section.settings.theirs_label | escape -}}
+                </span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {%- for block in section.blocks -%}
+              <tr class="landing-comparison__row" {{ block.shopify_attributes }}>
+                <td class="landing-comparison__cell landing-comparison__cell--ours">
+                  {%- if block.settings.ours != blank -%}
+                    <span class="landing-comparison__point">
+                      <svg
+                        class="landing-comparison__icon landing-comparison__icon--check"
+                        aria-hidden="true"
+                        focusable="false"
+                        viewBox="0 0 20 20"
+                      >
+                        <circle cx="10" cy="10" r="10" fill="currentColor"/>
+                        <path d="m6 10.3 2.6 2.6L14 7.4" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                      <span>{{ block.settings.ours | escape }}</span>
+                    </span>
+                  {%- endif -%}
+                </td>
+                <td class="landing-comparison__cell landing-comparison__cell--theirs">
+                  {%- if block.settings.theirs != blank -%}
+                    <span class="landing-comparison__point">
+                      <svg
+                        class="landing-comparison__icon landing-comparison__icon--cross"
+                        aria-hidden="true"
+                        focusable="false"
+                        viewBox="0 0 20 20"
+                      >
+                        <circle cx="10" cy="10" r="9.25" fill="none" stroke="currentColor" stroke-width="1.2"/>
+                        <path d="m7.2 7.2 5.6 5.6m0-5.6-5.6 5.6" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+                      </svg>
+                      <span>{{ block.settings.theirs | escape }}</span>
+                    </span>
+                  {%- endif -%}
+                </td>
+              </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.button_label != blank -%}
+      <div class="landing-comparison__action landing-comparison__action--{{ section.settings.text_alignment }}">
+        <a class="button landing-comparison__button" href="{{ button_link }}">
+          {{- section.settings.button_label | escape -}}
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% stylesheet %}
+  .landing-comparison {
+    --landing-comparison-radius: var(--style-border-radius-lg);
+    --landing-comparison-divider: rgb(var(--color-foreground-rgb) / var(--opacity-10));
+
+    display: grid;
+    gap: var(--gap-xl);
+    width: min(100%, 1100px);
+    min-width: 0;
+    margin-inline: auto;
+  }
+
+  .landing-comparison__intro {
+    display: grid;
+    gap: var(--gap-md);
+    justify-items: center;
+    min-width: 0;
+    text-align: center;
+  }
+
+  .landing-comparison__heading {
+    margin: 0;
+    font-size: clamp(1.75rem, 1.4rem + 1.6vw, 2.5rem);
+    line-height: 1.15;
+    overflow-wrap: break-word;
+    text-wrap: balance;
+  }
+
+  .landing-comparison__text {
+    max-width: 44ch;
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-80));
+  }
+
+  .landing-comparison__text > * {
+    margin-block: 0 var(--margin-sm);
+  }
+
+  .landing-comparison__text > :last-child {
+    margin-block-end: 0;
+  }
+
+  .landing-comparison__table-wrap {
+    min-width: 0;
+  }
+
+  .landing-comparison__table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+
+  .landing-comparison__table th,
+  .landing-comparison__table td {
+    border: 0;
+    text-align: start;
+    vertical-align: middle;
+  }
+
+  /* Our column reads as one soft card: header cell rounds the top, last row the bottom. */
+  .landing-comparison__cell--ours {
+    background-color: var(--landing-comparison-highlight);
+  }
+
+  .landing-comparison__table thead tr:first-child > .landing-comparison__cell--ours {
+    border-start-start-radius: var(--landing-comparison-radius);
+    border-start-end-radius: var(--landing-comparison-radius);
+  }
+
+  .landing-comparison__media {
+    padding: var(--padding-sm) var(--padding-sm) 0;
+    vertical-align: bottom;
+  }
+
+  .landing-comparison__image {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 430 / 418;
+    object-fit: cover;
+    border-radius: calc(var(--landing-comparison-radius) - var(--padding-sm) / 2);
+  }
+
+  /* Brand names sit closer to the photo than to the card edge. */
+  .landing-comparison__media-row + tr .landing-comparison__brand {
+    padding-block-start: var(--padding-md);
+  }
+
+  .landing-comparison__row:last-child .landing-comparison__cell--ours {
+    border-end-start-radius: var(--landing-comparison-radius);
+    border-end-end-radius: var(--landing-comparison-radius);
+  }
+
+  .landing-comparison__brand {
+    padding: var(--padding-xl) var(--padding-sm) var(--padding-md);
+    font-family: var(--font-heading--family);
+    font-size: clamp(1.125rem, 1rem + 0.8vw, 1.5rem);
+    font-weight: var(--font-heading--weight);
+    line-height: 1.2;
+    overflow-wrap: break-word;
+  }
+
+  .landing-comparison__brand.landing-comparison__cell--ours {
+    padding-inline-start: var(--padding-md);
+  }
+
+  .landing-comparison__brand.landing-comparison__cell--theirs {
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-60));
+    font-weight: 400;
+  }
+
+  .landing-comparison__sparkle {
+    display: inline-block;
+    width: 0.75em;
+    height: 0.75em;
+    margin-inline-start: 0.3em;
+    vertical-align: -0.05em;
+    color: var(--landing-comparison-icon);
+  }
+
+  .landing-comparison__cell {
+    padding: var(--padding-sm) var(--padding-sm);
+  }
+
+  .landing-comparison__cell--ours.landing-comparison__cell {
+    padding-inline-start: var(--padding-md);
+  }
+
+  .landing-comparison__row:last-child .landing-comparison__cell {
+    padding-block-end: var(--padding-lg);
+  }
+
+  /* Hairline between rows, inset inside our card so it never touches the rounded edge. */
+  .landing-comparison__row + .landing-comparison__row .landing-comparison__cell {
+    background-image: linear-gradient(var(--landing-comparison-divider), var(--landing-comparison-divider));
+    background-repeat: no-repeat;
+    background-size: calc(100% - var(--padding-sm) * 2) 1px;
+    background-position: center top;
+  }
+
+  .landing-comparison__point {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-xs);
+    min-width: 0;
+    min-height: 2.75rem;
+    overflow-wrap: break-word;
+  }
+
+  .landing-comparison__point > span {
+    min-width: 0;
+  }
+
+  .landing-comparison__cell--ours .landing-comparison__point {
+    font-weight: 500;
+  }
+
+  .landing-comparison__cell--theirs .landing-comparison__point {
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-70));
+  }
+
+  .landing-comparison__icon {
+    flex: none;
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+
+  .landing-comparison__icon--check {
+    color: var(--landing-comparison-icon);
+  }
+
+  .landing-comparison__icon--cross {
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-40));
+  }
+
+  .landing-comparison__action {
+    display: flex;
+    justify-content: center;
+  }
+
+  @media screen and (min-width: 750px) {
+    .landing-comparison__table {
+      font-size: 1rem;
+    }
+
+    .landing-comparison__point {
+      gap: var(--gap-sm);
+    }
+
+    .landing-comparison__icon {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+
+    .landing-comparison__brand {
+      padding: var(--padding-2xl) var(--padding-lg) var(--padding-md);
+    }
+
+    .landing-comparison__cell {
+      padding: var(--padding-sm) var(--padding-lg);
+    }
+
+    .landing-comparison__media {
+      padding: var(--padding-lg) var(--padding-lg) 0;
+    }
+
+    .landing-comparison__media-row + tr .landing-comparison__brand {
+      padding-block-start: var(--padding-lg);
+    }
+
+    .landing-comparison__brand.landing-comparison__cell--ours,
+    .landing-comparison__cell--ours.landing-comparison__cell {
+      padding-inline-start: var(--padding-xl);
+    }
+
+    .landing-comparison__row + .landing-comparison__row .landing-comparison__cell {
+      background-size: calc(100% - var(--padding-lg) * 2) 1px;
+    }
+
+    .landing-comparison__intro--start {
+      justify-items: start;
+      text-align: start;
+    }
+
+    .landing-comparison__action--start {
+      justify-content: flex-start;
+    }
+  }
+
+  @media screen and (min-width: 990px) {
+    .landing-comparison {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+      grid-template-rows: 1fr auto 1fr;
+      grid-template-areas:
+        'intro table'
+        'action table'
+        '. table';
+      column-gap: var(--gap-3xl);
+      row-gap: var(--gap-xl);
+    }
+
+    .landing-comparison--table-left {
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+      grid-template-areas:
+        'table intro'
+        'table action'
+        'table .';
+    }
+
+    .landing-comparison__intro {
+      grid-area: intro;
+      align-self: end;
+    }
+
+    .landing-comparison__table-wrap {
+      grid-area: table;
+      align-self: center;
+    }
+
+    .landing-comparison__action {
+      grid-area: action;
+      align-self: start;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:landing.names.comparison_table",
+  "class": "landing-comparison-section",
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "label": "t:settings.heading",
+      "default": "Why women over 40 switch"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "t:settings.text",
+      "default": "<p>See how we compare to the foundations you already know.</p>"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "t:landing.settings.text_alignment_desktop",
+      "options": [
+        { "value": "start", "label": "t:options.left" },
+        { "value": "center", "label": "t:options.center" }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:landing.settings.button_label",
+      "default": "Shop now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:landing.settings.button_link",
+      "info": "t:landing.info.button_link"
+    },
+    {
+      "type": "header",
+      "content": "t:landing.content.comparison_table"
+    },
+    {
+      "type": "select",
+      "id": "table_position",
+      "label": "t:landing.settings.table_position",
+      "info": "t:landing.info.table_position",
+      "options": [
+        { "value": "left", "label": "t:options.left" },
+        { "value": "right", "label": "t:options.right" }
+      ],
+      "default": "right"
+    },
+    {
+      "type": "image_picker",
+      "id": "ours_image",
+      "label": "t:landing.settings.ours_image"
+    },
+    {
+      "type": "image_picker",
+      "id": "theirs_image",
+      "label": "t:landing.settings.theirs_image"
+    },
+    {
+      "type": "text",
+      "id": "ours_label",
+      "label": "t:landing.settings.ours_label",
+      "default": "Our brand"
+    },
+    {
+      "type": "text",
+      "id": "theirs_label",
+      "label": "t:landing.settings.theirs_label",
+      "default": "Other brands"
+    },
+    {
+      "type": "color",
+      "id": "highlight_color",
+      "label": "t:landing.settings.highlight_color",
+      "alpha": true,
+      "default": "#F1EDF5"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "t:landing.settings.icon_color",
+      "default": "#7C6A96"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:settings.background",
+      "alpha": true
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "row",
+      "name": "t:landing.names.comparison_row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "ours",
+          "label": "t:landing.settings.ours_point",
+          "default": "Adjusts to your skin tone"
+        },
+        {
+          "type": "text",
+          "id": "theirs",
+          "label": "t:landing.settings.theirs_point",
+          "default": "Wrong shade"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:landing.names.comparison_table",
+      "blocks": [
+        { "type": "row", "settings": { "ours": "Adjusts to your skin tone", "theirs": "Wrong shade" } },
+        { "type": "row", "settings": { "ours": "Natural, smooth finish", "theirs": "Looks cakey or heavy" } },
+        { "type": "row", "settings": { "ours": "Lasts all day", "theirs": "Fades by midday" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
