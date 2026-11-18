@@ -3,13 +3,31 @@
   A heading followed by numbered feature cards. Each card pairs an image with a heading,
   a checklist and a call-to-action. Cards stack image-first on mobile and alternate the
   image side from tablet up. Buttons scroll to the product buy box (#landing-buy) unless a link is set.
+  A card's media can be a single image or a before/after slider (<landing-compare>, which extends
+  @theme/comparison-slider); landing-compare.js loads only when a card uses the slider.
   @example
   <!-- Add "Feature cards" to a product landing template and add one Feature block per reason -->
 {% endcomment %}
 
 {% liquid
   assign button_link = section.settings.button_link | default: '#landing-buy'
+  assign compare_sides = 'before,after' | split: ','
+  assign has_compare = false
+  for block in section.blocks
+    if block.settings.media_type == 'compare'
+      assign has_compare = true
+      break
+    endif
+  endfor
 %}
+
+{%- if has_compare -%}
+  <script
+    src="{{ 'landing-compare.js' | asset_url }}"
+    type="module"
+    fetchpriority="low"
+  ></script>
+{%- endif -%}
 
 {% render 'contrast-override', background_color: section.settings.background_color, section_id: section.id %}
 
@@ -37,7 +55,91 @@
       {%- for block in section.blocks -%}
         <li class="landing-features__card" {{ block.shopify_attributes }}>
           <div class="landing-features__media">
-            {%- if block.settings.image != blank -%}
+            {%- if block.settings.media_type == 'compare' -%}
+              {%- liquid
+                assign compare_label_id = 'LandingCompareLabel-' | append: block.id
+                assign compare_heading = block.settings.heading | strip_html | escape
+              -%}
+              <landing-compare class="landing-features__compare">
+                <div
+                  class="landing-features__compare-media"
+                  ref="mediaWrapper"
+                  data-orientation="horizontal"
+                >
+                  {%- for side in compare_sides -%}
+                    {%- liquid
+                      if side == 'before'
+                        assign side_image = block.settings.before_image
+                        assign side_label = 'landing.compare_before' | t
+                      else
+                        assign side_image = block.settings.after_image
+                        assign side_label = 'landing.compare_after' | t
+                      endif
+                    -%}
+                    <div class="landing-features__compare-layer landing-features__compare-layer--{{ side }}">
+                      {%- if side_image != blank -%}
+                        {%- if side == 'after' -%}
+                          {{
+                            side_image
+                            | image_url: width: 1400
+                            | image_tag:
+                              widths: '400, 600, 800, 1000, 1400',
+                              sizes: '(min-width: 1200px) 560px, (min-width: 750px) 45vw, 100vw',
+                              loading: 'lazy',
+                              draggable: 'false',
+                              class: 'landing-features__compare-image',
+                              ref: 'afterImage'
+                          }}
+                        {%- else -%}
+                          {{
+                            side_image
+                            | image_url: width: 1400
+                            | image_tag:
+                              widths: '400, 600, 800, 1000, 1400',
+                              sizes: '(min-width: 1200px) 560px, (min-width: 750px) 45vw, 100vw',
+                              loading: 'lazy',
+                              draggable: 'false',
+                              class: 'landing-features__compare-image'
+                          }}
+                        {%- endif -%}
+                      {%- elsif side == 'after' -%}
+                        <div class="landing-features__compare-image" ref="afterImage">
+                          {{ 'image' | placeholder_svg_tag: 'landing-features__placeholder' }}
+                        </div>
+                      {%- else -%}
+                        <div class="landing-features__compare-image">
+                          {{ 'image' | placeholder_svg_tag: 'landing-features__placeholder' }}
+                        </div>
+                      {%- endif -%}
+                      <span class="landing-features__compare-label landing-features__compare-label--{{ side }}">
+                        {{- side_label -}}
+                      </span>
+                    </div>
+                  {%- endfor -%}
+
+                  <input
+                    type="range"
+                    class="landing-features__compare-input"
+                    ref="slider"
+                    min="0"
+                    max="100"
+                    value="50"
+                    aria-label="{{ 'landing.compare_label' | t }}"
+                    {% if compare_heading != blank %}
+                      aria-describedby="{{ compare_label_id }}"
+                    {% endif %}
+                    on:input="/sync"
+                  >
+                  {%- if compare_heading != blank -%}
+                    <span id="{{ compare_label_id }}" hidden>{{ compare_heading }}</span>
+                  {%- endif -%}
+                  <span class="landing-features__compare-handle" aria-hidden="true">
+                    <span class="svg-wrapper">{{- 'icon-chevron-left.svg' | inline_asset_content -}}</span>
+                    <span class="svg-wrapper">{{- 'icon-chevron-right.svg' | inline_asset_content -}}</span>
+                  </span>
+                </div>
+              </landing-compare>
+            {%- elsif block.settings.image != blank -%}
               {{
                 block.settings.image
                 | image_url: width: 1400
@@ -134,6 +236,151 @@
   .landing-features__placeholder {
     aspect-ratio: 1;
     background-color: rgb(var(--color-foreground-rgb) / var(--opacity-5));
+  }
+
+  /* Before/after slider. --compare is the range value (0–100); before sits on the inline-start side. */
+  .landing-features__compare {
+    display: block;
+  }
+
+  .landing-features__compare-media {
+    --compare: 50;
+    --landing-compare-position: calc(var(--compare) * 1%);
+
+    position: relative;
+    display: grid;
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: var(--style-border-radius-lg);
+    cursor: ew-resize;
+    touch-action: pan-y;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .landing-features__compare-media:dir(rtl) {
+    --landing-compare-position: calc((100 - var(--compare)) * 1%);
+  }
+
+  .landing-features__compare-layer {
+    position: relative;
+    grid-area: 1 / 1;
+    min-width: 0;
+    transition: clip-path var(--transition-duration, 0s) ease-in-out;
+  }
+
+  /* stylelint-disable plugin/no-unsupported-browser-features */
+  .landing-features__compare-layer--before {
+    clip-path: inset(0 calc(100% - var(--landing-compare-position)) 0 0);
+  }
+
+  .landing-features__compare-layer--after {
+    clip-path: inset(0 0 0 var(--landing-compare-position));
+  }
+
+  .landing-features__compare-media:dir(rtl) .landing-features__compare-layer--before {
+    clip-path: inset(0 0 0 var(--landing-compare-position));
+  }
+
+  .landing-features__compare-media:dir(rtl) .landing-features__compare-layer--after {
+    clip-path: inset(0 calc(100% - var(--landing-compare-position)) 0 0);
+  }
+  /* stylelint-enable plugin/no-unsupported-browser-features */
+
+  .landing-features__compare-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+  }
+
+  .landing-features__compare-image .landing-features__placeholder {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .landing-features__compare-label {
+    position: absolute;
+    inset-block-start: var(--padding-sm);
+    padding: var(--padding-2xs) var(--padding-xs);
+    border-radius: var(--style-border-radius-pills, 999px);
+    background-color: rgb(var(--color-background-rgb) / var(--opacity-85));
+    color: var(--color-foreground);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: var(--letter-spacing-sm);
+    line-height: 1.2;
+    text-transform: uppercase;
+    pointer-events: none;
+  }
+
+  .landing-features__compare-label--before {
+    inset-inline-start: var(--padding-sm);
+  }
+
+  .landing-features__compare-label--after {
+    inset-inline-end: var(--padding-sm);
+  }
+
+  /* Divider line */
+  .landing-features__compare-media::after {
+    content: '';
+    position: absolute;
+    inset-block: 0;
+    left: var(--landing-compare-position);
+    z-index: var(--layer-raised);
+    width: 3px;
+    background-color: var(--color-background);
+    box-shadow: 0 0 8px rgb(0 0 0 / var(--opacity-20));
+    transform: translateX(-50%);
+    transition: left var(--transition-duration, 0s) ease-in-out;
+    pointer-events: none;
+  }
+
+  /* Hidden range input: keyboard and assistive-technology control. Pointer input is handled in JS. */
+  .landing-features__compare-input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    opacity: 0;
+    appearance: none;
+    pointer-events: none;
+  }
+
+  .landing-features__compare-handle {
+    position: absolute;
+    inset-block-start: 50%;
+    left: var(--landing-compare-position);
+    z-index: var(--layer-heightened);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--gap-2xs);
+    width: var(--button-size);
+    height: var(--button-size);
+    border-radius: 50%;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    box-shadow: 0 2px 10px rgb(0 0 0 / var(--opacity-20));
+    direction: ltr;
+    transform: translate(-50%, -50%);
+    transition: left var(--transition-duration, 0s) ease-in-out;
+    pointer-events: none;
+  }
+
+  .landing-features__compare-handle .svg-wrapper {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+
+  .landing-features__compare-input:focus-visible ~ .landing-features__compare-handle {
+    outline: var(--focus-outline-width) solid var(--color-foreground);
+    outline-offset: var(--focus-outline-offset);
   }
 
   .landing-features__content {
@@ -305,9 +552,32 @@
       "name": "t:landing.names.feature",
       "settings": [
         {
+          "type": "select",
+          "id": "media_type",
+          "label": "t:settings.media_type",
+          "options": [
+            { "value": "image", "label": "t:options.image" },
+            { "value": "compare", "label": "t:landing.options.before_after" }
+          ],
+          "default": "image"
+        },
+        {
           "type": "image_picker",
           "id": "image",
-          "label": "t:settings.image"
+          "label": "t:settings.image",
+          "visible_if": "{{ block.settings.media_type == 'image' }}"
+        },
+        {
+          "type": "image_picker",
+          "id": "before_image",
+          "label": "t:settings.before_image",
+          "visible_if": "{{ block.settings.media_type == 'compare' }}"
+        },
+        {
+          "type": "image_picker",
+          "id": "after_image",
+          "label": "t:settings.after_image",
+          "visible_if": "{{ block.settings.media_type == 'compare' }}"
         },
         {
           "type": "text",

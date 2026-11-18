@@ -393,7 +393,10 @@
         "feature_1": {
           "type": "feature",
           "settings": {
+            "media_type": "compare",
             "image": "shopify://shop_images/landing-Before_and_After_of_a_202604292026.jpg",
+            "before_image": "shopify://shop_images/landing-feature-01-before.jpg",
+            "after_image": "shopify://shop_images/landing-feature-01-after.jpg",
             "label": "01",
             "heading": "Instantly a natural, even & youthful glow",
             "text": "<ul><li>Even coverage without a masking effect</li><li>Instantly softens fine lines</li><li>Fresh, natural glow</li><li>Blends in within seconds, effortlessly, without streaks</li></ul>"

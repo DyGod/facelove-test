@@ -336,7 +336,10 @@
     "free_gift_item": "+ GRATIS {{ title }}",
     "free_shipping": "+ GRATIS Versand",
     "rating_label": "Mit {{ rating }} von 5 bewertet",
-    "review_count": "({{ count }} Bewertungen)"
+    "review_count": "({{ count }} Bewertungen)",
+    "compare_before": "Vorher",
+    "compare_after": "Nachher",
+    "compare_label": "Vorher und nachher vergleichen"
   },
   "placeholders": {
     "password": "Passwort",

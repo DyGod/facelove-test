@@ -380,7 +380,10 @@
     "free_gift_item": "+ FREE {{ title }}",
     "free_shipping": "+ FREE Shipping",
     "rating_label": "Rated {{ rating }} out of 5",
-    "review_count": "({{ count }} Reviews)"
+    "review_count": "({{ count }} Reviews)",
+    "compare_before": "Before",
+    "compare_after": "After",
+    "compare_label": "Compare before and after"
   },
   "placeholders": {
     "password": "Password",

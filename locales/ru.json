@@ -373,7 +373,10 @@
     "free_gift_item": "+ БЕСПЛАТНО: {{ title }}",
     "free_shipping": "+ БЕСПЛАТНАЯ доставка",
     "rating_label": "Оценка {{ rating }} из 5",
-    "review_count": "({{ count }} отзывов)"
+    "review_count": "({{ count }} отзывов)",
+    "compare_before": "До",
+    "compare_after": "После",
+    "compare_label": "Сравнить до и после"
   },
   "placeholders": {
     "password": "Пароль",

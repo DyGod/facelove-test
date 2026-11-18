@@ -359,7 +359,10 @@
     "free_gift_item": "+ GRATIS {{ title }}",
     "free_shipping": "+ GRATIS verzending",
     "rating_label": "Beoordeeld met {{ rating }} van 5",
-    "review_count": "({{ count }} reviews)"
+    "review_count": "({{ count }} reviews)",
+    "compare_before": "Voor",
+    "compare_after": "Na",
+    "compare_label": "Vergelijk voor en na"
   },
   "placeholders": {
     "password": "Wachtwoord",

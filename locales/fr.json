@@ -342,7 +342,10 @@
     "free_gift_item": "+ {{ title }} OFFERT",
     "free_shipping": "+ Livraison OFFERTE",
     "rating_label": "Noté {{ rating }} sur 5",
-    "review_count": "({{ count }} avis)"
+    "review_count": "({{ count }} avis)",
+    "compare_before": "Avant",
+    "compare_after": "Après",
+    "compare_label": "Comparer avant et après"
   },
   "placeholders": {
     "password": "Mot de passe",
