@@ -391,7 +391,9 @@
     "review_count": "({{ count }} Reviews)",
     "compare_before": "Before",
     "compare_after": "After",
-    "compare_label": "Compare before and after"
+    "compare_label": "Compare before and after",
+    "skin_concern_legend": "Choose a skin concern",
+    "key_ingredient": "Key ingredient"
   },
   "placeholders": {
     "password": "Password",

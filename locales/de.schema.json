@@ -38,7 +38,9 @@
       "ingredient": "Inhaltsstoff",
       "cross_sell": "Cross-Selling",
       "cross_sell_rows": "Cross-Selling-Zeilen",
-      "cross_sell_product": "Cross-Selling-Produkt"
+      "cross_sell_product": "Cross-Selling-Produkt",
+      "skin_concerns": "Hautproblem-Karte",
+      "skin_concern": "Hautproblem"
     },
     "settings": {
       "show_rating": "Bewertung anzeigen",
@@ -129,7 +131,12 @@
       "short_name": "Kurzname",
       "benefit_line": "Vorteilszeile",
       "button_color": "Schaltflächenfarbe",
-      "added_color": "Akzent für „Hinzugefügt“"
+      "added_color": "Akzent für „Hinzugefügt“",
+      "concern_name": "Hautproblem",
+      "face_area": "Gesichtsbereich",
+      "point_from_left": "Punktposition von links",
+      "point_from_top": "Punktposition von oben",
+      "ingredient_text": "Nutzen des Inhaltsstoffs"
     },
     "content": {
       "sticky_bar": "Fixierte Warenkorb-Leiste",
@@ -163,7 +170,8 @@
       "qualifying_variants": "Variant names, separated by commas, that get the gifts (for example: 2 Sticks). Leave empty for every variant. Match this to your automatic discount.",
       "payment_types": "Durch Kommas getrennt. Verwende die Shopify-Namen: visa, master, american_express, paypal, apple_pay, google_pay, maestro, shopify_pay.",
       "short_name": "Leer lassen, um den Produkttitel zu verwenden.",
-      "cross_sell": "Produkte, die zu diesem passen. Jedes wird direkt in den Warenkorb gelegt, ohne ihn zu öffnen. Ausverkaufte Produkte werden ausgeblendet."
+      "cross_sell": "Produkte, die zu diesem passen. Jedes wird direkt in den Warenkorb gelegt, ohne ihn zu öffnen. Ausverkaufte Produkte werden ausgeblendet.",
+      "skin_concern_image": "Ein Gesichtsfoto. Platziere den Punkt jedes Hautproblems mit den Positionsreglern."
     },
     "options": {
       "badge_all": "Every card on sale",

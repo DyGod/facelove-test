@@ -370,7 +370,9 @@
     "review_count": "({{ count }} reviews)",
     "compare_before": "Voor",
     "compare_after": "Na",
-    "compare_label": "Vergelijk voor en na"
+    "compare_label": "Vergelijk voor en na",
+    "skin_concern_legend": "Kies een huidprobleem",
+    "key_ingredient": "Belangrijkste ingrediënt"
   },
   "placeholders": {
     "password": "Wachtwoord",

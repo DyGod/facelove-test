@@ -347,7 +347,9 @@
     "review_count": "({{ count }} Bewertungen)",
     "compare_before": "Vorher",
     "compare_after": "Nachher",
-    "compare_label": "Vorher und nachher vergleichen"
+    "compare_label": "Vorher und nachher vergleichen",
+    "skin_concern_legend": "Wähle ein Hautproblem",
+    "key_ingredient": "Wichtigster Inhaltsstoff"
   },
   "placeholders": {
     "password": "Passwort",

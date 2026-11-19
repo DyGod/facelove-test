@@ -1,0 +1,648 @@
+{% comment %}
+  Section contract.
+  A face photo with one tappable point per skin concern. Choosing a point shows that concern's card:
+  what the product does for it and the key ingredient behind it. The points are native radio buttons
+  and the cards switch with CSS :has(), so it works without JavaScript; browsers without :has() show
+  every card. Only the selected point shows its name. The image comes first and the card sits below it on
+  mobile, where landing-skin-concerns.js scrolls the chosen card into view; they sit side by side from tablet up.
+  The button scrolls to the product buy box (#landing-buy) unless a link is set.
+  @example
+  <!-- Add "Skin concern map" to a product landing template, pick a face photo and add one Skin concern block per point -->
+{% endcomment %}
+
+{% liquid
+  assign button_link = section.settings.button_link | default: '#landing-buy'
+  assign group_name = 'skin-concern-' | append: section.id
+%}
+
+<script
+  src="{{ 'landing-skin-concerns.js' | asset_url }}"
+  type="module"
+  fetchpriority="low"
+></script>
+
+{% render 'contrast-override', background_color: section.settings.background_color, section_id: section.id %}
+
+<div class="section-background color-custom-{{ section.id }}"></div>
+<div class="section section--page-width color-custom-{{ section.id }}">
+  <landing-skin-concerns
+    class="landing-skin-concerns spacing-style"
+    style="
+      {% render 'spacing-style', settings: section.settings %}
+      --landing-skin-concerns-accent: {{ section.settings.accent_color }};
+      --landing-skin-concerns-card: {{ section.settings.card_background }};
+    "
+  >
+    {%- if section.settings.eyebrow != blank or section.settings.heading != blank or section.settings.text != blank -%}
+      <div class="landing-skin-concerns__intro">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="landing-skin-concerns__eyebrow">{{ section.settings.eyebrow | escape }}</p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 class="landing-skin-concerns__heading">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+        {%- if section.settings.text != blank -%}
+          <div class="landing-skin-concerns__text rte">{{ section.settings.text }}</div>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="landing-skin-concerns__layout">
+      <fieldset class="landing-skin-concerns__map">
+        <legend class="visually-hidden">{{ 'landing.skin_concern_legend' | t }}</legend>
+        <div class="landing-skin-concerns__figure">
+          {%- if section.settings.image != blank -%}
+            {{
+              section.settings.image
+              | image_url: width: 1200
+              | image_tag:
+                widths: '400, 600, 800, 1000, 1200',
+                sizes: '(min-width: 1200px) 520px, (min-width: 750px) 45vw, calc(100vw - 32px)',
+                loading: 'lazy',
+                alt: section.settings.image.alt,
+                class: 'landing-skin-concerns__image'
+            }}
+          {%- else -%}
+            {{ 'image' | placeholder_svg_tag: 'landing-skin-concerns__image landing-skin-concerns__placeholder' }}
+          {%- endif -%}
+
+          {%- for block in section.blocks -%}
+            {%- assign input_id = 'SkinConcern-' | append: section.id | append: '-' | append: block.id -%}
+            <input
+              class="landing-skin-concerns__input"
+              type="radio"
+              name="{{ group_name }}"
+              id="{{ input_id }}"
+              data-index="{{ forloop.index0 }}"
+              on:change="/handleChange"
+              {% if forloop.first %}
+                checked
+              {% endif %}
+            >
+            <label
+              class="landing-skin-concerns__point"
+              for="{{ input_id }}"
+              style="--point-x: {{ block.settings.position_x }}%; --point-y: {{ block.settings.position_y }}%;"
+            >
+              <span class="landing-skin-concerns__dot" aria-hidden="true"></span>
+              <span class="landing-skin-concerns__point-name">{{ block.settings.name | escape }}</span>
+            </label>
+          {%- endfor -%}
+        </div>
+      </fieldset>
+
+      {%- if section.blocks.size > 0 -%}
+        <div class="landing-skin-concerns__cards">
+          {%- for block in section.blocks -%}
+            <div class="landing-skin-concerns__card" ref="cards[]" {{ block.shopify_attributes }}>
+              {%- if block.settings.zone != blank -%}
+                <p class="landing-skin-concerns__zone">
+                  {{- block.settings.zone | escape }} · {{ block.settings.name | escape -}}
+                </p>
+              {%- endif -%}
+              {%- if block.settings.heading != blank -%}
+                <h3 class="landing-skin-concerns__card-heading">{{ block.settings.heading | escape }}</h3>
+              {%- endif -%}
+              {%- if block.settings.text != blank -%}
+                <div class="landing-skin-concerns__checklist rte">{{ block.settings.text }}</div>
+              {%- endif -%}
+              {%- if block.settings.ingredient_name != blank -%}
+                <div class="landing-skin-concerns__ingredient">
+                  <p class="landing-skin-concerns__ingredient-label">{{ 'landing.key_ingredient' | t }}</p>
+                  <p class="landing-skin-concerns__ingredient-name">{{ block.settings.ingredient_name | escape }}</p>
+                  {%- if block.settings.ingredient_text != blank -%}
+                    <div class="landing-skin-concerns__ingredient-text rte">{{ block.settings.ingredient_text }}</div>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.button_label != blank -%}
+      <div class="landing-skin-concerns__actions">
+        <a class="{{ section.settings.button_style }} landing-skin-concerns__button" href="{{ button_link }}">
+          {{- section.settings.button_label | escape -}}
+        </a>
+      </div>
+    {%- endif -%}
+  </landing-skin-concerns>
+</div>
+
+{% stylesheet %}
+  .landing-skin-concerns {
+    --landing-skin-concerns-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5l3 3 7-7' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+    display: grid;
+    gap: var(--gap-xl);
+    width: min(100%, 1100px);
+    min-width: 0;
+    margin-inline: auto;
+  }
+
+  .landing-skin-concerns__intro {
+    display: grid;
+    justify-items: center;
+    gap: var(--gap-xs);
+    text-align: center;
+  }
+
+  .landing-skin-concerns__eyebrow {
+    margin: 0;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--landing-skin-concerns-accent);
+  }
+
+  .landing-skin-concerns__heading {
+    margin: 0;
+    font-size: clamp(1.875rem, 1.5rem + 1.6vw, 2.75rem);
+    line-height: 1.1;
+    text-wrap: balance;
+  }
+
+  .landing-skin-concerns__text {
+    max-width: 52ch;
+    font-size: 0.9375rem;
+    color: var(--color-foreground-muted);
+  }
+
+  .landing-skin-concerns__text > * {
+    margin: 0;
+  }
+
+  .landing-skin-concerns__layout {
+    display: grid;
+    gap: var(--gap-lg);
+    min-width: 0;
+  }
+
+  .landing-skin-concerns__map {
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .landing-skin-concerns__figure {
+    position: relative;
+    width: min(100%, 520px);
+    margin-inline: auto;
+    border-radius: var(--style-border-radius-lg);
+    overflow: hidden;
+  }
+
+  .landing-skin-concerns__image {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .landing-skin-concerns__placeholder {
+    aspect-ratio: 1;
+    background-color: rgb(var(--color-foreground-rgb) / var(--opacity-5));
+  }
+
+  /* Hidden but focusable: the label below is the visible control. */
+  .landing-skin-concerns__input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* The label is the touch target; the dot's centre sits on the merchant's point. */
+  .landing-skin-concerns__point {
+    position: absolute;
+    inset-block-start: var(--point-y);
+    inset-inline-start: var(--point-x);
+    display: grid;
+    justify-items: center;
+    gap: 2px;
+    min-inline-size: 44px;
+    translate: -50% -22px;
+    cursor: pointer;
+  }
+
+  [dir='rtl'] .landing-skin-concerns__point {
+    translate: 50% -22px;
+  }
+
+  .landing-skin-concerns__dot {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+  }
+
+  .landing-skin-concerns__dot::before {
+    content: '';
+    position: absolute;
+    inset: 10px;
+    border-radius: 50%;
+    background-color: var(--landing-skin-concerns-accent);
+    opacity: 0;
+    animation: landing-skin-concerns-pulse 2s var(--ease-out-cubic) infinite;
+  }
+
+  .landing-skin-concerns__dot::after {
+    content: '';
+    position: relative;
+    width: 16px;
+    height: 16px;
+    border: 3px solid var(--landing-skin-concerns-accent);
+    border-radius: 50%;
+    background-color: #fff;
+    box-shadow: 0 1px 4px rgb(0 0 0 / 0.25);
+    transition: background-color var(--animation-values), transform var(--animation-values);
+  }
+
+  .landing-skin-concerns__point-name {
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    line-height: 1.4;
+    white-space: nowrap;
+    color: #2a2230;
+    background-color: rgb(255 255 255 / 0.9);
+    box-shadow: 0 1px 4px rgb(0 0 0 / 0.12);
+  }
+
+  /* Inactive names stay readable to assistive technology but hidden on screen. */
+  .landing-skin-concerns__input:not(:checked) + .landing-skin-concerns__point .landing-skin-concerns__point-name {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .landing-skin-concerns__input:checked + .landing-skin-concerns__point {
+    z-index: 1;
+  }
+
+  .landing-skin-concerns__input:checked + .landing-skin-concerns__point .landing-skin-concerns__point-name {
+    animation: landing-skin-concerns-in var(--animation-speed-slow) var(--ease-out-cubic);
+  }
+
+  .landing-skin-concerns__input:checked + .landing-skin-concerns__point .landing-skin-concerns__dot::after {
+    background-color: var(--landing-skin-concerns-accent);
+    border-color: #fff;
+    transform: scale(1.15);
+  }
+
+  .landing-skin-concerns__input:checked + .landing-skin-concerns__point .landing-skin-concerns__dot::before {
+    animation: none;
+  }
+
+  .landing-skin-concerns__input:focus-visible + .landing-skin-concerns__point .landing-skin-concerns__point-name {
+    outline: var(--focus-outline-width) solid var(--landing-skin-concerns-accent);
+    outline-offset: 2px;
+  }
+
+  @keyframes landing-skin-concerns-pulse {
+    0% {
+      opacity: 0.45;
+      transform: scale(0.6);
+    }
+
+    100% {
+      opacity: 0;
+      transform: scale(1.8);
+    }
+  }
+
+  .landing-skin-concerns__cards {
+    display: grid;
+    gap: var(--gap-md);
+    min-width: 0;
+  }
+
+  .landing-skin-concerns__card {
+    display: grid;
+    align-content: start;
+    gap: var(--gap-sm);
+    min-width: 0;
+    padding: var(--padding-lg) var(--padding-md);
+    border-radius: var(--style-border-radius-lg);
+    background-color: var(--landing-skin-concerns-card);
+    /* Room for the sticky header above and the sticky add to cart bar below when scrolled into view. */
+    scroll-margin-block: calc(var(--header-height, 0px) + 16px) 96px;
+  }
+
+  /* One card per point, matched by position. Up to 6 points (max_blocks). */
+  @supports selector(:has(*)) {
+    .landing-skin-concerns__card {
+      display: none;
+      animation: landing-skin-concerns-in var(--animation-speed-slow) var(--ease-out-cubic);
+    }
+
+    .landing-skin-concerns:has(.landing-skin-concerns__input:nth-of-type(1):checked)
+      .landing-skin-concerns__card:nth-child(1),
+    .landing-skin-concerns:has(.landing-skin-concerns__input:nth-of-type(2):checked)
+      .landing-skin-concerns__card:nth-child(2),
+    .landing-skin-concerns:has(.landing-skin-concerns__input:nth-of-type(3):checked)
+      .landing-skin-concerns__card:nth-child(3),
+    .landing-skin-concerns:has(.landing-skin-concerns__input:nth-of-type(4):checked)
+      .landing-skin-concerns__card:nth-child(4),
+    .landing-skin-concerns:has(.landing-skin-concerns__input:nth-of-type(5):checked)
+      .landing-skin-concerns__card:nth-child(5),
+    .landing-skin-concerns:has(.landing-skin-concerns__input:nth-of-type(6):checked)
+      .landing-skin-concerns__card:nth-child(6) {
+      display: grid;
+    }
+  }
+
+  @keyframes landing-skin-concerns-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+  }
+
+  .landing-skin-concerns__zone {
+    margin: 0;
+    font-size: 0.75rem;
+    color: var(--color-foreground-muted);
+  }
+
+  .landing-skin-concerns__card-heading {
+    margin: 0;
+    font-size: clamp(1.5rem, 1.3rem + 0.8vw, 1.875rem);
+    line-height: 1.15;
+    overflow-wrap: break-word;
+  }
+
+  .landing-skin-concerns__checklist {
+    font-size: 0.9375rem;
+  }
+
+  .landing-skin-concerns__checklist ul {
+    display: grid;
+    gap: var(--gap-2xs);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .landing-skin-concerns__checklist li {
+    position: relative;
+    padding-inline-start: 1.75rem;
+  }
+
+  .landing-skin-concerns__checklist li::before {
+    content: '';
+    position: absolute;
+    inset-inline-start: 0;
+    inset-block-start: 0.2em;
+    width: 1.1rem;
+    height: 1.1rem;
+    background-color: var(--landing-skin-concerns-accent);
+    mask: var(--landing-skin-concerns-check) center / contain no-repeat;
+  }
+
+  .landing-skin-concerns__checklist p {
+    margin: 0;
+  }
+
+  .landing-skin-concerns__ingredient {
+    display: grid;
+    gap: 2px;
+    padding-block-start: var(--padding-sm);
+    border-block-start: 1px solid rgb(var(--color-foreground-rgb) / var(--opacity-10));
+  }
+
+  .landing-skin-concerns__ingredient-label {
+    margin: 0;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--landing-skin-concerns-accent);
+  }
+
+  .landing-skin-concerns__ingredient-name {
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .landing-skin-concerns__ingredient-text {
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: var(--color-foreground-muted);
+  }
+
+  .landing-skin-concerns__ingredient-text > * {
+    margin: 0;
+  }
+
+  .landing-skin-concerns__actions {
+    display: flex;
+    justify-content: center;
+  }
+
+  .landing-skin-concerns__button {
+    min-height: 48px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .landing-skin-concerns__dot::before,
+    .landing-skin-concerns__card,
+    .landing-skin-concerns__input:checked + .landing-skin-concerns__point .landing-skin-concerns__point-name {
+      animation: none;
+    }
+  }
+
+  @media screen and (min-width: 750px) {
+    .landing-skin-concerns__layout {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      align-items: center;
+      gap: var(--gap-2xl);
+    }
+
+    .landing-skin-concerns__card {
+      padding: var(--padding-xl) var(--padding-lg);
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:landing.names.skin_concerns",
+  "class": "landing-skin-concerns-section",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "t:landing.settings.eyebrow",
+      "default": "Made for mature skin"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "t:settings.heading",
+      "default": "What does your skin need most?"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "t:settings.text",
+      "default": "<p>Tap where you notice it most and see how the stick takes care of it.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:settings.image",
+      "info": "t:landing.info.skin_concern_image"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "t:landing.settings.button_label",
+      "default": "Buy Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "t:landing.settings.button_link",
+      "info": "t:landing.info.button_link"
+    },
+    {
+      "type": "select",
+      "id": "button_style",
+      "label": "t:settings.button_style",
+      "options": [
+        { "value": "button", "label": "t:options.primary" },
+        { "value": "button-secondary", "label": "t:options.secondary" }
+      ],
+      "default": "button"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "t:landing.settings.accent_color",
+      "default": "#B8976A"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "t:landing.settings.card_background",
+      "default": "#F7F3EE"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "t:settings.background",
+      "alpha": true,
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "header",
+      "content": "t:content.padding"
+    },
+    {
+      "type": "range",
+      "id": "padding-block-start",
+      "label": "t:settings.top",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding-block-end",
+      "label": "t:settings.bottom",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 48
+    }
+  ],
+  "blocks": [
+    {
+      "type": "concern",
+      "name": "t:landing.names.skin_concern",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "t:landing.settings.concern_name",
+          "default": "Skin concern"
+        },
+        {
+          "type": "text",
+          "id": "zone",
+          "label": "t:landing.settings.face_area"
+        },
+        {
+          "type": "range",
+          "id": "position_x",
+          "label": "t:landing.settings.point_from_left",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 50
+        },
+        {
+          "type": "range",
+          "id": "position_y",
+          "label": "t:landing.settings.point_from_top",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "default": 50
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "t:settings.heading",
+          "default": "How the stick helps"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "t:landing.settings.checklist",
+          "info": "t:landing.info.checklist"
+        },
+        {
+          "type": "text",
+          "id": "ingredient_name",
+          "label": "t:landing.settings.ingredient_name"
+        },
+        {
+          "type": "richtext",
+          "id": "ingredient_text",
+          "label": "t:landing.settings.ingredient_text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:landing.names.skin_concerns",
+      "blocks": {
+        "concern_1": { "type": "concern", "settings": { "position_x": 27, "position_y": 44 } },
+        "concern_2": { "type": "concern", "settings": { "position_x": 50, "position_y": 20 } },
+        "concern_3": { "type": "concern", "settings": { "position_x": 74, "position_y": 64 } }
+      },
+      "block_order": ["concern_1", "concern_2", "concern_3"]
+    }
+  ]
+}
+{% endschema %}

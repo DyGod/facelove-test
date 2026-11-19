@@ -353,7 +353,9 @@
     "review_count": "({{ count }} avis)",
     "compare_before": "Avant",
     "compare_after": "Après",
-    "compare_label": "Comparer avant et après"
+    "compare_label": "Comparer avant et après",
+    "skin_concern_legend": "Choisissez une préoccupation de peau",
+    "key_ingredient": "Ingrédient clé"
   },
   "placeholders": {
     "password": "Mot de passe",

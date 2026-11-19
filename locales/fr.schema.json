@@ -38,7 +38,9 @@
       "ingredient": "Ingrédient",
       "cross_sell": "Vente croisée",
       "cross_sell_rows": "Lignes de vente croisée",
-      "cross_sell_product": "Produit de vente croisée"
+      "cross_sell_product": "Produit de vente croisée",
+      "skin_concerns": "Carte des préoccupations de peau",
+      "skin_concern": "Préoccupation de peau"
     },
     "settings": {
       "show_rating": "Afficher la note",
@@ -129,7 +131,12 @@
       "short_name": "Nom court",
       "benefit_line": "Ligne d’avantage",
       "button_color": "Couleur du bouton",
-      "added_color": "Accent de l’état « Ajouté »"
+      "added_color": "Accent de l’état « Ajouté »",
+      "concern_name": "Préoccupation de peau",
+      "face_area": "Zone du visage",
+      "point_from_left": "Position du point depuis la gauche",
+      "point_from_top": "Position du point depuis le haut",
+      "ingredient_text": "Bienfait de l'ingrédient"
     },
     "content": {
       "sticky_bar": "Barre d’ajout au panier flottante",
@@ -163,7 +170,8 @@
       "qualifying_variants": "Variant names, separated by commas, that get the gifts (for example: 2 Sticks). Leave empty for every variant. Match this to your automatic discount.",
       "payment_types": "Séparés par des virgules. Utilisez les noms Shopify : visa, master, american_express, paypal, apple_pay, google_pay, maestro, shopify_pay.",
       "short_name": "Laissez vide pour utiliser le titre du produit.",
-      "cross_sell": "Produits qui accompagnent celui-ci. Chacun s’ajoute au panier sur place, sans l’ouvrir. Les produits épuisés sont masqués."
+      "cross_sell": "Produits qui accompagnent celui-ci. Chacun s’ajoute au panier sur place, sans l’ouvrir. Les produits épuisés sont masqués.",
+      "skin_concern_image": "Une photo de visage. Placez le point de chaque préoccupation avec les curseurs de position."
     },
     "options": {
       "badge_all": "Every card on sale",

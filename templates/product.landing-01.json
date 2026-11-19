@@ -1,3 +1,4 @@
+
 {
   "sections": {
     "main": {
@@ -886,12 +887,90 @@
         "padding-block-start": 48,
         "padding-block-end": 48
       }
+    },
+    "skin_concerns": {
+      "type": "landing-skin-concerns",
+      "blocks": {
+        "fine_lines": {
+          "type": "concern",
+          "settings": {
+            "name": "Fine lines",
+            "zone": "Around the eyes",
+            "position_x": 27,
+            "position_y": 44,
+            "heading": "Does not settle into wrinkles or pores",
+            "text": "<ul><li>Instantly softens fine lines</li><li>Fine lines appear smoother with each application</li></ul>",
+            "ingredient_name": "Squalane",
+            "ingredient_text": "<p>Lightweight hydration that keeps the finish supple, never tight.</p>"
+          }
+        },
+        "dryness": {
+          "type": "concern",
+          "settings": {
+            "name": "Dryness",
+            "zone": "Cheeks",
+            "position_x": 74,
+            "position_y": 64,
+            "heading": "Gentle, moisturizing formula",
+            "text": "<ul><li>No cakey, dry or tight feeling</li><li>Gives the skin more suppleness and freshness</li></ul>",
+            "ingredient_name": "Shea butter",
+            "ingredient_text": "<p>Rich nourishment that helps skin feel comfortable all day.</p>"
+          }
+        },
+        "redness": {
+          "type": "concern",
+          "settings": {
+            "name": "Redness & sensitivity",
+            "zone": "Nose",
+            "position_x": 50,
+            "position_y": 55,
+            "heading": "No irritation, redness or itching",
+            "text": "<ul><li>Ideal for mature and sensitive skin</li><li>Nourishes, soothes and supports the skin barrier</li></ul>",
+            "ingredient_name": "Aloe vera",
+            "ingredient_text": "<p>Soothes skin that reacts easily to ordinary foundations.</p>"
+          }
+        },
+        "dullness": {
+          "type": "concern",
+          "settings": {
+            "name": "Dullness & uneven tone",
+            "zone": "Forehead",
+            "position_x": 50,
+            "position_y": 20,
+            "heading": "Instantly a natural, even & youthful glow",
+            "text": "<ul><li>Even coverage without a masking effect</li><li>Care, glow and an even complexion in one</li></ul>",
+            "ingredient_name": "Jojoba seed oil",
+            "ingredient_text": "<p>Softens dry patches so the colour glides on instead of clinging.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "fine_lines",
+        "dryness",
+        "redness",
+        "dullness"
+      ],
+      "settings": {
+        "eyebrow": "Made for mature skin",
+        "heading": "What does your skin need most?",
+        "text": "<p>Tap where you notice it most and see how the stick takes care of it.</p>",
+        "image": "shopify://shop_images/landing-feature-01-before.jpg",
+        "button_label": "Buy Now",
+        "button_link": "",
+        "button_style": "button",
+        "accent_color": "#B8976A",
+        "card_background": "#F7F3EE",
+        "background_color": "#FFFFFF",
+        "padding-block-start": 40,
+        "padding-block-end": 40
+      }
     }
   },
   "order": [
     "main",
     "logos",
     "reviews",
+    "skin_concerns",
     "cross_sell",
     "comparison",
     "features",

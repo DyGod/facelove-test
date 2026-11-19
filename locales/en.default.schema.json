@@ -283,7 +283,9 @@
       "ingredient": "Ingredient",
       "cross_sell": "Cross-sell",
       "cross_sell_rows": "Cross-sell rows",
-      "cross_sell_product": "Cross-sell product"
+      "cross_sell_product": "Cross-sell product",
+      "skin_concerns": "Skin concern map",
+      "skin_concern": "Skin concern"
     },
     "settings": {
       "show_rating": "Show rating",
@@ -374,7 +376,12 @@
       "short_name": "Short name",
       "benefit_line": "Benefit line",
       "button_color": "Button color",
-      "added_color": "Added state accent"
+      "added_color": "Added state accent",
+      "concern_name": "Skin concern",
+      "face_area": "Face area",
+      "point_from_left": "Point position from left",
+      "point_from_top": "Point position from top",
+      "ingredient_text": "Ingredient benefit"
     },
     "content": {
       "sticky_bar": "Sticky add to cart bar",
@@ -408,7 +415,8 @@
       "qualifying_variants": "Variant names, separated by commas, that get the gifts (for example: 2 Sticks). Leave empty for every variant. Match this to your automatic discount.",
       "payment_types": "Separate with commas. Use Shopify's names: visa, master, american_express, paypal, apple_pay, google_pay, maestro, shopify_pay.",
       "short_name": "Leave empty to use the product title.",
-      "cross_sell": "Products that pair with this one. Each one adds to the cart in place, without opening the cart. Sold-out products are hidden."
+      "cross_sell": "Products that pair with this one. Each one adds to the cart in place, without opening the cart. Sold-out products are hidden.",
+      "skin_concern_image": "A face photo. Place each skin concern's point on it with the position sliders."
     },
     "options": {
       "badge_all": "Every card on sale",

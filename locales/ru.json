@@ -384,7 +384,9 @@
     "review_count": "({{ count }} отзывов)",
     "compare_before": "До",
     "compare_after": "После",
-    "compare_label": "Сравнить до и после"
+    "compare_label": "Сравнить до и после",
+    "skin_concern_legend": "Выберите проблему кожи",
+    "key_ingredient": "Ключевой ингредиент"
   },
   "placeholders": {
     "password": "Пароль",

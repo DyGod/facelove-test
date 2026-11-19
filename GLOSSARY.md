@@ -19,3 +19,11 @@ _Avoid_: Upsell, recommended products, related products, add-on
 **Free gift**:
 A product given at no charge once the order qualifies. Never offered as a Cross-sell.
 _Avoid_: Mystery gift (that is one specific free gift product), bonus
+
+**Skin concern**:
+A visible problem of mature skin that a shopper recognises in herself: fine lines, dryness, redness and sensitivity, or dullness and uneven tone. The Hero product's benefits are framed per Skin concern, with cosmetic claims only.
+_Avoid_: Skin type (oily/dry is a different axis), problem, issue
+
+**Skin concern section**:
+The landing-page section that answers "will it work on my mature or sensitive skin?" by letting the shopper pick a Skin concern and see how the Hero product helps with it. It is not a quiz.
+_Avoid_: Concern finder, skin quiz
